@@ -61,9 +61,12 @@ export class VNPayProvider implements PaymentProvider {
         vnp_ExpireDate: expireDate,
       }
 
-      // Sort params alphabetically and create query string
+      // Sort params alphabetically and create query string exactly as VNPay expects
       const sortedParams = this.sortObject(vnpParams)
-      const signData = new URLSearchParams(sortedParams).toString()
+      const signData = Object.keys(sortedParams)
+        .map((key) => `${key}=${sortedParams[key]}`)
+        .join('&')
+
       const hmac = crypto.createHmac('sha512', this.hashSecret)
       const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex')
 
@@ -91,7 +94,9 @@ export class VNPayProvider implements PaymentProvider {
     delete vnpParams['vnp_SecureHashType']
 
     const sortedParams = this.sortObject(vnpParams)
-    const signData = new URLSearchParams(sortedParams).toString()
+    const signData = Object.keys(sortedParams)
+      .map((key) => `${key}=${sortedParams[key]}`)
+      .join('&')
     const hmac = crypto.createHmac('sha512', this.hashSecret)
     const checkSum = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex')
 
@@ -134,7 +139,9 @@ export class VNPayProvider implements PaymentProvider {
     delete vnpParams['vnp_SecureHashType']
 
     const sortedParams = this.sortObject(vnpParams)
-    const signData = new URLSearchParams(sortedParams).toString()
+    const signData = Object.keys(sortedParams)
+      .map((key) => `${key}=${sortedParams[key]}`)
+      .join('&')
     const hmac = crypto.createHmac('sha512', this.hashSecret)
     const checkSum = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex')
 
@@ -169,7 +176,10 @@ export class VNPayProvider implements PaymentProvider {
     const keys = Object.keys(obj).sort()
     for (const key of keys) {
       if (obj[key] !== undefined && obj[key] !== null && obj[key] !== '') {
-        sorted[key] = obj[key]
+        // Encode key and value specifically for VNPay standard
+        const encodedKey = encodeURIComponent(key)
+        const encodedValue = encodeURIComponent(obj[key]).replace(/%20/g, '+')
+        sorted[encodedKey] = encodedValue
       }
     }
     return sorted

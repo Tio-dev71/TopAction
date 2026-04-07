@@ -40,12 +40,13 @@ export default async function ProfilePage() {
     .eq('user_id', user.id)
 
   const stravaConnected = connections?.some((c: any) => c.provider === 'strava') || false;
+  const garminConnected = connections?.some((c: any) => c.provider === 'garmin') || false;
 
   return (
     <main className="min-h-screen bg-secondary/30 flex flex-col">
       <Navbar />
       <div className="flex-1 w-full relative">
-        <ProfileForm profile={safeProfile} stravaConnected={stravaConnected} />
+        <ProfileForm profile={safeProfile} stravaConnected={stravaConnected} garminConnected={garminConnected} />
       </div>
     </main>
   )

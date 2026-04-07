@@ -12,7 +12,7 @@ import { Loader2, LogOut, Medal } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { useRouter } from "next/navigation";
 
-export function ProfileForm({ profile, stravaConnected = false }: { profile: any, stravaConnected?: boolean }) {
+export function ProfileForm({ profile, stravaConnected = false, garminConnected = false }: { profile: any, stravaConnected?: boolean, garminConnected?: boolean }) {
   const [state, formAction, pending] = useActionState(updateProfile, null);
   const router = useRouter();
 
@@ -143,6 +143,33 @@ export function ProfileForm({ profile, stravaConnected = false }: { profile: any
               </Button>
             ) : (
               <Button size="sm" className="bg-[#FC4C02] hover:bg-[#FC4C02]/90 text-white" onClick={() => router.push('/api/auth/strava')}>
+                Kết nối ngay
+              </Button>
+            )}
+          </div>
+
+          {/* Garmin Connect */}
+          <div className="flex items-center justify-between p-4 rounded-xl border border-border/50 bg-secondary/20 mt-3">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-[#007CC3] rounded-xl flex items-center justify-center text-white shadow-md">
+                {/* Garmin triangle/mountain icon */}
+                <svg viewBox="0 0 24 24" fill="currentColor" className="w-7 h-7">
+                  <path d="M12 2L2 19h20L12 2zm0 4l6.5 11h-13L12 6z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-[15px]">Garmin Connect</p>
+                <p className="text-sm text-muted-foreground">
+                  {garminConnected ? "Đã kết nối" : "Chưa kết nối"}
+                </p>
+              </div>
+            </div>
+            {garminConnected ? (
+              <Button variant="outline" size="sm" className="text-muted-foreground" onClick={() => router.push('/api/auth/garmin/disconnect')}>
+                Tạm ngưng
+              </Button>
+            ) : (
+              <Button size="sm" className="bg-[#007CC3] hover:bg-[#007CC3]/90 text-white" onClick={() => router.push('/api/auth/garmin')}>
                 Kết nối ngay
               </Button>
             )}

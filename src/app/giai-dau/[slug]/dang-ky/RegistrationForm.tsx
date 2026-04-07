@@ -102,49 +102,55 @@ export function RegistrationForm({
               {/* Category selection */}
               <div className="space-y-2">
                 <Label>Hạng mục thi đấu *</Label>
-                <div className="grid gap-2">
-                  {activeCategories.map((cat: any) => {
-                    const isRegistered = registeredCategoryIds.includes(cat.id)
-                    const isFull = cat.capacity && cat.registered_count >= cat.capacity
-                    const disabled = isRegistered || isFull
+                {activeCategories.length === 0 ? (
+                  <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-600">
+                    Ban tổ chức chưa mở hạng mục thi đấu nào. Vui lòng quay lại sau!
+                  </div>
+                ) : (
+                  <div className="grid gap-2">
+                    {activeCategories.map((cat: any) => {
+                      const isRegistered = registeredCategoryIds.includes(cat.id)
+                      const isFull = cat.capacity && cat.registered_count >= cat.capacity
+                      const disabled = isRegistered || isFull
 
-                    return (
-                      <label
-                        key={cat.id}
-                        className={`flex items-center justify-between rounded-lg border p-3 cursor-pointer transition-all ${
-                          disabled
-                            ? 'border-border/40 opacity-50 cursor-not-allowed'
-                            : 'border-border/60 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5'
-                        }`}
-                      >
-                        <div className="flex items-center gap-3">
-                          <input
-                            type="radio"
-                            name="category_id"
-                            value={cat.id}
-                            disabled={disabled}
-                            required
-                            className="accent-primary"
-                          />
-                          <div>
-                            <p className="text-sm font-medium">
-                              {cat.name}
-                              {cat.distance && <span className="text-muted-foreground ml-1">({cat.distance})</span>}
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                              {cat.registered_count}/{cat.capacity || '∞'} đã ĐK
-                              {isRegistered && ' · ✅ Đã đăng ký'}
-                              {isFull && !isRegistered && ' · Hết chỗ'}
-                            </p>
+                      return (
+                        <label
+                          key={cat.id}
+                          className={`flex items-center justify-between rounded-lg border p-3 cursor-pointer transition-all ${
+                            disabled
+                              ? 'border-border/40 opacity-50 cursor-not-allowed'
+                              : 'border-border/60 hover:border-primary/50 has-[:checked]:border-primary has-[:checked]:bg-primary/5'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <input
+                              type="radio"
+                              name="category_id"
+                              value={cat.id}
+                              disabled={disabled}
+                              required
+                              className="accent-primary"
+                            />
+                            <div>
+                              <p className="text-sm font-medium">
+                                {cat.name}
+                                {cat.distance && <span className="text-muted-foreground ml-1">({cat.distance})</span>}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {cat.registered_count}/{cat.capacity || '∞'} đã ĐK
+                                {isRegistered && ' · ✅ Đã đăng ký'}
+                                {isFull && !isRegistered && ' · Hết chỗ'}
+                              </p>
+                            </div>
                           </div>
-                        </div>
-                        <span className="text-sm font-bold text-primary">
-                          {cat.price > 0 ? `${cat.price.toLocaleString('vi-VN')} ₫` : 'Miễn phí'}
-                        </span>
-                      </label>
-                    )
-                  })}
-                </div>
+                          <span className="text-sm font-bold text-primary">
+                            {cat.price > 0 ? `${cat.price.toLocaleString('vi-VN')} ₫` : 'Miễn phí'}
+                          </span>
+                        </label>
+                      )
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Personal info - prefilled from profile */}

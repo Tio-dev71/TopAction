@@ -1,20 +1,24 @@
 import { type PaymentProvider } from './types'
 import { VNPayProvider } from './providers/vnpay'
+import { SePayProvider } from './providers/sepay'
 
 let provider: PaymentProvider | null = null
 
 /**
  * Get the configured payment provider.
- * Currently supports: vnpay
+ * Currently supports: vnpay, sepay
  * Add more providers here as needed.
  */
 export function getPaymentProvider(): PaymentProvider {
   if (!provider) {
-    const providerName = process.env.PAYMENT_PROVIDER || 'vnpay'
+    const providerName = process.env.PAYMENT_PROVIDER || 'sepay' // Defaults to sepay for manual bank transfers
 
     switch (providerName) {
       case 'vnpay':
         provider = new VNPayProvider()
+        break
+      case 'sepay':
+        provider = new SePayProvider()
         break
       // Add more providers here:
       // case 'momo':

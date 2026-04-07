@@ -13,12 +13,17 @@ export async function createRegistration(prevState: any, formData: FormData) {
   const user = await requireAuth()
   const supabase = await createClient()
 
-  // Parse and validate
-  const raw = Object.fromEntries(formData)
+  // Handle missing fields (unchecked radios or empty inputs become undefined)
+  const raw = {
+    ...Object.fromEntries(formData),
+    category_id: formData.get('category_id') || '',
+    gender: formData.get('gender') || '',
+  }
+  
   const parsed = registrationSchema.safeParse(raw)
 
   if (!parsed.success) {
-    return { error: parsed.error.issues.map(e => e.message).join(', ') }
+    return { error: parsed.error.issues[0].message }
   }
 
   const data = parsed.data

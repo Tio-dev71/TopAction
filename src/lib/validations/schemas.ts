@@ -57,11 +57,11 @@ export const tournamentRuleSchema = z.object({
 
 export const registrationSchema = z.object({
   tournament_id: z.string().uuid('ID giải đấu không hợp lệ'),
-  category_id: z.string().uuid('Chọn hạng mục tham gia'),
+  category_id: z.string().min(1, 'Vui lòng chọn hạng mục thi đấu').uuid('Hạng mục không hợp lệ'),
   full_name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự').max(100),
   email: z.string().email('Email không hợp lệ'),
   phone: z.string().min(8, 'Số điện thoại không hợp lệ').max(20),
-  gender: z.enum(['male', 'female', 'other']).optional(),
+  gender: z.string().optional(),
   birth_date: z.string().optional().or(z.literal('')),
   city: z.string().max(100).optional().or(z.literal('')),
   club_name: z.string().max(100).optional().or(z.literal('')),
