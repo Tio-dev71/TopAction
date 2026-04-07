@@ -47,14 +47,14 @@ export default function SignupPage() {
     try {
       const { createClient } = await import('@/lib/supabase/client')
       const supabase = createClient()
-      
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
         },
       })
-      
+
       if (error) {
         toast.error(error.message)
         setGoogleLoading(false)
@@ -64,7 +64,7 @@ export default function SignupPage() {
       setGoogleLoading(false)
     }
   }
-  
+
   return (
     <div className="flex min-h-screen items-center justify-center bg-secondary/30 px-4 py-12 sm:px-6 lg:px-8">
       <div className="w-full max-w-md space-y-8">
@@ -74,7 +74,7 @@ export default function SignupPage() {
               <Trophy className="h-5 w-5" />
             </div>
             <span className="text-2xl font-bold tracking-tight">
-              <span className="text-primary">A</span>TUAN
+              <span className="text-primary">TOP</span>ACTION
             </span>
           </Link>
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground">
@@ -97,7 +97,7 @@ export default function SignupPage() {
                 </div>
               )}
 
-               <div className="space-y-2">
+              <div className="space-y-2">
                 <Label htmlFor="fullName">Họ và tên</Label>
                 <Input
                   id="fullName"
@@ -137,8 +137,8 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-2">
-                 <Label htmlFor="password">Mật khẩu (ít nhất 6 ký tự)</Label>
-                 <Input
+                <Label htmlFor="password">Mật khẩu (ít nhất 6 ký tự)</Label>
+                <Input
                   id="password"
                   name="password"
                   type="password"
@@ -149,8 +149,8 @@ export default function SignupPage() {
               </div>
 
               <div className="space-y-2">
-                 <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
-                 <Input
+                <Label htmlFor="confirmPassword">Xác nhận mật khẩu</Label>
+                <Input
                   id="confirmPassword"
                   name="confirmPassword"
                   type="password"
@@ -181,11 +181,11 @@ export default function SignupPage() {
               </div>
             </div>
 
-            <Button 
+            <Button
               type="button"
-              variant="outline" 
-              className="mt-6 w-full gap-2" 
-              onClick={handleGoogleSignIn} 
+              variant="outline"
+              className="mt-6 w-full gap-2"
+              onClick={handleGoogleSignIn}
               disabled={pending || googleLoading}
             >
               {googleLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : (
@@ -199,10 +199,10 @@ export default function SignupPage() {
               Google
             </Button>
           </CardContent>
-           <CardFooter className="flex justify-center border-t border-border/60 p-4">
-               <Link href="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
-                  <ArrowLeft className="h-4 w-4" /> Về trang chủ
-               </Link>
+          <CardFooter className="flex justify-center border-t border-border/60 p-4">
+            <Link href="/" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+              <ArrowLeft className="h-4 w-4" /> Về trang chủ
+            </Link>
           </CardFooter>
         </Card>
       </div>

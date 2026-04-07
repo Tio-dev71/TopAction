@@ -2,6 +2,7 @@
 
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
+import { profileSchema } from '@/lib/validations/schemas'
 
 export async function updateProfile(state: any, formData: FormData) {
   const supabase = await createClient()
@@ -11,22 +12,28 @@ export async function updateProfile(state: any, formData: FormData) {
     return { error: 'Bạn chưa đăng nhập.' }
   }
 
-  const full_name = formData.get('full_name') as string
-  const phone = formData.get('phone') as string
-  const city = formData.get('city') as string
-  const club_name = formData.get('club_name') as string
+  const raw = Object.fromEntries(formData)
+  const parsed = profileSchema.safeParse(raw)
+
+  if (!parsed.success) {
+    return { error: parsed.error.issues.map(e => e.message).join(', ') }
+  }
 
   const { error } = await supabase.from('profiles').upsert({
     id: user.id,
-    full_name,
-    phone,
-    city,
-    club_name,
-    email: user.email 
+    email: user.email,
+    ...parsed.data,
+    // Convert empty strings to null for optional fields
+    phone: parsed.data.phone || null,
+    birth_date: parsed.data.birth_date || null,
+    gender: parsed.data.gender || null,
+    city: parsed.data.city || null,
+    club_name: parsed.data.club_name || null,
+    emergency_contact: parsed.data.emergency_contact || null,
   }, { onConflict: 'id', ignoreDuplicates: false })
 
   if (error) {
-     return { error: 'Cập nhật thông tin thất bại.' }
+     return { error: 'Cập nhật thông tin thất bại: ' + error.message }
   }
 
   revalidatePath('/ca-nhan')

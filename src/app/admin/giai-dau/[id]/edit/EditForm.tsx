@@ -1,0 +1,320 @@
+'use client'
+
+import { useActionState, useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Textarea } from '@/components/ui/textarea'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import {
+  updateTournament,
+  saveTournamentCategory,
+  deleteTournamentCategory,
+  saveTournamentRule,
+  saveOrganizer,
+} from '@/app/actions/admin/tournaments'
+import { toast } from 'sonner'
+import { Loader2, ArrowLeft, Plus, Trash2, Save } from 'lucide-react'
+
+export function TournamentEditForm({ tournament }: { tournament: any }) {
+  const router = useRouter()
+  const boundUpdate = updateTournament.bind(null, tournament.id)
+  const [state, formAction, pending] = useActionState(boundUpdate, null)
+
+  useEffect(() => {
+    if (state?.success) {
+      toast.success('Cập nhật thành công!')
+      router.refresh()
+    } else if (state?.error) {
+      toast.error(state.error)
+    }
+  }, [state, router])
+
+  return (
+    <div className="mx-auto max-w-4xl space-y-6">
+      <div className="flex items-center gap-3">
+        <Link href={`/admin/giai-dau/${tournament.id}`}>
+          <Button variant="ghost" size="sm" className="gap-1">
+            <ArrowLeft className="h-4 w-4" />
+            Quay lại
+          </Button>
+        </Link>
+        <h2 className="text-lg font-bold">Chỉnh sửa: {tournament.title}</h2>
+      </div>
+
+      <Tabs defaultValue="general" className="w-full">
+        <TabsList className="mb-4">
+          <TabsTrigger value="general">Thông tin</TabsTrigger>
+          <TabsTrigger value="categories">Hạng mục ({tournament.categories?.length || 0})</TabsTrigger>
+          <TabsTrigger value="rules">Quy định ({tournament.rules?.length || 0})</TabsTrigger>
+          <TabsTrigger value="organizers">Tổ chức ({tournament.organizers?.length || 0})</TabsTrigger>
+        </TabsList>
+
+        {/* General Info Tab */}
+        <TabsContent value="general">
+          <Card className="border-border/60">
+            <CardContent className="pt-6">
+              <form action={formAction} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="title">Tên giải đấu *</Label>
+                  <Input id="title" name="title" defaultValue={tournament.title} required />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="slug">Slug *</Label>
+                  <Input id="slug" name="slug" defaultValue={tournament.slug} required />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="category">Thể loại</Label>
+                    <Input id="category" name="category" defaultValue={tournament.category || ''} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="city">Thành phố</Label>
+                    <Input id="city" name="city" defaultValue={tournament.city || ''} />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="short_description">Mô tả ngắn</Label>
+                  <Textarea id="short_description" name="short_description" rows={2} defaultValue={tournament.short_description || ''} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="description">Mô tả chi tiết</Label>
+                  <Textarea id="description" name="description" rows={10} defaultValue={tournament.description || ''} />
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="start_date">Ngày bắt đầu</Label>
+                    <Input id="start_date" name="start_date" type="date" defaultValue={tournament.start_date || ''} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="end_date">Ngày kết thúc</Label>
+                    <Input id="end_date" name="end_date" type="date" defaultValue={tournament.end_date || ''} />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="registration_open_at">Mở đăng ký</Label>
+                    <Input id="registration_open_at" name="registration_open_at" type="datetime-local" defaultValue={tournament.registration_open_at?.slice(0, 16) || ''} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="registration_close_at">Đóng đăng ký</Label>
+                    <Input id="registration_close_at" name="registration_close_at" type="datetime-local" defaultValue={tournament.registration_close_at?.slice(0, 16) || ''} />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="location">Địa điểm</Label>
+                  <Input id="location" name="location" defaultValue={tournament.location || ''} />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="cover_image">URL ảnh bìa</Label>
+                  <Input id="cover_image" name="cover_image" defaultValue={tournament.cover_image || ''} />
+                  {tournament.cover_image && (
+                    <img src={tournament.cover_image} alt="" className="mt-2 h-32 w-auto rounded-lg object-cover" />
+                  )}
+                </div>
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="max_participants">Số lượng tối đa</Label>
+                    <Input id="max_participants" name="max_participants" type="number" min="0" defaultValue={tournament.max_participants || ''} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Nổi bật</Label>
+                    <div className="flex items-center gap-2 pt-2">
+                      <input type="hidden" name="is_featured" value={tournament.is_featured ? 'true' : 'false'} />
+                      <label className="text-sm text-muted-foreground">
+                        {tournament.is_featured ? '✅ Đang nổi bật' : 'Không nổi bật'}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+
+                <input type="hidden" name="status" value={tournament.status} />
+
+                {state?.error && (
+                  <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{state.error}</div>
+                )}
+
+                <div className="flex justify-end gap-3 pt-4 border-t">
+                  <Button type="submit" disabled={pending} className="gap-2">
+                    {pending && <Loader2 className="h-4 w-4 animate-spin" />}
+                    <Save className="h-4 w-4" />
+                    Lưu thay đổi
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        {/* Categories Tab */}
+        <TabsContent value="categories">
+          <CategoriesEditor tournamentId={tournament.id} categories={tournament.categories || []} />
+        </TabsContent>
+
+        {/* Rules Tab */}
+        <TabsContent value="rules">
+          <RulesEditor tournamentId={tournament.id} rules={tournament.rules || []} />
+        </TabsContent>
+
+        {/* Organizers Tab */}
+        <TabsContent value="organizers">
+          <OrganizersEditor tournamentId={tournament.id} organizers={tournament.organizers || []} />
+        </TabsContent>
+      </Tabs>
+    </div>
+  )
+}
+
+// ---- Categories Editor ----
+function CategoriesEditor({ tournamentId, categories }: { tournamentId: string; categories: any[] }) {
+  const router = useRouter()
+  const boundSave = saveTournamentCategory.bind(null, tournamentId)
+  const [state, formAction, pending] = useActionState(boundSave, null)
+
+  useEffect(() => {
+    if (state?.success) { toast.success('Lưu hạng mục thành công!'); router.refresh() }
+    if (state?.error) toast.error(state.error)
+  }, [state, router])
+
+  const handleDelete = async (catId: string) => {
+    if (!confirm('Xóa hạng mục này?')) return
+    const res = await deleteTournamentCategory(catId, tournamentId)
+    if (res.error) toast.error(res.error)
+    else { toast.success('Đã xóa'); router.refresh() }
+  }
+
+  return (
+    <Card className="border-border/60">
+      <CardHeader>
+        <CardTitle className="text-base">Hạng mục thi đấu</CardTitle>
+      </CardHeader>
+      <CardContent className="space-y-4">
+        {categories.map((cat) => (
+          <div key={cat.id} className="flex items-center gap-3 rounded-lg border border-border/40 p-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium">{cat.name} {cat.distance && `(${cat.distance})`}</p>
+              <p className="text-xs text-muted-foreground">
+                {cat.price > 0 ? `${cat.price.toLocaleString('vi-VN')} ₫` : 'Miễn phí'} · {cat.registered_count}/{cat.capacity || '∞'} đã ĐK
+              </p>
+            </div>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive" onClick={() => handleDelete(cat.id)}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
+          </div>
+        ))}
+
+        <form action={formAction} className="space-y-3 rounded-lg border border-dashed border-border/60 p-4">
+          <p className="text-sm font-medium">Thêm hạng mục mới</p>
+          <div className="grid grid-cols-2 gap-3">
+            <Input name="name" placeholder="Tên (VD: 10km)" required />
+            <Input name="distance" placeholder="Cự ly (VD: 10 km)" />
+            <Input name="price" type="number" min="0" defaultValue="0" placeholder="Giá (VNĐ)" />
+            <Input name="capacity" type="number" min="0" placeholder="Sức chứa" />
+          </div>
+          <input type="hidden" name="sort_order" value={categories.length} />
+          <input type="hidden" name="is_active" value="true" />
+          <Button type="submit" size="sm" disabled={pending} className="gap-1.5">
+            {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            <Plus className="h-3.5 w-3.5" /> Thêm
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}
+
+// ---- Rules Editor ----
+function RulesEditor({ tournamentId, rules }: { tournamentId: string; rules: any[] }) {
+  const router = useRouter()
+  const boundSave = saveTournamentRule.bind(null, tournamentId)
+  const [state, formAction, pending] = useActionState(boundSave, null)
+
+  useEffect(() => {
+    if (state?.success) { toast.success('Lưu quy định thành công!'); router.refresh() }
+    if (state?.error) toast.error(state.error)
+  }, [state, router])
+
+  return (
+    <Card className="border-border/60">
+      <CardHeader><CardTitle className="text-base">Quy định sự kiện</CardTitle></CardHeader>
+      <CardContent className="space-y-3">
+        {rules.map((rule) => (
+          <div key={rule.id} className="rounded-lg border border-border/40 p-3">
+            <p className="text-sm font-medium">{rule.title}</p>
+            <p className="text-xs text-muted-foreground mt-1">{rule.content}</p>
+          </div>
+        ))}
+        <form action={formAction} className="space-y-3 rounded-lg border border-dashed border-border/60 p-4">
+          <p className="text-sm font-medium">Thêm quy định mới</p>
+          <Input name="title" placeholder="Tiêu đề" required />
+          <Textarea name="content" placeholder="Nội dung" rows={3} />
+          <div className="grid grid-cols-2 gap-3">
+            <Input name="icon" placeholder="Icon (running, gauge...)" />
+            <Input name="rule_type" placeholder="Loại (sport, pace...)" />
+          </div>
+          <input type="hidden" name="sort_order" value={rules.length} />
+          <Button type="submit" size="sm" disabled={pending} className="gap-1.5">
+            {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            <Plus className="h-3.5 w-3.5" /> Thêm
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}
+
+// ---- Organizers Editor ----
+function OrganizersEditor({ tournamentId, organizers }: { tournamentId: string; organizers: any[] }) {
+  const router = useRouter()
+  const boundSave = saveOrganizer.bind(null, tournamentId)
+  const [state, formAction, pending] = useActionState(boundSave, null)
+
+  useEffect(() => {
+    if (state?.success) { toast.success('Lưu thành công!'); router.refresh() }
+    if (state?.error) toast.error(state.error)
+  }, [state, router])
+
+  return (
+    <Card className="border-border/60">
+      <CardHeader><CardTitle className="text-base">Đơn vị tổ chức & Đồng hành</CardTitle></CardHeader>
+      <CardContent className="space-y-3">
+        {organizers.map((org) => (
+          <div key={org.id} className="rounded-lg border border-border/40 p-3">
+            <p className="text-sm font-medium">{org.name} <span className="text-xs text-muted-foreground">({org.type})</span></p>
+            <p className="text-xs text-muted-foreground mt-1">{org.description}</p>
+          </div>
+        ))}
+        <form action={formAction} className="space-y-3 rounded-lg border border-dashed border-border/60 p-4">
+          <p className="text-sm font-medium">Thêm đơn vị mới</p>
+          <Input name="name" placeholder="Tên đơn vị" required />
+          <Textarea name="description" placeholder="Mô tả" rows={2} />
+          <div className="grid grid-cols-2 gap-3">
+            <select name="type" className="rounded-lg border border-input bg-background px-3 py-2 text-sm">
+              <option value="organizer">Tổ chức</option>
+              <option value="sponsor">Tài trợ</option>
+              <option value="partner">Đồng hành</option>
+            </select>
+            <Input name="logo_url" placeholder="Logo URL" />
+          </div>
+          <input type="hidden" name="sort_order" value={organizers.length} />
+          <Button type="submit" size="sm" disabled={pending} className="gap-1.5">
+            {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            <Plus className="h-3.5 w-3.5" /> Thêm
+          </Button>
+        </form>
+      </CardContent>
+    </Card>
+  )
+}

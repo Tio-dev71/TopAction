@@ -18,14 +18,14 @@ export function Navbar() {
 
   useEffect(() => {
     const supabase = createClient();
-    
+
     // Get initial session
     const getSession = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       setUser(session?.user ?? null);
       setLoading(false);
     };
-    
+
     getSession();
 
     // Listen for auth state changes
@@ -57,7 +57,7 @@ export function Navbar() {
             <Trophy className="h-5 w-5" />
           </div>
           <span className="text-xl font-bold tracking-tight">
-            <span className="text-primary">A</span>TUAN
+            <span className="text-primary">TOP</span>ACTION
           </span>
         </Link>
 
@@ -75,7 +75,7 @@ export function Navbar() {
               {item.label}
             </Link>
           ))}
-          
+
           <div className="ml-3 flex items-center min-w-[120px] justify-end">
             {!loading && (
               user ? (
@@ -95,7 +95,7 @@ export function Navbar() {
                 <Link href="/dang-nhap" passHref>
                   <Button size="sm" className="gap-2 shadow-md shadow-primary/20">
                     Đăng nhập
-                    <ArrowRight className="h-3.5 w-3.5" />
+                    <ArrowRight className="h-4.5 w-4.5" />
                   </Button>
                 </Link>
               )
@@ -133,18 +133,18 @@ export function Navbar() {
             <div className="pt-2 min-h-[40px]">
               {!loading && (
                 user ? (
-                   <div className="flex flex-col gap-2">
-                     <Link href="/ca-nhan" onClick={() => setMobileOpen(false)}>
-                        <Button variant="secondary" size="sm" className="w-full gap-2">
-                          <User className="h-4 w-4" />
-                          Hồ sơ {user.user_metadata?.full_name ? `- ${user.user_metadata.full_name}` : ''}
-                        </Button>
-                     </Link>
-                     <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => { handleLogout(); setMobileOpen(false); }}>
-                        Thoát
-                        <LogOut className="h-4 w-4" />
+                  <div className="flex flex-col gap-2">
+                    <Link href="/ca-nhan" onClick={() => setMobileOpen(false)}>
+                      <Button variant="secondary" size="sm" className="w-full gap-2">
+                        <User className="h-4 w-4" />
+                        Hồ sơ {user.user_metadata?.full_name ? `- ${user.user_metadata.full_name}` : ''}
                       </Button>
-                   </div>
+                    </Link>
+                    <Button variant="outline" size="sm" className="w-full gap-2" onClick={() => { handleLogout(); setMobileOpen(false); }}>
+                      Thoát
+                      <LogOut className="h-4 w-4" />
+                    </Button>
+                  </div>
                 ) : (
                   <Link href="/dang-nhap" passHref onClick={() => setMobileOpen(false)}>
                     <Button size="sm" className="w-full gap-2 shadow-md shadow-primary/20">

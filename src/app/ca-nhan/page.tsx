@@ -5,7 +5,7 @@ import { ProfileForm } from './ProfileForm'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Hồ sơ cá nhân | ATUAN',
+  title: 'Hồ sơ cá nhân | TOPACTION',
 }
 
 export default async function ProfilePage() {
@@ -35,10 +35,10 @@ export default async function ProfilePage() {
 
   return (
     <main className="min-h-screen bg-secondary/30 flex flex-col">
-        <Navbar />
-        <div className="flex-1 w-full relative">
-           <ProfileForm profile={safeProfile} />
-        </div>
+      <Navbar />
+      <div className="flex-1 w-full relative">
+        <ProfileForm profile={safeProfile} />
+      </div>
     </main>
   )
 }
