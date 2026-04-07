@@ -467,17 +467,8 @@ export function DonationWidget({
                   Hệ thống đang chờ giao dịch. Sẽ tự động đóng khi thành công.
                 </p>
                 <div className="flex gap-2">
-                  <Button variant="outline" className="flex-1" onClick={() => setQrOpen(false)}>
-                    Đóng
-                  </Button>
-                  <Button
-                    className="flex-1 bg-green-600 hover:bg-green-700 text-white gap-2"
-                    onClick={handleSimulatePayment}
-                    disabled={simulating}
-                    title="Chức năng giả lập cho Test Developer"
-                  >
-                    {simulating ? <Loader2 className="h-4 w-4 animate-spin" /> : <CheckCircle2 className="h-4 w-4" />}
-                    Simulate (Test Mode)
+                  <Button variant="outline" className="w-full font-medium" onClick={() => setQrOpen(false)}>
+                    Đóng cửa sổ
                   </Button>
                 </div>
               </div>
