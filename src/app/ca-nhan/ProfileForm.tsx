@@ -12,7 +12,7 @@ import { Loader2, LogOut, Medal } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { useRouter } from "next/navigation";
 
-export function ProfileForm({ profile }: { profile: any }) {
+export function ProfileForm({ profile, stravaConnected = false }: { profile: any, stravaConnected?: boolean }) {
   const [state, formAction, pending] = useActionState(updateProfile, null);
   const router = useRouter();
 
@@ -113,6 +113,40 @@ export function ProfileForm({ profile }: { profile: any }) {
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-8 border-border/60 shadow-lg shadow-primary/5">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Ứng dụng liên kết</CardTitle>
+          <p className="text-sm text-muted-foreground mt-1">Kết nối tài khoản của bạn để đồng bộ kết quả thi đấu tự động.</p>
+        </CardHeader>
+        <CardContent>
+          <div className="flex items-center justify-between p-4 rounded-xl border border-border/50 bg-secondary/20">
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 bg-[#FC4C02] rounded-xl flex items-center justify-center text-white shadow-md">
+                {/* Simple Strava SVG */}
+                <svg viewBox="0 0 512 512" fill="currentColor" className="w-8 h-8">
+                  <path d="M141.56 220.16L214.36 74.32l73.12 145.84h88.64L214.36 -0.08l-161.84 322.96h88.64l40.4-102.72z m145.44 0l40.4 102.72 40.4-102.72h88.64l-129.04 291.92-129.04-291.92h88.64z"/>
+                </svg>
+              </div>
+              <div>
+                <p className="font-semibold text-[15px]">Strava</p>
+                <p className="text-sm text-muted-foreground">
+                  {stravaConnected ? "Đã kết nối" : "Chưa kết nối"}
+                </p>
+              </div>
+            </div>
+            {stravaConnected ? (
+              <Button variant="outline" size="sm" className="text-muted-foreground" onClick={() => router.push('/api/auth/strava/disconnect')}>
+                Tạm ngưng
+              </Button>
+            ) : (
+              <Button size="sm" className="bg-[#FC4C02] hover:bg-[#FC4C02]/90 text-white" onClick={() => router.push('/api/auth/strava')}>
+                Kết nối ngay
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     </div>

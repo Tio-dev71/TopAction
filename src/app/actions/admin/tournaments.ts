@@ -63,6 +63,9 @@ export async function createTournament(prevState: any, formData: FormData) {
     max_participants: raw.max_participants ? parseInt(raw.max_participants as string) : null,
     registration_open_at: fixTz(raw.registration_open_at),
     registration_close_at: fixTz(raw.registration_close_at),
+    valid_activity_types: formData.getAll('valid_activity_types').length ? formData.getAll('valid_activity_types') : ['Run'],
+    min_pace: raw.min_pace ? parseInt(raw.min_pace as string) : 240,
+    max_pace: raw.max_pace ? parseInt(raw.max_pace as string) : 900,
   })
 
   if (!parsed.success) {
@@ -108,6 +111,9 @@ export async function updateTournament(id: string, prevState: any, formData: For
     max_participants: raw.max_participants ? parseInt(raw.max_participants as string) : null,
     registration_open_at: fixTz(raw.registration_open_at),
     registration_close_at: fixTz(raw.registration_close_at),
+    valid_activity_types: formData.getAll('valid_activity_types').length ? formData.getAll('valid_activity_types') : ['Run'],
+    min_pace: raw.min_pace ? parseInt(raw.min_pace as string) : 240,
+    max_pace: raw.max_pace ? parseInt(raw.max_pace as string) : 900,
   })
 
   if (!parsed.success) {

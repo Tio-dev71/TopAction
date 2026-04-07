@@ -76,6 +76,9 @@ export interface DbTournament {
   created_by: string | null
   created_at: string
   updated_at: string
+  valid_activity_types: string[]
+  min_pace: number
+  max_pace: number
 }
 
 export interface DbTournamentCategory {
@@ -247,6 +250,50 @@ export interface DbMediaAsset {
   uploaded_by: string | null
   is_deleted: boolean
   created_at: string
+}
+
+export interface DbUserConnection {
+  id: string
+  user_id: string
+  provider: string
+  provider_athlete_id: string
+  access_token: string
+  refresh_token: string
+  expires_at: string
+  created_at: string
+  updated_at: string
+}
+
+export interface DbActivity {
+  id: string
+  user_id: string
+  provider: string
+  external_id: string
+  name: string
+  activity_type: string
+  distance: number
+  moving_time: number
+  elapsed_time: number
+  start_date: string
+  average_speed: number | null
+  average_heartrate: number | null
+  polyline: string | null
+  is_valid: boolean
+  invalid_reason: string | null
+  created_at: string
+}
+
+export interface DbTournamentResult {
+  id: string
+  tournament_id: string
+  category_id: string | null
+  user_id: string
+  total_distance: number
+  total_moving_time: number
+  activity_count: number
+  last_activity_at: string | null
+  rank: number | null
+  updated_at: string
 }
 
 // ============ Extended types with joins ============

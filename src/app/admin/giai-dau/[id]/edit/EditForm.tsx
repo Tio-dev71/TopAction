@@ -149,6 +149,36 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                   </div>
                 </div>
 
+                <div className="rounded-xl border border-border/60 bg-secondary/10 p-4 space-y-4">
+                  <h3 className="font-bold text-sm">Cấu hình Tracking (Strava/Garmin)</h3>
+                  <div className="space-y-2">
+                    <Label>Loại hoạt động hợp lệ</Label>
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="valid_activity_types" value="Run" defaultChecked={tournament.valid_activity_types?.includes('Run')} />
+                        Chạy bộ (Run)
+                      </label>
+                      <label className="flex items-center gap-2 text-sm">
+                        <input type="checkbox" name="valid_activity_types" value="Walk" defaultChecked={tournament.valid_activity_types?.includes('Walk')} />
+                        Đi bộ (Walk)
+                      </label>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="min_pace">Pace tối thiểu (giây/km) - Nhanh nhất</Label>
+                      <Input id="min_pace" name="min_pace" type="number" min="0" defaultValue={tournament.min_pace ?? 240} placeholder="Ví dụ: 240 (4:00/km)" />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="max_pace">Pace tối đa (giây/km) - Chậm nhất</Label>
+                      <Input id="max_pace" name="max_pace" type="number" min="0" defaultValue={tournament.max_pace ?? 900} placeholder="Ví dụ: 900 (15:00/km)" />
+                    </div>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    Gợi ý: 240 tương đương Pace 4:00. 900 tương đương Pace 15:00. Những hoạt động nằm ngoài khoảng pace này sẽ hiển thị là không hợp lệ (is_valid = false).
+                  </p>
+                </div>
+
                 <input type="hidden" name="status" value={tournament.status} />
 
                 {state?.error && (

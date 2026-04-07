@@ -31,6 +31,9 @@ export const tournamentSchema = z.object({
   status: z.enum(['draft', 'published', 'closed', 'archived']).default('draft'),
   is_featured: z.boolean().default(false),
   max_participants: z.number().int().positive().optional().nullable(),
+  valid_activity_types: z.array(z.string()).default(['Run']),
+  min_pace: z.number().int().nonnegative().default(240),
+  max_pace: z.number().int().nonnegative().default(900),
 })
 
 export const tournamentCategorySchema = z.object({

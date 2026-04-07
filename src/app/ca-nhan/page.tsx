@@ -33,11 +33,19 @@ export default async function ProfilePage() {
     club_name: ''
   }
 
+  // load connections
+  const { data: connections } = await supabase
+    .from('user_connections')
+    .select('provider')
+    .eq('user_id', user.id)
+
+  const stravaConnected = connections?.some((c: any) => c.provider === 'strava') || false;
+
   return (
     <main className="min-h-screen bg-secondary/30 flex flex-col">
       <Navbar />
       <div className="flex-1 w-full relative">
-        <ProfileForm profile={safeProfile} />
+        <ProfileForm profile={safeProfile} stravaConnected={stravaConnected} />
       </div>
     </main>
   )

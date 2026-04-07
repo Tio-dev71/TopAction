@@ -10,6 +10,7 @@ import {
   Trophy, CalendarDays, Users, ArrowLeft, MapPin,
   Dumbbell, Gauge, Map, Smartphone, CheckCircle,
   Heart, Building2, Handshake, Star, Clock, UserPlus,
+  Medal
 } from "lucide-react";
 import { CountdownTimer } from "./CountdownTimer";
 
@@ -84,6 +85,18 @@ export default async function TournamentDetailPage({
     ...d,
     donor_name: d.is_anonymous ? "Ẩn danh" : d.donor_name,
   }));
+
+  // Get Leaderboard
+  const { data: results } = await supabase
+    .from('tournament_results')
+    .select(`
+      *,
+      profiles:user_id(full_name, avatar_url, club_name),
+      category:category_id(name)
+    `)
+    .eq('tournament_id', tournament.id)
+    .order('total_distance', { ascending: false })
+    .limit(10);
 
   // Check registration window
   const now = new Date().toISOString();
@@ -241,7 +254,7 @@ export default async function TournamentDetailPage({
                 </section>
               )}
 
-              {/* Organizers */}
+            {/* Organizers */}
               {tournament.organizers && tournament.organizers.length > 0 && (
                 <section>
                   <h2 className="text-xl font-bold mb-4">Đơn vị tổ chức & Đồng hành</h2>
@@ -278,6 +291,71 @@ export default async function TournamentDetailPage({
                         </div>
                       );
                     })}
+                  </div>
+                </section>
+              )}
+
+              {/* Leaderboard Section */}
+              {results && results.length > 0 && (
+                <section>
+                  <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
+                    <Medal className="h-5 w-5 text-[#FC4C02]" />
+                    Bảng xếp hạng (Top 10)
+                  </h2>
+                  <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
+                    <div className="overflow-x-auto">
+                      <table className="w-full text-sm text-left">
+                        <thead className="bg-secondary/30 text-xs uppercase font-medium text-muted-foreground">
+                          <tr>
+                            <th className="px-4 py-3 min-w-[60px] text-center">Hạng</th>
+                            <th className="px-4 py-3 min-w-[200px]">Vận động viên</th>
+                            <th className="px-4 py-3 text-right">Quãng đường</th>
+                            <th className="px-4 py-3 text-right">Thời gian</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-border/40">
+                          {results.map((r: any, idx: number) => {
+                            const isTop3 = idx < 3;
+                            const colors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
+                            return (
+                              <tr key={r.id} className="hover:bg-muted/50 transition-colors">
+                                <td className="px-4 py-3 text-center font-bold">
+                                  {isTop3 ? (
+                                    <span className={colors[idx]}><Medal className="h-5 w-5 inline-block" /></span>
+                                  ) : (
+                                    idx + 1
+                                  )}
+                                </td>
+                                <td className="px-4 py-3">
+                                  <div className="flex items-center gap-3">
+                                    <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center shrink-0 overflow-hidden">
+                                      {r.profiles?.avatar_url ? (
+                                        <img src={r.profiles.avatar_url} className="h-full w-full object-cover" alt="" />
+                                      ) : (
+                                        <span className="font-bold text-xs">{r.profiles?.full_name?.charAt(0) || '?'}</span>
+                                      )}
+                                    </div>
+                                    <div>
+                                      <p className="font-medium text-foreground">{r.profiles?.full_name || 'VĐV Ẩn danh'}</p>
+                                      {r.category?.name && (
+                                        <p className="text-[10px] text-muted-foreground">{r.category.name}</p>
+                                      )}
+                                    </div>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3 text-right">
+                                  <span className="font-bold text-[#FC4C02]">{(r.total_distance / 1000).toFixed(2)}</span>
+                                  <span className="text-xs text-muted-foreground ml-1">km</span>
+                                </td>
+                                <td className="px-4 py-3 text-right text-muted-foreground">
+                                  {Math.floor(r.total_moving_time / 3600)}:{String(Math.floor((r.total_moving_time % 3600) / 60)).padStart(2, '0')}:{String(r.total_moving_time % 60).padStart(2, '0')}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    </div>
                   </div>
                 </section>
               )}

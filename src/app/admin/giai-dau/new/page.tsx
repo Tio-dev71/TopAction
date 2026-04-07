@@ -150,6 +150,33 @@ export default function NewTournamentPage() {
               <Input id="max_participants" name="max_participants" type="number" min="0" placeholder="Không giới hạn" />
             </div>
 
+            <div className="rounded-xl border border-border/60 bg-secondary/10 p-4 space-y-4">
+              <h3 className="font-bold text-sm">Cấu hình Tracking (Strava)</h3>
+              <div className="space-y-2">
+                <Label>Loại hoạt động hợp lệ</Label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" name="valid_activity_types" value="Run" defaultChecked />
+                    Chạy bộ (Run)
+                  </label>
+                  <label className="flex items-center gap-2 text-sm">
+                    <input type="checkbox" name="valid_activity_types" value="Walk" />
+                    Đi bộ (Walk)
+                  </label>
+                </div>
+              </div>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                <div className="space-y-2">
+                  <Label htmlFor="min_pace">Pace tối thiểu (giây/km)</Label>
+                  <Input id="min_pace" name="min_pace" type="number" min="0" defaultValue={240} />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="max_pace">Pace tối đa (giây/km)</Label>
+                  <Input id="max_pace" name="max_pace" type="number" min="0" defaultValue={900} />
+                </div>
+              </div>
+            </div>
+
             <input type="hidden" name="status" value="draft" />
             <input type="hidden" name="is_featured" value="false" />
 

@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     // 2. Extract our 10-character code using Regex
     // Example content: "NGUYEN VAN A chuyen tien 87AEBF49E3"
     const matchedCodes = content.match(/[A-Z0-9]{10}/ig)
-    
+
     if (!matchedCodes || matchedCodes.length === 0) {
       return NextResponse.json({ success: true, message: 'No valid code found in content' })
     }
