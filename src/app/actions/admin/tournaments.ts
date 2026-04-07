@@ -54,10 +54,15 @@ export async function createTournament(prevState: any, formData: FormData) {
   const supabase = await createClient()
 
   const raw = Object.fromEntries(formData)
+  
+  const fixTz = (val: any) => (typeof val === 'string' && val.length === 16 && val.includes('T')) ? `${val}:00+07:00` : (val || null)
+
   const parsed = tournamentSchema.safeParse({
     ...raw,
     is_featured: raw.is_featured === 'true',
     max_participants: raw.max_participants ? parseInt(raw.max_participants as string) : null,
+    registration_open_at: fixTz(raw.registration_open_at),
+    registration_close_at: fixTz(raw.registration_close_at),
   })
 
   if (!parsed.success) {
@@ -94,10 +99,15 @@ export async function updateTournament(id: string, prevState: any, formData: For
   const supabase = await createClient()
 
   const raw = Object.fromEntries(formData)
+  
+  const fixTz = (val: any) => (typeof val === 'string' && val.length === 16 && val.includes('T')) ? `${val}:00+07:00` : (val || null)
+
   const parsed = tournamentSchema.safeParse({
     ...raw,
     is_featured: raw.is_featured === 'true',
     max_participants: raw.max_participants ? parseInt(raw.max_participants as string) : null,
+    registration_open_at: fixTz(raw.registration_open_at),
+    registration_close_at: fixTz(raw.registration_close_at),
   })
 
   if (!parsed.success) {

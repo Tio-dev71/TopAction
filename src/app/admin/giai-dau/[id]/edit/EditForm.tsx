@@ -19,6 +19,15 @@ import {
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft, Plus, Trash2, Save } from 'lucide-react'
 
+function formatDatetimeLocal(iso: string | null) {
+  if (!iso) return '';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '';
+  // Move UTC to Vietnam time (+7) for display purposes
+  const vnTime = new Date(d.getTime() + 7 * 3600 * 1000);
+  return vnTime.toISOString().slice(0, 16);
+}
+
 export function TournamentEditForm({ tournament }: { tournament: any }) {
   const router = useRouter()
   const boundUpdate = updateTournament.bind(null, tournament.id)
@@ -103,11 +112,11 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="registration_open_at">Mở đăng ký</Label>
-                    <Input id="registration_open_at" name="registration_open_at" type="datetime-local" defaultValue={tournament.registration_open_at?.slice(0, 16) || ''} />
+                    <Input id="registration_open_at" name="registration_open_at" type="datetime-local" defaultValue={formatDatetimeLocal(tournament.registration_open_at)} />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="registration_close_at">Đóng đăng ký</Label>
-                    <Input id="registration_close_at" name="registration_close_at" type="datetime-local" defaultValue={tournament.registration_close_at?.slice(0, 16) || ''} />
+                    <Input id="registration_close_at" name="registration_close_at" type="datetime-local" defaultValue={formatDatetimeLocal(tournament.registration_close_at)} />
                   </div>
                 </div>
 
