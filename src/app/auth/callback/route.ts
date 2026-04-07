@@ -6,13 +6,26 @@ export async function GET(request: Request) {
   const code = searchParams.get('code')
   
   // if "next" is in param, use it as the redirect URL
-  const next = searchParams.get('next') ?? '/'
+  const next = searchParams.get('next') ?? '/ca-nhan'
 
   if (code) {
     const supabase = await createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
-    
     if (!error) {
+      // Sync the profile after a successful OAuth exchange
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        await supabase.from('profiles').upsert(
+          {
+             id: user.id,
+             email: user.email as string,
+             full_name: user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split('@')[0],
+             avatar_url: user.user_metadata?.avatar_url || '',
+          },
+          { onConflict: 'id', ignoreDuplicates: true }
+        )
+      }
+
       const forwardedHost = request.headers.get('x-forwarded-host') 
       const isLocalEnv = process.env.NODE_ENV === 'development'
       

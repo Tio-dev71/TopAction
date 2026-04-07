@@ -29,6 +29,28 @@ export async function updateSession(request: NextRequest) {
     },
   })
 
-  await supabase.auth.getUser()
+  // IMPORTANT: DO NOT run code between createServerClient and
+  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // issues with cross-site tracking.
+  const { data: { user } } = await supabase.auth.getUser()
+
+  // Define routes that require authentication
+  const protectedRoutes = ['/ca-nhan', '/thanh-toan', '/dang-ky-giai']
+  const isProtectedRoute = protectedRoutes.some(route => request.nextUrl.pathname.startsWith(route))
+
+  if (isProtectedRoute && !user) {
+    const redirectUrl = new URL('/dang-nhap', request.url)
+    redirectUrl.searchParams.set('redirect', request.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
+  }
+
+  // Redirect away from auth pages if already logged in
+  const authRoutes = ['/dang-nhap', '/dang-ky', '/quen-mat-khau']
+  const isAuthRoute = authRoutes.some(route => request.nextUrl.pathname.startsWith(route))
+  
+  if (isAuthRoute && user) {
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
   return supabaseResponse
 }

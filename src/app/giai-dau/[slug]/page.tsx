@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Input } from "@/components/ui/input";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Navbar } from "@/components/layout/Navbar";
 import {
   getTournamentBySlug,
   tournamentRules,
@@ -88,38 +89,7 @@ function useCountdown(target: string) {
   };
 }
 
-/* ────────────── Navbar (compact) ────────────── */
-
-function Navbar() {
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/60 bg-background/80 backdrop-blur-xl">
-      <div className="mx-auto flex h-14 max-w-7xl items-center gap-4 px-4 sm:px-6 lg:px-8">
-        <Link
-          href="/"
-          className="flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          <span className="hidden sm:inline">Quay lại</span>
-        </Link>
-        <div className="flex-1" />
-        <Link href="/" className="flex items-center gap-2">
-          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-sm">
-            <Trophy className="h-4 w-4" />
-          </div>
-          <span className="text-lg font-bold tracking-tight">
-            <span className="text-primary">A</span>TUAN
-          </span>
-        </Link>
-        <div className="flex-1" />
-        <Link href="/dang-nhap" passHref>
-          <Button variant="outline" size="sm" className="gap-2">
-            Đăng nhập
-          </Button>
-        </Link>
-      </div>
-    </header>
-  );
-}
+/* ────────────── local Navbar removed ────────────── */
 
 /* ────────────── Hero ────────────── */
 
