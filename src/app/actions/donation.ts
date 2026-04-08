@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { donationSchema } from '@/lib/validations/schemas'
 import { getPaymentProvider } from '@/lib/payments/create-payment'
 import { createAuditLog } from '@/lib/audit'
@@ -13,6 +14,9 @@ export async function createDonation(prevState: any, formData: FormData) {
   
   // Auth is optional for donations (guests can donate)
   const { data: { user } } = await supabase.auth.getUser()
+
+  // Use admin client for bypass RLS on bypass insert/select
+  const adminSupabase = await createAdminClient()
 
   // Parse and validate
   const raw = Object.fromEntries(formData)
@@ -44,7 +48,7 @@ export async function createDonation(prevState: any, formData: FormData) {
   }
 
   // Create donation
-  const { data: donation, error } = await supabase
+  const { data: donation, error } = await adminSupabase
     .from('donations')
     .insert({
       tournament_id: data.tournament_id,
@@ -82,7 +86,7 @@ export async function createDonation(prevState: any, formData: FormData) {
     const baseUrl = `${protocol}://${host}`
 
     // Create payment transaction
-    await supabase.from('payment_transactions').insert({
+    await adminSupabase.from('payment_transactions').insert({
       transaction_type: 'donation',
       donation_id: donation.id,
       user_id: user?.id || null,

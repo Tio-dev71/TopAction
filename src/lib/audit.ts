@@ -1,6 +1,7 @@
 'use server'
 
 import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/admin'
 import { headers } from 'next/headers'
 
 interface AuditLogEntry {
@@ -17,6 +18,9 @@ export async function createAuditLog(entry: AuditLogEntry) {
   try {
     const supabase = await createClient()
     const { data: { user } } = await supabase.auth.getUser()
+    
+    // Use admin client for the actual logging to bypass RLS
+    const adminSupabase = await createAdminClient()
     
     const headersList = await headers()
     const ip = headersList.get('x-forwarded-for') || headersList.get('x-real-ip') || null
@@ -36,7 +40,7 @@ export async function createAuditLog(entry: AuditLogEntry) {
       }
     }
 
-    await supabase.from('audit_logs').insert({
+    await adminSupabase.from('audit_logs').insert({
       actor_user_id: user?.id || null,
       actor_role: actorRole,
       action: entry.action,
