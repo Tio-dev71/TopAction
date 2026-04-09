@@ -18,6 +18,7 @@ import {
 } from '@/app/actions/admin/tournaments'
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft, Plus, Trash2, Save } from 'lucide-react'
+import { ImageUploadField } from '@/components/admin/ImageUploadField'
 
 function formatDatetimeLocal(iso: string | null) {
   if (!iso) return '';
@@ -125,13 +126,12 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                   <Input id="location" name="location" defaultValue={tournament.location || ''} />
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="cover_image">URL ảnh bìa</Label>
-                  <Input id="cover_image" name="cover_image" defaultValue={tournament.cover_image || ''} />
-                  {tournament.cover_image && (
-                    <img src={tournament.cover_image} alt="" className="mt-2 h-32 w-auto rounded-lg object-cover" />
-                  )}
-                </div>
+                <ImageUploadField
+                  name="cover_image"
+                  label="Ảnh bìa"
+                  defaultValue={tournament.cover_image || ''}
+                  folder="tournaments"
+                />
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
@@ -345,7 +345,12 @@ function OrganizersEditor({ tournamentId, organizers }: { tournamentId: string; 
               <option value="sponsor">Tài trợ</option>
               <option value="partner">Đồng hành</option>
             </select>
-            <Input name="logo_url" placeholder="Logo URL" />
+            <ImageUploadField
+              name="logo_url"
+              label="Logo"
+              folder="organizers"
+              showPreview={true}
+            />
           </div>
           <input type="hidden" name="sort_order" value={organizers.length} />
           <Button type="submit" size="sm" disabled={pending} className="gap-1.5">

@@ -12,6 +12,7 @@ import { createPost } from '@/app/actions/admin/posts'
 import { generateSlug } from '@/lib/validations/schemas'
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft } from 'lucide-react'
+import { ImageUploadField } from '@/components/admin/ImageUploadField'
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -50,10 +51,11 @@ export default function NewPostPage() {
               <Label htmlFor="content">Nội dung</Label>
               <Textarea id="content" name="content" rows={12} placeholder="Nội dung bài viết (Markdown)" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="cover_image">Ảnh bìa URL</Label>
-              <Input id="cover_image" name="cover_image" />
-            </div>
+            <ImageUploadField
+              name="cover_image"
+              label="Ảnh bìa"
+              folder="posts"
+            />
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>
               <select name="status" className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">

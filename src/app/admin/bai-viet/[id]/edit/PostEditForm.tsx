@@ -11,6 +11,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { updatePost } from '@/app/actions/admin/posts'
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft, Save } from 'lucide-react'
+import { ImageUploadField } from '@/components/admin/ImageUploadField'
 
 export function PostEditForm({ post }: { post: any }) {
   const router = useRouter()
@@ -35,7 +36,12 @@ export function PostEditForm({ post }: { post: any }) {
             <div className="space-y-2"><Label htmlFor="slug">Slug *</Label><Input id="slug" name="slug" defaultValue={post.slug} required /></div>
             <div className="space-y-2"><Label htmlFor="excerpt">Tóm tắt</Label><Textarea id="excerpt" name="excerpt" rows={2} defaultValue={post.excerpt || ''} /></div>
             <div className="space-y-2"><Label htmlFor="content">Nội dung</Label><Textarea id="content" name="content" rows={12} defaultValue={post.content || ''} /></div>
-            <div className="space-y-2"><Label htmlFor="cover_image">Ảnh bìa URL</Label><Input id="cover_image" name="cover_image" defaultValue={post.cover_image || ''} /></div>
+            <ImageUploadField
+              name="cover_image"
+              label="Ảnh bìa"
+              defaultValue={post.cover_image || ''}
+              folder="posts"
+            />
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>
               <select name="status" defaultValue={post.status} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">

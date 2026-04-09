@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
+import { ImageUploadField } from '@/components/admin/ImageUploadField'
 
 export default function NewTournamentPage() {
   const router = useRouter()
@@ -140,10 +141,11 @@ export default function NewTournamentPage() {
               <Input id="location" name="location" placeholder="Địa điểm thi đấu" />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="cover_image">URL ảnh bìa</Label>
-              <Input id="cover_image" name="cover_image" placeholder="https://..." />
-            </div>
+            <ImageUploadField
+              name="cover_image"
+              label="Ảnh bìa"
+              folder="tournaments"
+            />
 
             <div className="space-y-2">
               <Label htmlFor="max_participants">Số lượng tối đa</Label>
