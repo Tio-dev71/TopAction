@@ -196,6 +196,20 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                   </p>
                 </div>
 
+                <div className="rounded-xl border border-border/60 bg-secondary/10 p-4 space-y-4">
+                  <h3 className="font-bold text-sm">Cấu hình Thiện nguyện / Quỹ</h3>
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="space-y-2">
+                      <Label htmlFor="donation_goal">Mục tiêu quyên góp (VND)</Label>
+                      <Input id="donation_goal" name="donation_goal" type="number" min="0" defaultValue={tournament.donation_goal ?? ''} placeholder="Ví dụ: 500000000" />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="donation_description">Nội dung giải thích (text nhỏ bên dưới thanh tiến trình)</Label>
+                    <Textarea id="donation_description" name="donation_description" rows={2} defaultValue={tournament.donation_description || ''} placeholder="Mỗi lượt đăng ký là 100.000 VND gửi đến Quỹ..." />
+                  </div>
+                </div>
+
                 <input type="hidden" name="status" value={tournament.status} />
 
                 {state?.error && (
