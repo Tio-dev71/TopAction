@@ -17,6 +17,7 @@ import { CountdownTimer } from "./CountdownTimer";
 import { CharityProgress } from "./CharityProgress";
 import { FacebookEmbed } from "./FacebookEmbed";
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
+import { CollapsibleDescription } from "./CollapsibleDescription";
 
 /* ────────────── helpers ────────────── */
 
@@ -307,15 +308,7 @@ export default async function TournamentDetailPage({
                 )}
 
                 {/* ─── Description ─── */}
-                {tournament.description && (
-                  <div className="td-description">
-                    <h3 className="td-section-title">Giới thiệu giải đấu</h3>
-                    <div 
-                      className="td-description__content mt-4 space-y-4"
-                      dangerouslySetInnerHTML={{ __html: tournament.description.replace(/\n/g, '<br/>') }}
-                    />
-                  </div>
-                )}
+                <CollapsibleDescription description={tournament.description} />
 
                 {/* ─── Leaderboard ─── */}
                 {results && results.length > 0 && (
