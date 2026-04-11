@@ -63,13 +63,14 @@ export function LiveStatsBanner({
   totalParticipants,
   recentActivities = [],
 }: LiveStatsBannerProps) {
-  // Use up to 5 recent activities, mapped to our predefined layout positions
+  // Use up to 5 recent activities, mapped to our predefined layout positions.
   const floatingStats = recentActivities.slice(0, 5).map((activity, i) => ({
     ...activity,
     ...floatingLayout[i],
   }));
+
   return (
-    <section className="relative overflow-hidden border-y border-border/60 bg-slate-900 mx-4 sm:mx-6 lg:mx-8 rounded-2xl mb-16 sm:mb-24 mt-10">
+    <section className="relative w-full overflow-hidden rounded-2xl border border-border/60 bg-slate-900 shadow-md">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-60"
@@ -80,10 +81,10 @@ export function LiveStatsBanner({
       />
 
       {/* Overlay gradient for readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-slate-900/10 to-slate-900/30" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-slate-900/50" />
 
       {/* Main Content Area */}
-      <div className="relative mx-auto flex min-h-[400px] max-w-7xl items-center justify-center px-4 py-20 sm:px-6 lg:px-8">
+      <div className="relative mx-auto flex min-h-[300px] w-full flex-col items-center justify-center px-4 py-10 sm:px-6">
         {/* Floating Avatars */}
         <div className="pointer-events-none absolute inset-0 overflow-hidden">
           {floatingStats.map((stat, i) => (
@@ -125,20 +126,20 @@ export function LiveStatsBanner({
         </div>
 
         {/* Center Stats Grid */}
-        <div className="relative z-10 grid w-full max-w-5xl grid-cols-1 gap-12 md:grid-cols-3 md:gap-6 lg:gap-8">
+        <div className="relative z-10 grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 mt-4">
           
           {/* Stat 1 */}
           <div className="flex flex-col items-center">
-            <h3 className="mb-4 text-center text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] sm:text-[22px]">
+            <h3 className="mb-3 text-center text-base font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-lg">
               VĐV tập luyện trong ngày
             </h3>
-            <div className="flex w-full max-w-[280px] items-center justify-center gap-3 rounded-2xl bg-[#00bfb3] px-5 py-4 text-white shadow-2xl transition-transform duration-300 hover:scale-105 sm:px-6">
-              <RunIcon className="h-8 w-8 opacity-90 sm:h-9 sm:w-9" />
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <div className="flex w-full max-w-[240px] items-center justify-center gap-2 rounded-xl bg-[#0eb2b2] px-4 py-3 text-white shadow-xl transition-transform duration-300 hover:scale-105">
+              <RunIcon className="h-7 w-7 opacity-90" />
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-extrabold tracking-tight sm:text-3xl">
                   {todayParticipants.toLocaleString("vi-VN")}
                 </span>
-                <span className="text-[16px] font-bold uppercase sm:text-xl">
+                <span className="text-sm font-bold uppercase sm:text-base">
                   VĐV
                 </span>
               </div>
@@ -147,16 +148,16 @@ export function LiveStatsBanner({
 
           {/* Stat 2 */}
           <div className="flex flex-col items-center">
-            <h3 className="mb-4 text-center text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] sm:text-[22px]">
+            <h3 className="mb-3 text-center text-base font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-lg">
               Tổng quãng đường
             </h3>
-            <div className="flex w-full max-w-[280px] items-center justify-center gap-3 rounded-2xl bg-[#00bfb3] px-5 py-4 text-white shadow-2xl transition-transform duration-300 hover:scale-105 sm:px-6">
-              <RoadIcon className="h-8 w-8 opacity-90 sm:h-9 sm:w-9" />
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <div className="flex w-full max-w-[240px] items-center justify-center gap-2 rounded-xl bg-[#0eb2b2] px-4 py-3 text-white shadow-xl transition-transform duration-300 hover:scale-105">
+              <RoadIcon className="h-7 w-7 opacity-90" />
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-extrabold tracking-tight sm:text-3xl">
                   {totalDistance.toLocaleString("vi-VN", { maximumFractionDigits: 1 })}
                 </span>
-                <span className="text-[16px] font-bold uppercase sm:text-xl">
+                <span className="text-sm font-bold uppercase sm:text-base">
                   KM
                 </span>
               </div>
@@ -165,16 +166,16 @@ export function LiveStatsBanner({
 
           {/* Stat 3 */}
           <div className="flex flex-col items-center">
-            <h3 className="mb-4 text-center text-lg font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.6)] sm:text-[22px]">
+            <h3 className="mb-3 text-center text-base font-bold text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)] sm:text-lg">
               Tổng số VĐV
             </h3>
-            <div className="flex w-full max-w-[280px] items-center justify-center gap-3 rounded-2xl bg-[#00bfb3] px-5 py-4 text-white shadow-2xl transition-transform duration-300 hover:scale-105 sm:px-6">
-              <RunIcon className="h-8 w-8 opacity-90 sm:h-9 sm:w-9" />
-              <div className="flex items-baseline gap-2">
-                <span className="text-3xl font-extrabold tracking-tight sm:text-4xl">
+            <div className="flex w-full max-w-[240px] items-center justify-center gap-2 rounded-xl bg-[#0eb2b2] px-4 py-3 text-white shadow-xl transition-transform duration-300 hover:scale-105">
+              <RunIcon className="h-7 w-7 opacity-90" />
+              <div className="flex items-baseline gap-1.5">
+                <span className="text-2xl font-extrabold tracking-tight sm:text-3xl">
                   {totalParticipants.toLocaleString("vi-VN")}
                 </span>
-                <span className="text-[16px] font-bold uppercase sm:text-xl">
+                <span className="text-sm font-bold uppercase sm:text-base">
                   VĐV
                 </span>
               </div>

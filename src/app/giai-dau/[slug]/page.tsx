@@ -228,14 +228,6 @@ export default async function TournamentDetailPage({
           </div>
         </section>
 
-        {/* ─── Live Stats Banner ─── */}
-        <LiveStatsBanner
-          todayParticipants={todayParticipantsCount}
-          totalDistance={totalDistanceBanner}
-          totalParticipants={tournament.participant_count || 0}
-          recentActivities={recentActivities}
-        />
-
         {/* ─── Main Content Card ─── */}
         <div className="td-body">
           <div className="td-body__grid">
@@ -307,6 +299,16 @@ export default async function TournamentDetailPage({
                     </FadeInStagger>
                   </div>
                 )}
+
+                {/* ─── Live Stats Banner ─── */}
+                <div className="my-8">
+                  <LiveStatsBanner
+                    todayParticipants={todayParticipantsCount}
+                    totalDistance={totalDistanceBanner}
+                    totalParticipants={tournament.participant_count || 0}
+                    recentActivities={recentActivities.length > 0 ? recentActivities : []}
+                  />
+                </div>
 
                 {/* ─── Categories ─── */}
                 {tournament.categories && tournament.categories.length > 0 && (
