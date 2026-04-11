@@ -37,55 +37,37 @@ const RoadIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-const floatingStats = [
-  {
-    name: "PCCC Lê Tấn Đạt",
-    distance: "4,14",
-    top: "15%",
-    left: "5%",
-    size: "scale-100",
-    delay: 0,
-    mobileLeft: "-10%",
-  },
-  {
-    name: "PCHM Phạm Hồng Vũ",
-    distance: "1,90",
-    top: "8%",
-    left: "35%",
-    size: "scale-100",
-    delay: 1,
-    mobileLeft: "30%",
-  },
-  {
-    name: "PCBC Ngô Văn Rõ",
-    distance: "2",
-    top: "18%",
-    left: "75%",
-    size: "scale-75",
-    delay: 2,
-    hideOnMobile: true,
-  },
-  {
-    name: "PCCL Lê Ngọc Huyền",
-    distance: "3,33",
-    top: "78%",
-    left: "40%",
-    size: "scale-100",
-    delay: 1.5,
-    mobileLeft: "10%",
-  },
-  {
-    name: "Nguyễn Minh Long",
-    distance: "2,50",
-    top: "82%",
-    left: "75%",
-    size: "scale-75",
-    delay: 0.5,
-    hideOnMobile: true,
-  },
+export interface LiveActivity {
+  name: string;
+  distance: number;
+}
+
+interface LiveStatsBannerProps {
+  todayParticipants: number;
+  totalDistance: number;
+  totalParticipants: number;
+  recentActivities?: LiveActivity[];
+}
+
+const floatingLayout = [
+  { top: "15%", left: "5%", size: "scale-100", delay: 0 },
+  { top: "8%", left: "35%", size: "scale-100", delay: 1 },
+  { top: "18%", left: "75%", size: "scale-75", delay: 2, hideOnMobile: true },
+  { top: "78%", left: "40%", size: "scale-100", delay: 1.5 },
+  { top: "82%", left: "75%", size: "scale-75", delay: 0.5, hideOnMobile: true },
 ];
 
-export function LiveStatsBanner() {
+export function LiveStatsBanner({
+  todayParticipants,
+  totalDistance,
+  totalParticipants,
+  recentActivities = [],
+}: LiveStatsBannerProps) {
+  // Use up to 5 recent activities, mapped to our predefined layout positions
+  const floatingStats = recentActivities.slice(0, 5).map((activity, i) => ({
+    ...activity,
+    ...floatingLayout[i],
+  }));
   return (
     <section className="relative overflow-hidden border-y border-border/60 bg-slate-900 mx-4 sm:mx-6 lg:mx-8 rounded-2xl mb-16 sm:mb-24 mt-10">
       {/* Background Image */}
@@ -135,7 +117,7 @@ export function LiveStatsBanner() {
                   {stat.name}
                 </span>
                 <span className="mt-[1px] text-[11px] font-medium text-slate-500">
-                  Vừa chạy được {stat.distance} km
+                  Vừa chạy được {stat.distance.toLocaleString("vi-VN", { maximumFractionDigits: 2 })} km
                 </span>
               </div>
             </motion.div>
@@ -154,7 +136,7 @@ export function LiveStatsBanner() {
               <RunIcon className="h-8 w-8 opacity-90 sm:h-9 sm:w-9" />
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                  295
+                  {todayParticipants.toLocaleString("vi-VN")}
                 </span>
                 <span className="text-[16px] font-bold uppercase sm:text-xl">
                   VĐV
@@ -172,7 +154,7 @@ export function LiveStatsBanner() {
               <RoadIcon className="h-8 w-8 opacity-90 sm:h-9 sm:w-9" />
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                  32.385
+                  {totalDistance.toLocaleString("vi-VN", { maximumFractionDigits: 1 })}
                 </span>
                 <span className="text-[16px] font-bold uppercase sm:text-xl">
                   KM
@@ -190,7 +172,7 @@ export function LiveStatsBanner() {
               <RunIcon className="h-8 w-8 opacity-90 sm:h-9 sm:w-9" />
               <div className="flex items-baseline gap-2">
                 <span className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-                  1.275
+                  {totalParticipants.toLocaleString("vi-VN")}
                 </span>
                 <span className="text-[16px] font-bold uppercase sm:text-xl">
                   VĐV

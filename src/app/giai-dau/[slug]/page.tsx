@@ -18,6 +18,7 @@ import { CharityProgress } from "./CharityProgress";
 import { FacebookEmbed } from "./FacebookEmbed";
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
 import { CollapsibleDescription } from "./CollapsibleDescription";
+import { LiveStatsBanner } from "@/components/home/LiveStatsBanner";
 
 /* ────────────── helpers ────────────── */
 
@@ -112,6 +113,32 @@ export default async function TournamentDetailPage({
     .order('total_distance', { ascending: false })
     .limit(10);
 
+  // Get Stats for Banner
+  const { data: allResults } = await supabase
+    .from('tournament_results')
+    .select('total_distance, updated_at, profiles:user_id(full_name)')
+    .eq('tournament_id', tournament.id)
+    .order('updated_at', { ascending: false });
+
+  let totalDistanceBanner = 0;
+  let todayParticipantsCount = 0;
+  const recentActivities = [];
+
+  if (allResults) {
+    const today = new Date().toISOString().split('T')[0];
+    allResults.forEach((r: any) => {
+      totalDistanceBanner += (r.total_distance || 0) / 1000;
+      if (r.updated_at && r.updated_at.startsWith(today)) {
+        todayParticipantsCount++;
+      }
+    });
+
+    recentActivities.push(...allResults.slice(0, 5).map((r: any) => ({
+      name: r.profiles?.full_name || 'VĐV Ẩn danh',
+      distance: (r.total_distance || 0) / 1000,
+    })));
+  }
+
   // Check registration window
   const now = new Date().toISOString();
   const regOpen = !tournament.registration_close_at || now < tournament.registration_close_at;
@@ -200,6 +227,14 @@ export default async function TournamentDetailPage({
             </div>
           </div>
         </section>
+
+        {/* ─── Live Stats Banner ─── */}
+        <LiveStatsBanner
+          todayParticipants={todayParticipantsCount}
+          totalDistance={totalDistanceBanner}
+          totalParticipants={tournament.participant_count || 0}
+          recentActivities={recentActivities}
+        />
 
         {/* ─── Main Content Card ─── */}
         <div className="td-body">
