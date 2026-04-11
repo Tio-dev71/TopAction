@@ -19,6 +19,7 @@ import {
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft, Plus, Trash2, Save } from 'lucide-react'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
+import { TextareaWithImageUpload } from '@/components/admin/TextareaWithImageUpload'
 
 function formatDatetimeLocal(iso: string | null) {
   if (!iso) return '';
@@ -96,7 +97,12 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
 
                 <div className="space-y-2">
                   <Label htmlFor="description">Mô tả chi tiết</Label>
-                  <Textarea id="description" name="description" rows={10} defaultValue={tournament.description || ''} />
+                  <TextareaWithImageUpload 
+                    id="description" 
+                    name="description" 
+                    defaultValue={tournament.description || ''} 
+                    folder="tournaments"
+                  />
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -132,6 +138,17 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                   defaultValue={tournament.cover_image || ''}
                   folder="tournaments"
                 />
+
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="facebook_page_name">Tên Fanpage Facebook</Label>
+                    <Input id="facebook_page_name" name="facebook_page_name" defaultValue={tournament.facebook_page_name || ''} placeholder="VD: TOPACTION" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="facebook_page_url">Link Fanpage Facebook</Label>
+                    <Input id="facebook_page_url" name="facebook_page_url" defaultValue={tournament.facebook_page_url || ''} placeholder="https://facebook.com/..." />
+                  </div>
+                </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">

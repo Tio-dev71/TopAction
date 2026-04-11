@@ -310,9 +310,10 @@ export default async function TournamentDetailPage({
                 {tournament.description && (
                   <div className="td-description">
                     <h3 className="td-section-title">Giới thiệu giải đấu</h3>
-                    <div className="td-description__content">
-                      {tournament.description}
-                    </div>
+                    <div 
+                      className="td-description__content mt-4 space-y-4"
+                      dangerouslySetInnerHTML={{ __html: tournament.description.replace(/\n/g, '<br/>') }}
+                    />
                   </div>
                 )}
 

@@ -34,6 +34,8 @@ export const tournamentSchema = z.object({
   valid_activity_types: z.array(z.string()).default(['Run']),
   min_pace: z.number().int().nonnegative().default(240),
   max_pace: z.number().int().nonnegative().default(900),
+  facebook_page_url: z.string().optional().or(z.literal('')),
+  facebook_page_name: z.string().optional().or(z.literal('')),
 })
 
 export const tournamentCategorySchema = z.object({

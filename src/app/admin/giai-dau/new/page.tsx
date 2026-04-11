@@ -14,6 +14,7 @@ import { Loader2, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
+import { TextareaWithImageUpload } from '@/components/admin/TextareaWithImageUpload'
 
 export default function NewTournamentPage() {
   const router = useRouter()
@@ -106,11 +107,11 @@ export default function NewTournamentPage() {
 
             <div className="space-y-2">
               <Label htmlFor="description">Mô tả chi tiết</Label>
-              <Textarea
+              <TextareaWithImageUpload
                 id="description"
                 name="description"
-                rows={8}
-                placeholder="Mô tả chi tiết (hỗ trợ Markdown)"
+                placeholder="Mô tả chi tiết (hỗ trợ nhập văn bản và chèn ảnh)"
+                folder="tournaments"
               />
             </div>
 
@@ -146,6 +147,17 @@ export default function NewTournamentPage() {
               label="Ảnh bìa"
               folder="tournaments"
             />
+
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="space-y-2">
+                <Label htmlFor="facebook_page_name">Tên Fanpage Facebook</Label>
+                <Input id="facebook_page_name" name="facebook_page_name" placeholder="VD: TOPACTION" />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="facebook_page_url">Link Fanpage Facebook</Label>
+                <Input id="facebook_page_url" name="facebook_page_url" placeholder="https://facebook.com/..." />
+              </div>
+            </div>
 
             <div className="space-y-2">
               <Label htmlFor="max_participants">Số lượng tối đa</Label>
