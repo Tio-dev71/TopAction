@@ -11,7 +11,7 @@ import {
   Trophy, CalendarDays, Users, ArrowLeft, MapPin,
   Dumbbell, Gauge, Map, Smartphone, CheckCircle,
   Heart, Building2, Handshake, Star, Clock, UserPlus,
-  Medal, Share2, Mountain
+  Medal, Share2, Mountain, Activity, Footprints
 } from "lucide-react";
 import { CountdownTimer } from "./CountdownTimer";
 import { CharityProgress } from "./CharityProgress";
@@ -33,7 +33,9 @@ function fmtMoney(n: number) {
 }
 
 const ruleIcons: Record<string, React.ReactNode> = {
-  running: <Dumbbell className="h-7 w-7" />,
+  running: <Footprints className="h-7 w-7" />,
+  activity: <Activity className="h-7 w-7" />,
+  dumbbell: <Dumbbell className="h-7 w-7" />,
   gauge: <Gauge className="h-7 w-7" />,
   map: <Map className="h-7 w-7" />,
   smartphone: <Smartphone className="h-7 w-7" />,
@@ -155,10 +157,6 @@ export default async function TournamentDetailPage({
               <FadeIn delay={0.2} className="td-hero__info">
                 {tournament.category && (
                   <Badge variant="secondary" className="td-hero__badge">{tournament.category}</Badge>
-                )}
-                <h1 className="td-hero__title">{tournament.title}</h1>
-                {tournament.short_description && (
-                  <p className="td-hero__subtitle">{tournament.short_description}</p>
                 )}
               </FadeIn>
 

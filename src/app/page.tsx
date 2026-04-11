@@ -17,6 +17,7 @@ import {
   Medal,
 } from "lucide-react";
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
+import { LiveStatsBanner } from "@/components/home/LiveStatsBanner";
 
 /* ─────────────────── helpers ─────────────────── */
 
@@ -362,6 +363,7 @@ export default async function Home() {
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <LiveStatsBanner />
         <HowItWorksSection />
         <TournamentsSection tournaments={tournaments || []} />
       </main>
