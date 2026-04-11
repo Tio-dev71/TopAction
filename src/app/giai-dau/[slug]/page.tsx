@@ -1,3 +1,4 @@
+import "./tournament-detail.css";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
@@ -10,9 +11,12 @@ import {
   Trophy, CalendarDays, Users, ArrowLeft, MapPin,
   Dumbbell, Gauge, Map, Smartphone, CheckCircle,
   Heart, Building2, Handshake, Star, Clock, UserPlus,
-  Medal
+  Medal, Share2, Mountain
 } from "lucide-react";
 import { CountdownTimer } from "./CountdownTimer";
+import { CharityProgress } from "./CharityProgress";
+import { FacebookEmbed } from "./FacebookEmbed";
+import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
 
 /* ────────────── helpers ────────────── */
 
@@ -23,17 +27,22 @@ function fmtDate(iso: string | null) {
   });
 }
 
+function fmtMoney(n: number) {
+  return n.toLocaleString("vi-VN");
+}
+
 const ruleIcons: Record<string, React.ReactNode> = {
-  running: <Dumbbell className="h-6 w-6" />,
-  gauge: <Gauge className="h-6 w-6" />,
-  map: <Map className="h-6 w-6" />,
-  smartphone: <Smartphone className="h-6 w-6" />,
-  "check-circle": <CheckCircle className="h-6 w-6" />,
-  sport: <Trophy className="h-6 w-6" />,
-  pace: <Gauge className="h-6 w-6" />,
+  running: <Dumbbell className="h-7 w-7" />,
+  gauge: <Gauge className="h-7 w-7" />,
+  map: <Map className="h-7 w-7" />,
+  smartphone: <Smartphone className="h-7 w-7" />,
+  "check-circle": <CheckCircle className="h-7 w-7" />,
+  sport: <Trophy className="h-7 w-7" />,
+  pace: <Gauge className="h-7 w-7" />,
+  mountain: <Mountain className="h-7 w-7" />,
 };
 
-/* ────────────── page ────────────── */
+/* ────────────── metadata ────────────── */
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
@@ -44,6 +53,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     description: t?.short_description || 'Thông tin giải đấu thể thao trực tuyến',
   };
 }
+
+/* ────────────── page ────────────── */
 
 export default async function TournamentDetailPage({
   params,
@@ -103,251 +114,262 @@ export default async function TournamentDetailPage({
   const regOpen = !tournament.registration_close_at || now < tournament.registration_close_at;
   const regNotYetOpen = tournament.registration_open_at && now < tournament.registration_open_at;
 
+  // Organize sponsors by type
+  const organizers = (tournament.organizers || []).filter((o: any) => o.type === 'organizer');
+  const sponsors = (tournament.organizers || []).filter((o: any) => o.type === 'sponsor');
+  const partners = (tournament.organizers || []).filter((o: any) => o.type === 'partner');
+
+  // Registration fee display
+  const minPrice = tournament.categories?.length > 0
+    ? Math.min(...tournament.categories.map((c: any) => c.price || 0))
+    : 0;
+  const feeDisplay = tournament.registration_fee_description
+    || (minPrice > 0 ? `${fmtMoney(minPrice)} VND` : 'Miễn phí');
+
   return (
     <>
       <Navbar />
-      <main className="flex-1">
-        {/* Hero Banner */}
-        <section className="relative overflow-hidden">
-          <div className="absolute inset-0 -z-10">
+      <main className="tournament-detail">
+        {/* ─── Hero Banner ─── */}
+        <section className="td-hero">
+          <div className="td-hero__bg">
             {tournament.cover_image ? (
-              <img src={tournament.cover_image} alt="" className="h-full w-full object-cover" />
+              <img src={tournament.cover_image} alt="" className="td-hero__bg-img" />
             ) : (
-              <div className="h-full w-full bg-gradient-to-br from-primary/20 to-accent/20" />
+              <div className="td-hero__bg-gradient" />
             )}
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/40" />
+            <div className="td-hero__overlay" />
           </div>
 
-          <div className="mx-auto max-w-7xl px-4 pb-12 pt-24 sm:px-6 sm:pt-32 lg:px-8">
-            <Link href="/" className="mb-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
-              <ArrowLeft className="h-3.5 w-3.5" />
-              Trang chủ
-            </Link>
+          <div className="td-hero__content">
+            <FadeIn delay={0.1}>
+              <Link href="/" className="td-hero__back">
+                <ArrowLeft className="h-3.5 w-3.5" />
+                Trang chủ
+              </Link>
+            </FadeIn>
 
-            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
-              <div className="max-w-2xl">
+            <div className="td-hero__layout">
+              {/* Left - Title info */}
+              <FadeIn delay={0.2} className="td-hero__info">
                 {tournament.category && (
-                  <Badge variant="secondary" className="mb-3">{tournament.category}</Badge>
+                  <Badge variant="secondary" className="td-hero__badge">{tournament.category}</Badge>
                 )}
-                <h1 className="text-3xl font-extrabold tracking-tight sm:text-4xl lg:text-5xl">
-                  {tournament.title}
-                </h1>
+                <h1 className="td-hero__title">{tournament.title}</h1>
                 {tournament.short_description && (
-                  <p className="mt-3 text-lg text-muted-foreground">{tournament.short_description}</p>
+                  <p className="td-hero__subtitle">{tournament.short_description}</p>
                 )}
+              </FadeIn>
 
-                <div className="mt-6 flex flex-wrap gap-4 text-sm text-muted-foreground">
-                  <div className="flex items-center gap-2">
-                    <CalendarDays className="h-4 w-4 text-primary" />
-                    {fmtDate(tournament.start_date)} – {fmtDate(tournament.end_date)}
-                  </div>
-                  {tournament.location && (
-                    <div className="flex items-center gap-2">
-                      <MapPin className="h-4 w-4 text-primary" />
-                      {tournament.location}
+              {/* Right - Sponsors on banner */}
+              {(sponsors.length > 0 || partners.length > 0) && (
+                <FadeIn delay={0.3} className="td-hero__sponsors">
+                  {sponsors.length > 0 && (
+                    <div className="td-hero__sponsor-group">
+                      <p className="td-hero__sponsor-label">Đơn vị tài trợ</p>
+                      <div className="td-hero__sponsor-logos">
+                        {sponsors.map((s: any) => (
+                          <div key={s.id} className="td-hero__sponsor-logo-wrap">
+                            {s.logo_url ? (
+                              <img src={s.logo_url} alt={s.name} className="td-hero__sponsor-logo" />
+                            ) : (
+                              <span className="td-hero__sponsor-name">{s.name}</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
-                  <div className="flex items-center gap-2">
-                    <Users className="h-4 w-4 text-primary" />
-                    <strong className="text-foreground">{tournament.participant_count}</strong>
-                    {tournament.max_participants && `/${tournament.max_participants}`} tham gia
-                  </div>
-                </div>
-              </div>
-
-              {/* Countdown + CTA */}
-              <div className="rounded-2xl border border-border/60 bg-card/80 p-5 backdrop-blur-sm shadow-lg sm:min-w-[280px]">
-                {tournament.start_date && (
-                  <CountdownTimer targetDate={tournament.start_date} />
-                )}
-                <div className="mt-4 space-y-2">
-                  {regOpen && !regNotYetOpen ? (
-                    <Link href={`/giai-dau/${slug}/dang-ky`} className="block">
-                      <Button size="lg" className="w-full gap-2 text-base">
-                        <UserPlus className="h-5 w-5" />
-                        Đăng ký ngay
-                      </Button>
-                    </Link>
-                  ) : regNotYetOpen ? (
-                    <Button size="lg" className="w-full" disabled>
-                      <Clock className="mr-2 h-5 w-5" /> Chưa mở đăng ký
-                    </Button>
-                  ) : (
-                    <Button size="lg" className="w-full" disabled>
-                      Đã hết hạn đăng ký
-                    </Button>
+                  {partners.length > 0 && (
+                    <div className="td-hero__sponsor-group">
+                      <p className="td-hero__sponsor-label">Đơn vị đồng hành</p>
+                      <div className="td-hero__sponsor-logos">
+                        {partners.map((p: any) => (
+                          <div key={p.id} className="td-hero__sponsor-logo-wrap">
+                            {p.logo_url ? (
+                              <img src={p.logo_url} alt={p.name} className="td-hero__sponsor-logo" />
+                            ) : (
+                              <span className="td-hero__sponsor-name">{p.name}</span>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   )}
-                </div>
-              </div>
+                </FadeIn>
+              )}
             </div>
           </div>
         </section>
 
-        {/* Main content */}
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-          <div className="grid gap-8 lg:grid-cols-3">
-            {/* Left column */}
-            <div className="space-y-8 lg:col-span-2">
-              {/* Categories */}
-              {tournament.categories && tournament.categories.length > 0 && (
-                <section>
-                  <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <Trophy className="h-5 w-5 text-primary" />
-                    Hạng mục thi đấu
-                  </h2>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {tournament.categories.map((cat: any) => (
-                      <div key={cat.id} className="rounded-xl border border-border/60 bg-card p-4 transition-all hover:shadow-md">
-                        <div className="flex items-center justify-between">
-                          <h3 className="font-bold">{cat.name}</h3>
-                          <Badge variant="outline" className="text-primary">
-                            {cat.price > 0 ? `${cat.price.toLocaleString('vi-VN')} ₫` : 'Miễn phí'}
-                          </Badge>
-                        </div>
-                        {cat.distance && (
-                          <p className="mt-1 text-sm text-muted-foreground">Cự ly: {cat.distance}</p>
-                        )}
-                        <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
-                          <Users className="h-3.5 w-3.5" />
-                          {cat.registered_count}/{cat.capacity || '∞'} đã đăng ký
-                        </div>
-                        {cat.capacity && cat.registered_count >= cat.capacity && (
-                          <Badge className="mt-2 bg-red-100 text-red-600 border-0">Hết chỗ</Badge>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </section>
-              )}
+        {/* ─── Main Content Card ─── */}
+        <div className="td-body">
+          <div className="td-body__grid">
+            {/* ─── Left Column ─── */}
+            <div className="td-main">
+              {/* White Card Container */}
+              <FadeIn className="td-card">
+                {/* Tabs-like badges */}
+                <div className="td-card__tabs">
+                  <Badge className="td-card__tab td-card__tab--active">
+                    <Heart className="h-3.5 w-3.5" />
+                    Quyên góp
+                  </Badge>
+                  <Badge variant="outline" className="td-card__tab">
+                    <Building2 className="h-3.5 w-3.5" />
+                    Doanh nghiệp
+                  </Badge>
+                </div>
 
-              {/* Description */}
-              {tournament.description && (
-                <section>
-                  <h2 className="text-xl font-bold mb-4">Giới thiệu giải đấu</h2>
-                  <div className="prose prose-sm max-w-none text-muted-foreground whitespace-pre-wrap">
-                    {tournament.description}
-                  </div>
-                </section>
-              )}
+                {/* Title & meta */}
+                <h2 className="td-card__title">{tournament.title}</h2>
 
-              {/* Rules */}
-              {tournament.rules && tournament.rules.length > 0 && (
-                <section>
-                  <h2 className="text-xl font-bold mb-4">Quy định sự kiện</h2>
-                  <div className="grid gap-3 sm:grid-cols-2">
-                    {tournament.rules.map((rule: any) => (
-                      <div key={rule.id} className="rounded-xl border border-border/60 bg-card p-4">
-                        <div className="flex items-start gap-3">
-                          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
-                            {ruleIcons[rule.icon || rule.rule_type || ''] || <CheckCircle className="h-5 w-5" />}
+                <div className="td-card__meta">
+                  <div className="td-card__meta-item">
+                    <CalendarDays className="h-4 w-4 text-primary" />
+                    <span>Thời gian diễn ra: {fmtDate(tournament.start_date)} - {fmtDate(tournament.end_date)}</span>
+                  </div>
+                  {tournament.location && (
+                    <div className="td-card__meta-item">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      <span>{tournament.location}</span>
+                    </div>
+                  )}
+                  <div className="td-card__meta-item">
+                    <Mountain className="h-4 w-4 text-primary" />
+                    <span>Cự ly: {tournament.categories?.[0]?.distance || 'Không giới hạn'}</span>
+                  </div>
+                </div>
+
+                {/* ─── Charity Progress ─── */}
+                <CharityProgress
+                  donationTotal={tournament.donation_total || 0}
+                  donationGoal={tournament.donation_goal || 500000000}
+                  donationDescription={
+                    tournament.donation_description ||
+                    "Mỗi lượt đăng ký là 100.000 VND gửi đến Quỹ, tiếp sức điều trị cho trẻ em mắc bệnh hiểm."
+                  }
+                />
+
+                {/* ─── Rules Section ─── */}
+                {tournament.rules && tournament.rules.length > 0 && (
+                  <div className="td-rules">
+                    <div className="td-rules__header">
+                      <h3 className="td-rules__title">Quy định sự kiện</h3>
+                      <button className="td-rules__view-all">Xem tất cả</button>
+                    </div>
+                    <FadeInStagger className="td-rules__grid">
+                      {tournament.rules.map((rule: any) => (
+                        <FadeIn key={rule.id} className="td-rules__item">
+                          <div className="td-rules__icon-wrap">
+                            {ruleIcons[rule.icon || rule.rule_type || ''] || <CheckCircle className="h-7 w-7" />}
                           </div>
-                          <div>
-                            <h3 className="font-bold text-sm">{rule.title}</h3>
-                            {rule.content && (
-                              <p className="mt-1 text-xs text-muted-foreground leading-relaxed">{rule.content}</p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                          <h4 className="td-rules__item-title">{rule.title}</h4>
+                          {rule.content && (
+                            <p className="td-rules__item-desc">{rule.content}</p>
+                          )}
+                        </FadeIn>
+                      ))}
+                    </FadeInStagger>
                   </div>
-                </section>
-              )}
+                )}
 
-            {/* Organizers */}
-              {tournament.organizers && tournament.organizers.length > 0 && (
-                <section>
-                  <h2 className="text-xl font-bold mb-4">Đơn vị tổ chức & Đồng hành</h2>
-                  <div className="grid gap-4 sm:grid-cols-2">
-                    {tournament.organizers.map((org: any) => {
-                      const typeIcons: Record<string, React.ReactNode> = {
-                        organizer: <Building2 className="h-5 w-5" />,
-                        sponsor: <Star className="h-5 w-5" />,
-                        partner: <Handshake className="h-5 w-5" />,
-                      };
-                      const typeLabels: Record<string, string> = {
-                        organizer: 'Tổ chức',
-                        sponsor: 'Tài trợ',
-                        partner: 'Đồng hành',
-                      };
-                      return (
-                        <div key={org.id} className="rounded-xl border border-border/60 bg-card p-4">
-                          <div className="flex items-center gap-3">
-                            {org.logo_url ? (
-                              <img src={org.logo_url} alt={org.name} className="h-12 w-12 rounded-lg object-cover" />
-                            ) : (
-                              <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                {typeIcons[org.type] || <Building2 className="h-5 w-5" />}
-                              </div>
-                            )}
-                            <div>
-                              <h3 className="font-bold text-sm">{org.name}</h3>
-                              <p className="text-xs text-muted-foreground">{typeLabels[org.type] || org.type}</p>
-                              {org.description && (
-                                <p className="mt-1 text-xs text-muted-foreground">{org.description}</p>
-                              )}
-                            </div>
+                {/* ─── Categories ─── */}
+                {tournament.categories && tournament.categories.length > 0 && (
+                  <div className="td-categories">
+                    <h3 className="td-section-title">
+                      <Trophy className="h-5 w-5 text-primary" />
+                      Hạng mục thi đấu
+                    </h3>
+                    <FadeInStagger className="td-categories__grid">
+                      {tournament.categories.map((cat: any) => (
+                        <FadeIn key={cat.id} className="td-categories__card">
+                          <div className="td-categories__card-header">
+                            <h4 className="td-categories__name">{cat.name}</h4>
+                            <Badge variant="outline" className="td-categories__price">
+                              {cat.price > 0 ? `${cat.price.toLocaleString('vi-VN')} ₫` : 'Miễn phí'}
+                            </Badge>
                           </div>
-                        </div>
-                      );
-                    })}
+                          {cat.distance && (
+                            <p className="td-categories__distance">Cự ly: {cat.distance}</p>
+                          )}
+                          <div className="td-categories__count">
+                            <Users className="h-3.5 w-3.5" />
+                            {cat.registered_count}/{cat.capacity || '∞'} đã đăng ký
+                          </div>
+                          {cat.capacity && cat.registered_count >= cat.capacity && (
+                            <Badge className="td-categories__full">Hết chỗ</Badge>
+                          )}
+                        </FadeIn>
+                      ))}
+                    </FadeInStagger>
                   </div>
-                </section>
-              )}
+                )}
 
-              {/* Leaderboard Section */}
-              {results && results.length > 0 && (
-                <section>
-                  <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
-                    <Medal className="h-5 w-5 text-[#FC4C02]" />
-                    Bảng xếp hạng (Top 10)
-                  </h2>
-                  <div className="rounded-xl border border-border/60 bg-card overflow-hidden">
-                    <div className="overflow-x-auto">
-                      <table className="w-full text-sm text-left">
-                        <thead className="bg-secondary/30 text-xs uppercase font-medium text-muted-foreground">
+                {/* ─── Description ─── */}
+                {tournament.description && (
+                  <div className="td-description">
+                    <h3 className="td-section-title">Giới thiệu giải đấu</h3>
+                    <div className="td-description__content">
+                      {tournament.description}
+                    </div>
+                  </div>
+                )}
+
+                {/* ─── Leaderboard ─── */}
+                {results && results.length > 0 && (
+                  <div className="td-leaderboard">
+                    <h3 className="td-section-title">
+                      <Medal className="h-5 w-5 text-[#FC4C02]" />
+                      Bảng xếp hạng (Top 10)
+                    </h3>
+                    <FadeIn className="td-leaderboard__table-wrap">
+                      <table className="td-leaderboard__table">
+                        <thead>
                           <tr>
-                            <th className="px-4 py-3 min-w-[60px] text-center">Hạng</th>
-                            <th className="px-4 py-3 min-w-[200px]">Vận động viên</th>
-                            <th className="px-4 py-3 text-right">Quãng đường</th>
-                            <th className="px-4 py-3 text-right">Thời gian</th>
+                            <th className="td-leaderboard__th td-leaderboard__th--rank">Hạng</th>
+                            <th className="td-leaderboard__th td-leaderboard__th--name">Vận động viên</th>
+                            <th className="td-leaderboard__th td-leaderboard__th--dist">Quãng đường</th>
+                            <th className="td-leaderboard__th td-leaderboard__th--time">Thời gian</th>
                           </tr>
                         </thead>
-                        <tbody className="divide-y divide-border/40">
+                        <tbody>
                           {results.map((r: any, idx: number) => {
                             const isTop3 = idx < 3;
                             const colors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
                             return (
-                              <tr key={r.id} className="hover:bg-muted/50 transition-colors">
-                                <td className="px-4 py-3 text-center font-bold">
+                              <tr key={r.id} className="td-leaderboard__row">
+                                <td className="td-leaderboard__td td-leaderboard__td--rank">
                                   {isTop3 ? (
                                     <span className={colors[idx]}><Medal className="h-5 w-5 inline-block" /></span>
                                   ) : (
                                     idx + 1
                                   )}
                                 </td>
-                                <td className="px-4 py-3">
-                                  <div className="flex items-center gap-3">
-                                    <div className="h-8 w-8 rounded-full bg-secondary flex items-center justify-center shrink-0 overflow-hidden">
+                                <td className="td-leaderboard__td td-leaderboard__td--name">
+                                  <div className="td-leaderboard__athlete">
+                                    <div className="td-leaderboard__avatar">
                                       {r.profiles?.avatar_url ? (
-                                        <img src={r.profiles.avatar_url} className="h-full w-full object-cover" alt="" />
+                                        <img src={r.profiles.avatar_url} className="td-leaderboard__avatar-img" alt="" />
                                       ) : (
-                                        <span className="font-bold text-xs">{r.profiles?.full_name?.charAt(0) || '?'}</span>
+                                        <span className="td-leaderboard__avatar-text">
+                                          {r.profiles?.full_name?.charAt(0) || '?'}
+                                        </span>
                                       )}
                                     </div>
                                     <div>
-                                      <p className="font-medium text-foreground">{r.profiles?.full_name || 'VĐV Ẩn danh'}</p>
+                                      <p className="td-leaderboard__name">{r.profiles?.full_name || 'VĐV Ẩn danh'}</p>
                                       {r.category?.name && (
-                                        <p className="text-[10px] text-muted-foreground">{r.category.name}</p>
+                                        <p className="td-leaderboard__category">{r.category.name}</p>
                                       )}
                                     </div>
                                   </div>
                                 </td>
-                                <td className="px-4 py-3 text-right">
-                                  <span className="font-bold text-[#FC4C02]">{(r.total_distance / 1000).toFixed(2)}</span>
-                                  <span className="text-xs text-muted-foreground ml-1">km</span>
+                                <td className="td-leaderboard__td td-leaderboard__td--dist">
+                                  <span className="td-leaderboard__distance">{(r.total_distance / 1000).toFixed(2)}</span>
+                                  <span className="td-leaderboard__unit">km</span>
                                 </td>
-                                <td className="px-4 py-3 text-right text-muted-foreground">
+                                <td className="td-leaderboard__td td-leaderboard__td--time">
                                   {Math.floor(r.total_moving_time / 3600)}:{String(Math.floor((r.total_moving_time % 3600) / 60)).padStart(2, '0')}:{String(r.total_moving_time % 60).padStart(2, '0')}
                                 </td>
                               </tr>
@@ -355,49 +377,176 @@ export default async function TournamentDetailPage({
                           })}
                         </tbody>
                       </table>
-                    </div>
+                    </FadeIn>
                   </div>
-                </section>
-              )}
+                )}
+              </FadeIn>
             </div>
 
-            {/* Right sidebar */}
-            <div className="space-y-6">
-              {/* Register CTA */}
-              <div className="rounded-2xl border border-border/60 bg-card p-5 shadow-sm">
-                <h3 className="text-sm font-bold flex items-center gap-2">
-                  <UserPlus className="h-4 w-4 text-primary" />
-                  Tham gia giải đấu
-                </h3>
-                <p className="mt-2 text-xs text-muted-foreground">
-                  {regOpen && !regNotYetOpen
-                    ? 'Đăng ký ngay để giữ chỗ và nhận ưu đãi sớm!'
-                    : regNotYetOpen
-                      ? 'Đăng ký sẽ mở sớm. Hãy theo dõi!'
-                      : 'Đã hết hạn đăng ký cho giải đấu này.'}
-                </p>
-                {regOpen && !regNotYetOpen ? (
-                  <Link href={`/giai-dau/${slug}/dang-ky`} className="mt-3 block">
-                    <Button className="w-full gap-2">
-                      <UserPlus className="h-4 w-4" /> Đăng ký ngay
+            {/* ─── Right Sidebar ─── */}
+            <div className="td-sidebar">
+              {/* Countdown + CTA */}
+              <FadeIn delay={0.3} className="td-sidebar__cta">
+                {tournament.registration_close_at ? (
+                  <CountdownTimer
+                    targetDate={tournament.registration_close_at}
+                    label="Thời gian đăng ký còn"
+                  />
+                ) : tournament.start_date ? (
+                  <CountdownTimer
+                    targetDate={tournament.start_date}
+                    label="Giải đấu bắt đầu sau"
+                  />
+                ) : null}
+
+                <div className="td-sidebar__fee">
+                  <span className="td-sidebar__fee-amount">{feeDisplay}</span>
+                </div>
+
+                <div className="td-sidebar__cta-actions">
+                  {regOpen && !regNotYetOpen ? (
+                    <Link href={`/giai-dau/${slug}/dang-ky`} className="block">
+                      <Button size="lg" className="td-sidebar__register-btn">
+                        <UserPlus className="h-5 w-5" />
+                        Đăng ký ngay
+                      </Button>
+                    </Link>
+                  ) : regNotYetOpen ? (
+                    <Button size="lg" className="td-sidebar__register-btn" disabled>
+                      <Clock className="h-5 w-5" /> Chưa mở đăng ký
                     </Button>
-                  </Link>
-                ) : (
-                  <Button className="mt-3 w-full" disabled>
-                    {regNotYetOpen ? 'Chưa mở' : 'Đã đóng'}
-                  </Button>
-                )}
-              </div>
+                  ) : (
+                    <Button size="lg" className="td-sidebar__register-btn" disabled>
+                      Đã hết hạn đăng ký
+                    </Button>
+                  )}
+                </div>
+
+                <div className="td-sidebar__participants">
+                  <div className="td-sidebar__participant-avatars">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                      <div key={i} className="td-sidebar__participant-avatar">
+                        <UserPlus className="h-3 w-3" />
+                      </div>
+                    ))}
+                  </div>
+                  <span className="td-sidebar__participant-count">
+                    <strong>{tournament.participant_count}</strong> người tham gia
+                  </span>
+                  <button className="td-sidebar__share-btn">
+                    <Share2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </FadeIn>
+
+              {/* Facebook Fanpage */}
+              {tournament.facebook_page_url && (
+                <FadeIn delay={0.4}>
+                  <FacebookEmbed
+                    pageUrl={tournament.facebook_page_url}
+                    pageName={tournament.facebook_page_name || "TOPACTION"}
+                  />
+                </FadeIn>
+              )}
+
+              {/* Tournament Info */}
+              {tournament.description && (
+                <FadeIn delay={0.5} className="td-sidebar__info">
+                  <h3 className="td-sidebar__info-title">Thông tin giải đấu</h3>
+                  <p className="td-sidebar__info-text">
+                    {tournament.short_description || tournament.description?.substring(0, 200)}
+                  </p>
+                </FadeIn>
+              )}
 
               {/* Donation Widget */}
-              <DonationWidget
-                tournamentId={tournament.id}
-                slug={slug}
-                initialDonations={donationList}
-                initialTotal={tournament.donation_total || 0}
-              />
+              <FadeIn delay={0.6}>
+                <DonationWidget
+                  tournamentId={tournament.id}
+                  slug={slug}
+                  initialDonations={donationList}
+                  initialTotal={tournament.donation_total || 0}
+                />
+              </FadeIn>
             </div>
           </div>
+
+          {/* ─── Organizers Section (Full Width) ─── */}
+          {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0) && (
+            <div className="td-organizers">
+              {organizers.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Building2 className="td-organizers__title-icon" />
+                    Đơn vị tổ chức
+                  </h3>
+                  <div className="td-organizers__logos">
+                    {organizers.map((org: any) => (
+                      <div key={org.id} className="td-organizers__logo-card">
+                        {org.logo_url ? (
+                          <img src={org.logo_url} alt={org.name} className="td-organizers__logo-img" />
+                        ) : (
+                          <div className="td-organizers__logo-placeholder">
+                            <Building2 className="h-8 w-8" />
+                            <span>{org.name}</span>
+                          </div>
+                        )}
+                        {org.description && (
+                          <p className="td-organizers__logo-desc">{org.description}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </FadeIn>
+              )}
+
+              {sponsors.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Star className="td-organizers__title-icon" />
+                    Đơn vị tài trợ
+                  </h3>
+                  <div className="td-organizers__logos">
+                    {sponsors.map((sp: any) => (
+                      <div key={sp.id} className="td-organizers__logo-card">
+                        {sp.logo_url ? (
+                          <img src={sp.logo_url} alt={sp.name} className="td-organizers__logo-img" />
+                        ) : (
+                          <div className="td-organizers__logo-placeholder">
+                            <Star className="h-8 w-8" />
+                            <span>{sp.name}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </FadeIn>
+              )}
+
+              {partners.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Handshake className="td-organizers__title-icon" />
+                    Đơn vị đồng hành
+                  </h3>
+                  <div className="td-organizers__logos">
+                    {partners.map((pt: any) => (
+                      <div key={pt.id} className="td-organizers__logo-card">
+                        {pt.logo_url ? (
+                          <img src={pt.logo_url} alt={pt.name} className="td-organizers__logo-img" />
+                        ) : (
+                          <div className="td-organizers__logo-placeholder">
+                            <Handshake className="h-8 w-8" />
+                            <span>{pt.name}</span>
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </FadeIn>
+              )}
+            </div>
+          )}
         </div>
       </main>
 

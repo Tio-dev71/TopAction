@@ -3,7 +3,15 @@
 import { useState, useEffect } from "react";
 import { Clock } from "lucide-react";
 
-export function CountdownTimer({ targetDate }: { targetDate: string }) {
+interface CountdownTimerProps {
+  targetDate: string;
+  label?: string;
+}
+
+export function CountdownTimer({
+  targetDate,
+  label = "Thời gian đăng ký còn",
+}: CountdownTimerProps) {
   const [mounted, setMounted] = useState(false);
   const [now, setNow] = useState(Date.now());
 
@@ -15,11 +23,11 @@ export function CountdownTimer({ targetDate }: { targetDate: string }) {
 
   if (!mounted) {
     return (
-      <div className="space-y-3">
-        <div className="h-4 w-16 bg-muted animate-pulse rounded" />
-        <div className="grid grid-cols-4 gap-2">
+      <div className="countdown">
+        <div className="countdown__label-skeleton" />
+        <div className="countdown__grid">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="h-10 bg-muted animate-pulse rounded-lg" />
+            <div key={i} className="countdown__cell-skeleton" />
           ))}
         </div>
       </div>
@@ -38,30 +46,32 @@ export function CountdownTimer({ targetDate }: { targetDate: string }) {
 
   if (finished) {
     return (
-      <div className="text-center">
-        <p className="text-xs font-medium text-muted-foreground">Giải đấu đã bắt đầu!</p>
+      <div className="countdown countdown--finished">
+        <p className="countdown__finished-text">
+          <Clock className="countdown__finished-icon" />
+          Đã hết hạn đăng ký!
+        </p>
       </div>
     );
   }
 
+  const items = [
+    { value: days, label: "Ngày" },
+    { value: hours, label: "Giờ" },
+    { value: minutes, label: "Phút" },
+    { value: seconds, label: "Giây" },
+  ];
+
   return (
-    <div>
-      <div className="flex items-center gap-1.5 text-xs font-medium text-muted-foreground mb-3">
-        <Clock className="h-3.5 w-3.5" />
-        Còn lại
-      </div>
-      <div className="grid grid-cols-4 gap-2 text-center">
-        {[
-          { value: days, label: "Ngày" },
-          { value: hours, label: "Giờ" },
-          { value: minutes, label: "Phút" },
-          { value: seconds, label: "Giây" },
-        ].map((item) => (
-          <div key={item.label}>
-            <div className="rounded-lg bg-primary/10 py-2 text-xl font-extrabold text-primary tabular-nums">
+    <div className="countdown">
+      <p className="countdown__label">{label}</p>
+      <div className="countdown__grid">
+        {items.map((item) => (
+          <div key={item.label} className="countdown__cell">
+            <span className="countdown__value">
               {String(item.value).padStart(2, "0")}
-            </div>
-            <p className="mt-1 text-[10px] text-muted-foreground">{item.label}</p>
+            </span>
+            <span className="countdown__unit">{item.label}</span>
           </div>
         ))}
       </div>

@@ -16,6 +16,7 @@ import {
   Activity,
   Medal,
 } from "lucide-react";
+import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
 
 /* ─────────────────── helpers ─────────────────── */
 
@@ -37,7 +38,7 @@ function Hero() {
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-        <div className="mx-auto max-w-3xl text-center">
+        <FadeIn className="mx-auto max-w-3xl text-center">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold tracking-wide text-primary">
             <Flame className="h-3.5 w-3.5" />
             NỀN TẢNG GIẢI ĐẤU TRỰC TUYẾN #1 VIỆT NAM
@@ -85,7 +86,7 @@ function Hero() {
               </div>
             ))}
           </div>
-        </div>
+        </FadeIn>
       </div>
     </section>
   );
@@ -230,11 +231,13 @@ function TournamentsSection({ tournaments }: { tournaments: TournamentCardData[]
         </div>
 
         {tournaments.length > 0 ? (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <FadeInStagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {tournaments.map((t) => (
-              <TournamentCard key={t.slug} tournament={t} />
+              <FadeIn key={t.slug}>
+                <TournamentCard tournament={t} />
+              </FadeIn>
             ))}
-          </div>
+          </FadeInStagger>
         ) : (
           <div className="rounded-2xl border border-dashed border-border/60 py-16 text-center">
             <Trophy className="mx-auto h-12 w-12 text-muted-foreground/30" />
@@ -294,10 +297,10 @@ function HowItWorksSection() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 relative">
+        <FadeInStagger className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-4 relative">
           <div className="absolute top-12 left-[10%] right-[10%] hidden h-0.5 -translate-y-1/2 bg-border/80 lg:block" />
           {steps.map((step, i) => (
-            <div key={step.title} className="relative flex flex-col items-center text-center">
+            <FadeIn key={step.title} className="relative flex flex-col items-center text-center">
               <div className={`relative z-10 flex h-24 w-24 items-center justify-center rounded-2xl border-4 border-background ${step.color} shadow-sm shadow-primary/5`}>
                 {step.icon}
                 <div className="absolute -bottom-3 -right-3 flex h-8 w-8 items-center justify-center rounded-full bg-foreground text-sm font-bold text-background shadow-md">
@@ -306,9 +309,9 @@ function HowItWorksSection() {
               </div>
               <h3 className="mt-6 text-lg font-bold">{step.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground leading-relaxed px-2">{step.description}</p>
-            </div>
+            </FadeIn>
           ))}
-        </div>
+        </FadeInStagger>
       </div>
     </section>
   );
