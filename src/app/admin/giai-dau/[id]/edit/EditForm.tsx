@@ -70,8 +70,14 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
             <CardContent className="pt-6">
               <form action={formAction} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="title">Tên giải đấu *</Label>
+                  <Label htmlFor="title">Tên giải đấu (ID/Chính thức) *</Label>
                   <Input id="title" name="title" defaultValue={tournament.title} required />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="display_title">Tên hiển thị (Trang chủ)</Label>
+                  <Input id="display_title" name="display_title" defaultValue={tournament.display_title || ''} placeholder="VD: Sải bước nghĩa tình" />
+                  <p className="text-xs text-muted-foreground">Để trống nếu muốn dùng tên chính thức.</p>
                 </div>
 
                 <div className="space-y-2">

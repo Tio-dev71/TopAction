@@ -1,12 +1,20 @@
 "use client";
  
 import { useState } from "react";
-import { ChevronDown, LucideIcon } from "lucide-react";
+import { ChevronDown, LucideIcon, Medal, Activity, Trophy, Footprints, Info } from "lucide-react";
+
+const ICON_MAP: Record<string, LucideIcon> = {
+  medal: Medal,
+  activity: Activity,
+  trophy: Trophy,
+  footprints: Footprints,
+  info: Info,
+};
 
 interface CollapsibleSectionProps {
   title: string;
   content: string;
-  icon?: LucideIcon;
+  icon?: string;
   defaultExpanded?: boolean;
   className?: string;
 }
@@ -14,13 +22,15 @@ interface CollapsibleSectionProps {
 export function CollapsibleSection({ 
   title, 
   content, 
-  icon: Icon, 
+  icon, 
   defaultExpanded = false,
   className = ""
 }: CollapsibleSectionProps) {
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
 
   if (!content) return null;
+
+  const Icon = icon ? ICON_MAP[icon] : null;
 
   return (
     <div className={`td-collapsible-section ${className}`}>

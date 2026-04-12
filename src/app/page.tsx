@@ -98,6 +98,7 @@ function Hero() {
 interface TournamentCardData {
   slug: string;
   title: string;
+  display_title: string | null;
   category: string | null;
   cover_image: string | null;
   start_date: string | null;
@@ -182,8 +183,8 @@ function TournamentCard({ tournament }: { tournament: TournamentCardData }) {
       </div>
 
       <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <h3 className="text-base font-bold leading-snug tracking-tight text-card-foreground group-hover:text-primary transition-colors sm:text-lg">
-          {tournament.title}
+        <h3 className="text-base font-bold leading-snug tracking-tight text-card-foreground group-hover:text-primary transition-colors sm:text-lg line-clamp-2 min-h-[3rem]">
+          {tournament.display_title || tournament.title}
         </h3>
 
         <div className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
@@ -343,7 +344,7 @@ export default async function Home() {
   const { data: tournaments } = await supabase
     .from('tournaments')
     .select(`
-      slug, title, category, cover_image, start_date, end_date,
+      slug, title, display_title, category, cover_image, start_date, end_date,
       participant_count, location, is_featured, rewards_title,
       categories:tournament_categories(name, distance)
     `)

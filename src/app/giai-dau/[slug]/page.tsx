@@ -348,7 +348,7 @@ export default async function TournamentDetailPage({
                   <CollapsibleSection 
                     title={tournament.rewards_title || "Giải thưởng"} 
                     content={tournament.rewards_description}
-                    icon={Medal}
+                    icon="medal"
                     defaultExpanded={true}
                     className="mb-8"
                   />
@@ -358,7 +358,7 @@ export default async function TournamentDetailPage({
                 <CollapsibleSection 
                   title="Giới thiệu giải đấu" 
                   content={tournament.description}
-                  icon={Activity}
+                  icon="activity"
                 />
 
                 {/* ─── Leaderboard ─── */}

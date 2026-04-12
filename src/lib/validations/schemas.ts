@@ -16,6 +16,7 @@ export const profileSchema = z.object({
 
 export const tournamentSchema = z.object({
   title: z.string().min(5, 'Tiêu đề phải có ít nhất 5 ký tự').max(200),
+  display_title: z.string().max(200).optional().or(z.literal('')),
   slug: z.string().min(3).max(200).regex(/^[a-z0-9-]+$/, 'Slug chỉ chứa chữ thường, số và dấu gạch ngang'),
   short_description: z.string().max(500).optional().or(z.literal('')),
   description: z.string().optional().or(z.literal('')),
