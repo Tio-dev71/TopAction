@@ -61,6 +61,7 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
           <TabsTrigger value="general">Thông tin</TabsTrigger>
           <TabsTrigger value="categories">Hạng mục ({tournament.categories?.length || 0})</TabsTrigger>
           <TabsTrigger value="rules">Quy định ({tournament.rules?.length || 0})</TabsTrigger>
+          <TabsTrigger value="rewards">Giải thưởng</TabsTrigger>
           <TabsTrigger value="organizers">Tổ chức ({tournament.organizers?.length || 0})</TabsTrigger>
         </TabsList>
 
@@ -236,6 +237,52 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
         {/* Rules Tab */}
         <TabsContent value="rules">
           <RulesEditor tournamentId={tournament.id} rules={tournament.rules || []} />
+        </TabsContent>
+        
+        {/* Rewards Tab */}
+        <TabsContent value="rewards">
+          <Card className="border-border/60">
+            <CardContent className="pt-6">
+              <form action={formAction} className="space-y-5">
+                <div className="space-y-2">
+                  <Label htmlFor="rewards_title">Tên hiển thị (Tiêu đề phần giải thưởng)</Label>
+                  <Input 
+                    id="rewards_title" 
+                    name="rewards_title" 
+                    defaultValue={tournament.rewards_title || 'Giải thưởng'} 
+                    placeholder="VD: Cơ cấu giải thưởng, Giải thưởng hấp dẫn..."
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Đây là tên sẽ hiển thị ở tiêu đề phần Giải thưởng và trên thẻ giải đấu ở trang chủ.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="rewards_description">Nội dung giải thưởng chi tiết</Label>
+                  <TextareaWithImageUpload
+                    id="rewards_description"
+                    name="rewards_description"
+                    defaultValue={tournament.rewards_description || ''}
+                    folder="tournaments"
+                    placeholder="Mô tả chi tiết các giải thưởng cho từng hạng mục..."
+                  />
+                </div>
+
+                <div className="flex justify-end gap-3 pt-4 border-t">
+                  <Button type="submit" disabled={pending} className="gap-2">
+                    {pending && <Loader2 className="h-4 w-4 animate-spin" />}
+                    <Save className="h-4 w-4" />
+                    Lưu thay đổi
+                  </Button>
+                </div>
+                
+                {/* Hidden fields to maintain other data if submitted from this tab */}
+                <input type="hidden" name="title" value={tournament.title} />
+                <input type="hidden" name="slug" value={tournament.slug} />
+                <input type="hidden" name="status" value={tournament.status} />
+              </form>
+            </CardContent>
+          </Card>
         </TabsContent>
 
         {/* Organizers Tab */}

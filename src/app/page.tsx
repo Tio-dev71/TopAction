@@ -105,6 +105,7 @@ interface TournamentCardData {
   participant_count: number;
   location: string | null;
   is_featured: boolean;
+  rewards_title?: string | null;
   categories?: { name: string; distance: string | null }[];
 }
 
@@ -141,10 +142,25 @@ function TournamentCard({ tournament }: { tournament: TournamentCardData }) {
         )}
 
         {tournament.is_featured && (
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-3 right-3 flex flex-col items-end gap-2">
             <Badge className="gap-1 bg-chart-3/90 text-white backdrop-blur-sm border-0">
               <Flame className="h-3 w-3" />
               Nổi bật
+            </Badge>
+            {tournament.rewards_title && (
+              <Badge className="gap-1 bg-primary/90 text-white backdrop-blur-sm border-0 animate-pulse">
+                <Medal className="h-3 w-3" />
+                {tournament.rewards_title}
+              </Badge>
+            )}
+          </div>
+        )}
+
+        {!tournament.is_featured && tournament.rewards_title && (
+          <div className="absolute top-3 right-3">
+            <Badge className="gap-1 bg-primary/90 text-white backdrop-blur-sm border-0">
+              <Medal className="h-3 w-3" />
+              {tournament.rewards_title}
             </Badge>
           </div>
         )}
@@ -328,7 +344,7 @@ export default async function Home() {
     .from('tournaments')
     .select(`
       slug, title, category, cover_image, start_date, end_date,
-      participant_count, location, is_featured,
+      participant_count, location, is_featured, rewards_title,
       categories:tournament_categories(name, distance)
     `)
     .eq('status', 'published')

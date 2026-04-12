@@ -18,7 +18,7 @@ import { CountdownTimer } from "./CountdownTimer";
 import { CharityProgress } from "./CharityProgress";
 import { FacebookEmbed } from "./FacebookEmbed";
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
-import { CollapsibleDescription } from "./CollapsibleDescription";
+import { CollapsibleSection } from "./CollapsibleSection";
 import { LiveStatsBanner } from "@/components/home/LiveStatsBanner";
 
 /* ────────────── helpers ────────────── */
@@ -343,8 +343,23 @@ export default async function TournamentDetailPage({
                   </div>
                 )}
 
+                {/* ─── Rewards Section ─── */}
+                {tournament.rewards_description && (
+                  <CollapsibleSection 
+                    title={tournament.rewards_title || "Giải thưởng"} 
+                    content={tournament.rewards_description}
+                    icon={Medal}
+                    defaultExpanded={true}
+                    className="mb-8"
+                  />
+                )}
+
                 {/* ─── Description ─── */}
-                <CollapsibleDescription description={tournament.description} />
+                <CollapsibleSection 
+                  title="Giới thiệu giải đấu" 
+                  content={tournament.description}
+                  icon={Activity}
+                />
 
                 {/* ─── Leaderboard ─── */}
                 {results && results.length > 0 && (

@@ -67,6 +67,8 @@ export async function createTournament(prevState: any, formData: FormData) {
     min_pace: raw.min_pace ? parseInt(raw.min_pace as string) : 240,
     max_pace: raw.max_pace ? parseInt(raw.max_pace as string) : 900,
     donation_goal: raw.donation_goal ? parseInt(raw.donation_goal as string) : null,
+    rewards_title: raw.rewards_title as string,
+    rewards_description: raw.rewards_description as string,
   })
 
   if (!parsed.success) {
@@ -116,6 +118,8 @@ export async function updateTournament(id: string, prevState: any, formData: For
     min_pace: raw.min_pace ? parseInt(raw.min_pace as string) : 240,
     max_pace: raw.max_pace ? parseInt(raw.max_pace as string) : 900,
     donation_goal: raw.donation_goal ? parseInt(raw.donation_goal as string) : null,
+    rewards_title: raw.rewards_title as string,
+    rewards_description: raw.rewards_description as string,
   })
 
   if (!parsed.success) {

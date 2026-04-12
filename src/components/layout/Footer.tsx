@@ -48,7 +48,7 @@ export function Footer() {
     <footer className="w-full bg-primary text-white text-sm">
       {/* Top Banner Section */}
       <div className="border-b border-white/10 border-dashed">
-        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-6">
+        <div className="mx-auto mt-12 max-w-7xl px-4 py-6 sm:px-6 lg:px-8 flex flex-col lg:flex-row items-center justify-between gap-6">
           <div className="flex flex-col sm:flex-row items-center gap-6 lg:gap-12 w-full lg:w-auto">
             {/* Hotline */}
             <div className="flex items-center gap-3">

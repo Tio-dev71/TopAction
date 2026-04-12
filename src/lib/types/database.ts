@@ -79,6 +79,8 @@ export interface DbTournament {
   valid_activity_types: string[]
   min_pace: number
   max_pace: number
+  rewards_title: string | null
+  rewards_description: string | null
 }
 
 export interface DbTournamentCategory {
