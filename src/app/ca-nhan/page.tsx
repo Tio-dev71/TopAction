@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { redirect } from 'next/navigation'
 import { Navbar } from '@/components/layout/Navbar'
+import { Footer } from '@/components/layout/Footer'
 import { ProfileForm } from './ProfileForm'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Hồ sơ cá nhân | TOPACTION',
+  title: 'Hồ sơ cá nhân | TOPPLAY',
 }
 
 export default async function ProfilePage() {
@@ -48,6 +49,7 @@ export default async function ProfilePage() {
       <div className="flex-1 w-full relative">
         <ProfileForm profile={safeProfile} stravaConnected={stravaConnected} garminConnected={garminConnected} />
       </div>
+      <Footer />
     </main>
   )
 }

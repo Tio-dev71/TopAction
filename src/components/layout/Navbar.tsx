@@ -57,7 +57,7 @@ export function Navbar() {
             <Trophy className="h-5 w-5" />
           </div>
           <span className="text-xl font-bold tracking-tight">
-            <span className="text-primary">TOP</span>ACTION
+            <span className="text-primary">TOP</span>PLAY
           </span>
         </Link>
 

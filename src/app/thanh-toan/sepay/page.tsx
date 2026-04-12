@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { ArrowLeft, RefreshCw, QrCode } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card'
+import { Footer } from '@/components/layout/Footer'
 
 export default async function SePayCheckoutPage({
   searchParams,
@@ -96,6 +97,7 @@ export default async function SePayCheckoutPage({
           </CardFooter>
         </Card>
       </div>
+      <Footer />
     </div>
   )
 }

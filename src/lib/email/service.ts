@@ -39,7 +39,7 @@ class ConsoleEmailProvider implements EmailProvider {
 //   async send(message: EmailMessage) {
 //     try {
 //       await this.resend.emails.send({
-//         from: process.env.EMAIL_FROM || 'topaction <noreply@topaction.vn>',
+//         from: process.env.EMAIL_FROM || 'topplay <noreply@topplay.vn>',
 //         to: message.to,
 //         subject: message.subject,
 //         html: message.html,

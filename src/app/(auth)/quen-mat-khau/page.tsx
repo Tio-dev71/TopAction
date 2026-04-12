@@ -36,7 +36,7 @@ export default function ForgotPasswordPage() {
               <Trophy className="h-5 w-5" />
             </div>
             <span className="text-2xl font-bold tracking-tight">
-              <span className="text-primary">TOP</span>ACTION
+              <span className="text-primary">TOP</span>PLAY
             </span>
           </Link>
           <h2 className="text-3xl font-extrabold tracking-tight text-foreground">

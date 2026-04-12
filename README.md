@@ -1,6 +1,6 @@
-# TopAction - Nền Tảng Giải Đấu Thể Thao
+# TopPlay - Nền Tảng Giải Đấu Thể Thao
 
-TopAction là nền tảng quản lý các giải chạy bộ, đạp xe trực tuyến cho cộng đồng thể thao Việt Nam, được xây dựng với Next.js App Router và Supabase. 
+TopPlay là nền tảng quản lý các giải chạy bộ, đạp xe trực tuyến cho cộng đồng thể thao Việt Nam, được xây dựng với Next.js App Router và Supabase. 
 
 ## Tính Năng Nổi Bật
 - **Quản lý giải đấu**: Đăng ký tham gia, theo dõi bảng xếp hạng (Leaderboard) theo thời gian thực.
@@ -19,7 +19,7 @@ TopAction là nền tảng quản lý các giải chạy bộ, đạp xe trực 
 1. **Clone repository:**
 ```bash
 git clone <url>
-cd topaction
+cd topplay
 npm install
 ```
 
@@ -43,7 +43,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
 - Cấu hình redirect URI bên Google Console cho URL Callback của Supabase: `https://<reference_id>.supabase.co/auth/v1/callback`
 - Truy cập **Supabase Dashboard** -> **Authentication** -> **Providers**.
 - Enable **Google** và nhập `Client ID` / `Client Secret`. Bật option [Skip nonce check] đối với môi trường nhất định nếu có lỗi.
-- Đảm bảo trong **Supabase Authentication -> URL Configuration**, phần **Site URL** đang trỏ tới `http://localhost:3000` (ở local). Mặc định hệ thống auth của TOPACTION được cấu hình hook về `/auth/callback`.
+- Đảm bảo trong **Supabase Authentication -> URL Configuration**, phần **Site URL** đang trỏ tới `http://localhost:3000` (ở local). Mặc định hệ thống auth của TOPPLAY được cấu hình hook về `/auth/callback`.
 
 4. **Khởi chạy ứng dụng:**
 ```bash
@@ -62,6 +62,6 @@ Mở `http://localhost:3000` với trình duyệt.
    - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 5. Nhấn Deploy.
 6. **[Rất quan trọng] Cập nhật lại Supabase URL Configuration**:
-   - Sau khi Vercel có tên miền chính (ví dụ `https://topaction.vercel.app`), hãy truy cập **Supabase Dashboard** -> **Authentication** -> **URL Configuration**.
+   - Sau khi Vercel có tên miền chính (ví dụ `https://topplay.vercel.app`), hãy truy cập **Supabase Dashboard** -> **Authentication** -> **URL Configuration**.
    - Cập nhật **Site URL** bằng domain production mới nhất.
    - Thêm các Alias Domains phụ vào mục **Redirect URLs** nếu cần.

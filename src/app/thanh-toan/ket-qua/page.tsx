@@ -2,6 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getPaymentProvider } from '@/lib/payments/create-payment'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { Footer } from '@/components/layout/Footer'
 import { CheckCircle, XCircle, Clock, ArrowLeft, Home } from 'lucide-react'
 
 export default async function PaymentResultPage({
@@ -126,6 +127,7 @@ export default async function PaymentResultPage({
           </Link>
         </div>
       </div>
+      <Footer />
     </div>
   )
 }

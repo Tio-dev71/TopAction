@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Plus, Eye, Pencil } from 'lucide-react'
+import { DeleteTournamentButton } from '@/components/admin/tournaments/DeleteTournamentButton'
 
 const statusLabels: Record<string, { label: string; color: string }> = {
   draft: { label: 'Nháp', color: 'bg-gray-100 text-gray-700' },
@@ -131,6 +132,7 @@ export default async function AdminTournamentsPage({
                             <Pencil className="h-4 w-4" />
                           </Button>
                         </Link>
+                        <DeleteTournamentButton id={t.id} title={t.title} />
                       </div>
                     </td>
                   </tr>

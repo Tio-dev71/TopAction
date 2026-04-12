@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { ShieldAlert, ArrowLeft } from 'lucide-react'
 
 export const metadata: Metadata = {
-  title: 'Không có quyền truy cập | TOPACTION',
+  title: 'Không có quyền truy cập | TOPPLAY',
 }
 
 export default function ForbiddenPage() {

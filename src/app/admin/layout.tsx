@@ -4,7 +4,7 @@ import { AdminHeader } from '@/components/admin/AdminHeader'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Quản trị | TOPACTION',
+  title: 'Quản trị | TOPPLAY',
   robots: 'noindex, nofollow',
 }
 

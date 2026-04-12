@@ -29,7 +29,7 @@ function baseTemplate(content: string) {
   <div class="container">
     ${content}
     <div class="footer">
-      <p>© 2026 TOPACTION — Nền tảng giải đấu thể thao trực tuyến</p>
+      <p>© 2026 TOPPLAY — Nền tảng giải đấu thể thao trực tuyến</p>
       <p>Email này được gửi tự động, vui lòng không trả lời.</p>
     </div>
   </div>
@@ -68,7 +68,7 @@ export async function sendRegistrationSuccessEmail(data: {
 
   return sendEmail({
     to: data.email,
-    subject: `[TOPACTION] Đăng ký thành công — ${data.tournamentTitle}`,
+    subject: `[TOPPLAY] Đăng ký thành công — ${data.tournamentTitle}`,
     html: baseTemplate(content),
     text: `Xin chào ${data.fullName}, đăng ký giải đấu ${data.tournamentTitle} thành công. Mã: ${data.registrationCode}`,
   })
@@ -105,7 +105,7 @@ export async function sendPaymentSuccessEmail(data: {
 
   return sendEmail({
     to: data.email,
-    subject: `[TOPACTION] Thanh toán ${typeLabel} thành công — ${data.tournamentTitle}`,
+    subject: `[TOPPLAY] Thanh toán ${typeLabel} thành công — ${data.tournamentTitle}`,
     html: baseTemplate(content),
     text: `Thanh toán ${typeLabel} ${data.amount.toLocaleString('vi-VN')}đ cho ${data.tournamentTitle} thành công. Mã: ${data.referenceCode}`,
   })
@@ -138,7 +138,7 @@ export async function sendDonationThankYouEmail(data: {
 
   return sendEmail({
     to: data.email,
-    subject: `[TOPACTION] Cảm ơn ủng hộ — ${data.tournamentTitle}`,
+    subject: `[TOPPLAY] Cảm ơn ủng hộ — ${data.tournamentTitle}`,
     html: baseTemplate(content),
     text: `Cảm ơn ${data.donorName} đã ủng hộ ${data.amount.toLocaleString('vi-VN')}đ cho ${data.tournamentTitle}. Mã: ${data.donationCode}`,
   })

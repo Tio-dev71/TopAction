@@ -49,11 +49,11 @@ export function AdminSidebar({
       <div className="flex h-16 items-center justify-between border-b border-border/60 px-4">
         {!collapsed && (
           <Link href="/admin" className="flex items-center gap-2">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-md">
               <Trophy className="h-4 w-4" />
             </div>
-            <span className="text-lg font-bold">
-              <span className="text-primary">TOP</span>ACTION
+            <span className="text-xl font-bold tracking-tight">
+              <span className="text-primary">TOP</span>PLAY
             </span>
           </Link>
         )}

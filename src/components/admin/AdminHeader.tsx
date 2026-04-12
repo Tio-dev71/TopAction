@@ -68,12 +68,14 @@ export function AdminHeader({
           <SheetContent side="left" className="w-64 p-0">
             <SheetHeader className="border-b border-border/60 p-4">
               <SheetTitle className="flex items-center gap-2 text-left">
-                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-                  <Trophy className="h-4 w-4" />
-                </div>
-                <span className="text-lg font-bold">
-                  <span className="text-primary">TOP</span>ACTION Admin
-                </span>
+                <Link href="/admin" className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-md">
+                    <Trophy className="h-4 w-4" />
+                  </div>
+                  <span className="text-xl font-bold tracking-tight">
+                    <span className="text-primary">TOP</span>PLAY Admin
+                  </span>
+                </Link>
               </SheetTitle>
             </SheetHeader>
             <nav className="space-y-1 p-2">

@@ -5,6 +5,7 @@ import { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { DonationWidget } from "@/components/DonationWidget";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -53,7 +54,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const supabase = await createClient();
   const { data: t } = await supabase.from('tournaments').select('title, short_description').eq('slug', slug).single();
   return {
-    title: t ? `${t.title} | TOPACTION` : 'Giải đấu | TOPACTION',
+    title: t ? `${t.title} | TOPPLAY` : 'Giải đấu | TOPPLAY',
     description: t?.short_description || 'Thông tin giải đấu thể thao trực tuyến',
   };
 }
@@ -473,7 +474,7 @@ export default async function TournamentDetailPage({
                 <FadeIn delay={0.4}>
                   <FacebookEmbed
                     pageUrl={tournament.facebook_page_url}
-                    pageName={tournament.facebook_page_name || "TOPACTION"}
+                    pageName={tournament.facebook_page_name || "TOPPLAY"}
                   />
                 </FadeIn>
               )}
@@ -579,22 +580,7 @@ export default async function TournamentDetailPage({
         </div>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-border/60 bg-secondary/30">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-          <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-            <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-                <Trophy className="h-4 w-4" />
-              </div>
-              <span className="text-sm font-bold">TOPACTION</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              © 2026 TOPACTION. Nền tảng giải đấu thể thao trực tuyến.
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </>
   );
 }

@@ -97,10 +97,10 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
 
                 <div className="space-y-2">
                   <Label htmlFor="description">Mô tả chi tiết</Label>
-                  <TextareaWithImageUpload 
-                    id="description" 
-                    name="description" 
-                    defaultValue={tournament.description || ''} 
+                  <TextareaWithImageUpload
+                    id="description"
+                    name="description"
+                    defaultValue={tournament.description || ''}
                     folder="tournaments"
                   />
                 </div>
@@ -142,7 +142,7 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="facebook_page_name">Tên Fanpage Facebook</Label>
-                    <Input id="facebook_page_name" name="facebook_page_name" defaultValue={tournament.facebook_page_name || ''} placeholder="VD: TOPACTION" />
+                    <Input id="facebook_page_name" name="facebook_page_name" defaultValue={tournament.facebook_page_name || ''} placeholder="VD: TOPPLAY" />
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="facebook_page_url">Link Fanpage Facebook</Label>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { createClient } from "@/lib/supabase/server";
 import {
   Trophy,
@@ -314,28 +315,6 @@ function HowItWorksSection() {
         </FadeInStagger>
       </div>
     </section>
-  );
-}
-
-/* ─────────────────── footer ─────────────────── */
-
-function Footer() {
-  return (
-    <footer className="border-t border-border/60 bg-secondary/30">
-      <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8">
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-between">
-          <div className="flex items-center gap-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Trophy className="h-4 w-4" />
-            </div>
-            <span className="text-sm font-bold">TOPACTION</span>
-          </div>
-          <p className="text-xs text-muted-foreground">
-            © 2026 TOPACTION. Nền tảng giải đấu thể thao trực tuyến.
-          </p>
-        </div>
-      </div>
-    </footer>
   );
 }
 
