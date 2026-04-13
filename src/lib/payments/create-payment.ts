@@ -21,9 +21,8 @@ export function getPaymentProvider(): PaymentProvider {
         provider = new SePayProvider()
         break
       case 'vietqr':
-        // Reuse SePayProvider logic since it's just a manual bank transfer abstraction for now
+        // Reuse SePayProvider logic since it's just a manual bank transfer abstraction
         provider = new SePayProvider()
-        provider.name = 'vietqr'
         break
       // Add more providers here:
       // case 'momo':
