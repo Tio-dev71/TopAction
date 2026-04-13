@@ -39,6 +39,7 @@ export const tournamentSchema = z.object({
   facebook_page_name: z.string().optional().or(z.literal('')),
   donation_goal: z.number().int().min(0).optional().nullable(),
   donation_description: z.string().optional().or(z.literal('')),
+  charity_iframe_url: z.string().url('Link không hợp lệ').optional().or(z.literal('')),
   rewards_title: z.string().max(200).optional().or(z.literal('')),
   rewards_description: z.string().optional().or(z.literal('')),
 })

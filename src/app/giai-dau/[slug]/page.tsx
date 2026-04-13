@@ -189,7 +189,7 @@ export default async function TournamentDetailPage({
               </FadeIn>
 
               {/* Right - Sponsors on banner */}
-              {(sponsors.length > 0 || partners.length > 0) && (
+              {(sponsors.length > 0) && (
                 <FadeIn delay={0.3} className="td-hero__sponsors">
                   {sponsors.length > 0 && (
                     <div className="td-hero__sponsor-group">
@@ -201,22 +201,6 @@ export default async function TournamentDetailPage({
                               <img src={s.logo_url} alt={s.name} className="td-hero__sponsor-logo" />
                             ) : (
                               <span className="td-hero__sponsor-name">{s.name}</span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                  {partners.length > 0 && (
-                    <div className="td-hero__sponsor-group">
-                      <p className="td-hero__sponsor-label">Đơn vị đồng hành</p>
-                      <div className="td-hero__sponsor-logos">
-                        {partners.map((p: any) => (
-                          <div key={p.id} className="td-hero__sponsor-logo-wrap">
-                            {p.logo_url ? (
-                              <img src={p.logo_url} alt={p.name} className="td-hero__sponsor-logo" />
-                            ) : (
-                              <span className="td-hero__sponsor-name">{p.name}</span>
                             )}
                           </div>
                         ))}
@@ -270,12 +254,14 @@ export default async function TournamentDetailPage({
 
                 {/* ─── Charity Progress ─── */}
                 <CharityProgress
+                  tournamentId={tournament.id}
                   donationTotal={tournament.donation_total || 0}
                   donationGoal={tournament.donation_goal || 500000000}
                   donationDescription={
                     tournament.donation_description ||
                     "Mỗi lượt đăng ký là 100.000 VND gửi đến Quỹ, tiếp sức điều trị cho trẻ em mắc bệnh hiểm."
                   }
+                  charityIframeUrl={tournament.charity_iframe_url}
                 />
 
                 {/* ─── Rules Section ─── */}

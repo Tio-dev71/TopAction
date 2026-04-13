@@ -41,7 +41,7 @@ export function useRealtimeTable({
     if (!enabled) return
 
     const supabase = createClient()
-    const channelName = `realtime-${table}-${filter || 'all'}-${Date.now()}`
+    const channelName = `realtime-${table}-${filter || 'all'}-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`
 
     const channelConfig: any = {
       event,

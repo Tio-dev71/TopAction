@@ -81,6 +81,7 @@ export interface DbTournament {
   max_pace: number
   rewards_title: string | null
   rewards_description: string | null
+  charity_iframe_url: string | null
 }
 
 export interface DbTournamentCategory {

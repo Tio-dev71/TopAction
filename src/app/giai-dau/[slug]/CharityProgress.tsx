@@ -2,22 +2,47 @@
 
 import { Heart } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useRealtimeTable } from "@/hooks/useRealtimeTable";
 
 interface CharityProgressProps {
+  tournamentId: string;
   donationTotal: number;
   donationGoal: number;
   donationDescription?: string;
+  charityIframeUrl?: string | null;
 }
 
 export function CharityProgress({
-  donationTotal,
+  tournamentId,
+  donationTotal: initialTotal,
   donationGoal,
   donationDescription,
+  charityIframeUrl,
 }: CharityProgressProps) {
+  const [total, setTotal] = useState(initialTotal);
   const [animatedPercent, setAnimatedPercent] = useState(0);
 
+  // Lắng nghe realtime để cập nhật tổng số tiền quyên góp khi có GD thành công
+  useRealtimeTable({
+    table: "donations",
+    filter: `tournament_id=eq.${tournamentId}`,
+    onUpdate: (payload) => {
+      const newRow = payload.new as any;
+      const oldRow = payload.old as any;
+      if (newRow.status === "paid" && oldRow.status !== "paid") {
+        setTotal((prev) => prev + (newRow.amount || 0));
+      }
+    },
+    onInsert: (payload) => {
+      const newRow = payload.new as any;
+      if (newRow.status === "paid") {
+        setTotal((prev) => prev + (newRow.amount || 0));
+      }
+    },
+  });
+
   const percent = donationGoal > 0
-    ? Math.min(100, Math.round((donationTotal / donationGoal) * 100))
+    ? Math.min(100, Math.round((total / donationGoal) * 100))
     : 0;
 
   useEffect(() => {
@@ -42,7 +67,7 @@ export function CharityProgress({
         <span>
           Đã góp{" "}
           <strong className="charity-progress__raised">
-            {fmtMoney(donationTotal)}
+            {fmtMoney(total)}
           </strong>
         </span>
         <span className="charity-progress__separator">/</span>
@@ -62,6 +87,17 @@ export function CharityProgress({
 
       {donationDescription && (
         <p className="charity-progress__description">{donationDescription}</p>
+      )}
+
+      {charityIframeUrl && (
+        <div className="mt-8 overflow-hidden rounded-xl border border-gray-100 dark:border-gray-800 shadow-sm">
+          <iframe 
+            src={charityIframeUrl} 
+            className="w-full h-[600px] border-none block" 
+            title="Thống kê minh bạch"
+            sandbox="allow-same-origin allow-scripts allow-popups allow-forms"
+          />
+        </div>
       )}
     </div>
   );

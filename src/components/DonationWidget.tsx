@@ -404,7 +404,7 @@ export function DonationWidget({
               <div className="flex justify-center p-4 bg-white rounded-xl border-2 border-primary/20 shadow-inner">
                 {/* Image endpoint from VietQR.io */}
                 <img
-                  src={`https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${bankingInfo.amount}&addInfo=${bankingInfo.code}&accountName=${encodeURIComponent(accountName)}`}
+                  src={`https://img.vietqr.io/image/${bankId}-${accountNo}-compact2.png?amount=${bankingInfo.amount}&addInfo=SAIBUOCNGHIATINH%20${bankingInfo.code}&accountName=${encodeURIComponent(accountName)}`}
                   alt="VietQR Chuyển khoản"
                   className="w-64 h-64 object-contain"
                 />
@@ -445,10 +445,10 @@ export function DonationWidget({
                   <span className="text-muted-foreground mr-4">Nội dung <span className="text-[10px] text-destructive">(Bắt buộc)</span></span>
                   <div className="flex items-center gap-2">
                     <span className="font-mono font-bold bg-primary/10 px-2 py-0.5 rounded text-primary">
-                      {bankingInfo.code}
+                      SAIBUOCNGHIATINH {bankingInfo.code}
                     </span>
                     <button
-                      onClick={() => handleCopy(bankingInfo.code, 'code')}
+                      onClick={() => handleCopy(`SAIBUOCNGHIATINH ${bankingInfo.code}`, 'code')}
                       className="text-primary hover:text-primary/80 transition-colors"
                       title="Copy"
                     >

@@ -214,6 +214,11 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                     <Label htmlFor="donation_description">Nội dung giải thích (text nhỏ bên dưới thanh tiến trình)</Label>
                     <Textarea id="donation_description" name="donation_description" rows={2} defaultValue={tournament.donation_description || ''} placeholder="Mỗi lượt đăng ký là 100.000 VND gửi đến Quỹ..." />
                   </div>
+                  <div className="space-y-2 pt-2">
+                    <Label htmlFor="charity_iframe_url">Link Iframe Thiện Nguyện (tuỳ chọn)</Label>
+                    <Input id="charity_iframe_url" name="charity_iframe_url" type="url" defaultValue={tournament.charity_iframe_url || ''} placeholder="VD: https://thiennguyen.app/doi-tac/minh-bach-tai-khoan/1961" />
+                    <p className="text-xs text-muted-foreground">Ví dụ: https://thiennguyen.app/doi-tac/minh-bach-tai-khoan/1961 - Hệ thống sẽ nhúng thống kê trực tiếp.</p>
+                  </div>
                 </div>
 
                 <div className="rounded-xl border border-primary/20 bg-primary/5 p-4 space-y-4">
