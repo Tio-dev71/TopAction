@@ -15,9 +15,10 @@ import {
   deleteTournamentCategory,
   saveTournamentRule,
   saveOrganizer,
+  deleteOrganizer,
 } from '@/app/actions/admin/tournaments'
 import { toast } from 'sonner'
-import { Loader2, ArrowLeft, Plus, Trash2, Save } from 'lucide-react'
+import { Loader2, ArrowLeft, Plus, Trash2, Save, Edit2, X } from 'lucide-react'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
 import { TextareaWithImageUpload } from '@/components/admin/TextareaWithImageUpload'
 
@@ -388,28 +389,56 @@ function OrganizersEditor({ tournamentId, organizers }: { tournamentId: string; 
   const router = useRouter()
   const boundSave = saveOrganizer.bind(null, tournamentId)
   const [state, formAction, pending] = useActionState(boundSave, null)
+  const [editingOrg, setEditingOrg] = useState<any>(null)
 
   useEffect(() => {
-    if (state?.success) { toast.success('Lưu thành công!'); router.refresh() }
+    if (state?.success) { 
+      toast.success('Lưu thành công!')
+      setEditingOrg(null)
+      router.refresh() 
+    }
     if (state?.error) toast.error(state.error)
   }, [state, router])
+
+  const handleDelete = async (orgId: string) => {
+    if (!confirm('Xóa đơn vị này?')) return
+    const res = await deleteOrganizer(orgId, tournamentId)
+    if (res.error) toast.error(res.error)
+    else { toast.success('Đã xóa'); router.refresh() }
+  }
 
   return (
     <Card className="border-border/60">
       <CardHeader><CardTitle className="text-base">Đơn vị tổ chức & Đồng hành</CardTitle></CardHeader>
       <CardContent className="space-y-3">
         {organizers.map((org) => (
-          <div key={org.id} className="rounded-lg border border-border/40 p-3">
-            <p className="text-sm font-medium">{org.name} <span className="text-xs text-muted-foreground">({org.type})</span></p>
-            <p className="text-xs text-muted-foreground mt-1">{org.description}</p>
+          <div key={org.id} className="flex items-center gap-3 rounded-lg border border-border/40 p-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium">{org.name} <span className="text-xs text-muted-foreground">({org.type})</span></p>
+              <p className="text-xs text-muted-foreground mt-1">{org.description}</p>
+            </div>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setEditingOrg(org)}>
+              <Edit2 className="h-4 w-4" />
+            </Button>
+            <Button variant="ghost" size="sm" className="h-8 w-8 p-0 text-destructive" onClick={() => handleDelete(org.id)}>
+              <Trash2 className="h-4 w-4" />
+            </Button>
           </div>
         ))}
-        <form action={formAction} className="space-y-3 rounded-lg border border-dashed border-border/60 p-4">
-          <p className="text-sm font-medium">Thêm đơn vị mới</p>
-          <Input name="name" placeholder="Tên đơn vị" required />
-          <Textarea name="description" placeholder="Mô tả" rows={2} />
+        <form key={editingOrg ? editingOrg.id : 'new'} action={formAction} className="space-y-3 rounded-lg border border-dashed border-border/60 p-4">
+          <div className="flex items-center justify-between">
+            <p className="text-sm font-medium">{editingOrg ? 'Sửa đơn vị' : 'Thêm đơn vị mới'}</p>
+            {editingOrg && (
+              <Button type="button" variant="ghost" size="sm" onClick={() => setEditingOrg(null)} className="h-7 px-2 text-muted-foreground">
+                <X className="h-4 w-4 mr-1" /> Hủy
+              </Button>
+            )}
+          </div>
+          {editingOrg && <input type="hidden" name="id" value={editingOrg.id} />}
+          <Input name="name" placeholder="Tên đơn vị" defaultValue={editingOrg?.name || ''} required />
+          <Textarea name="description" placeholder="Mô tả" rows={2} defaultValue={editingOrg?.description || ''} />
           <div className="grid grid-cols-2 gap-3">
-            <select name="type" className="rounded-lg border border-input bg-background px-3 py-2 text-sm">
+            <select name="type" defaultValue={editingOrg?.type || 'organizer'} className="rounded-lg border border-input bg-background px-3 py-2 text-sm">
               <option value="organizer">Tổ chức</option>
               <option value="sponsor">Tài trợ</option>
               <option value="partner">Đồng hành</option>
@@ -418,13 +447,15 @@ function OrganizersEditor({ tournamentId, organizers }: { tournamentId: string; 
               name="logo_url"
               label="Logo"
               folder="organizers"
+              defaultValue={editingOrg?.logo_url || ''}
               showPreview={true}
             />
           </div>
-          <input type="hidden" name="sort_order" value={organizers.length} />
+          <input type="hidden" name="sort_order" value={editingOrg ? editingOrg.sort_order : organizers.length} />
           <Button type="submit" size="sm" disabled={pending} className="gap-1.5">
             {pending && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-            <Plus className="h-3.5 w-3.5" /> Thêm
+            {editingOrg ? <Save className="h-3.5 w-3.5" /> : <Plus className="h-3.5 w-3.5" />} 
+            {editingOrg ? 'Lưu thay đổi' : 'Thêm'}
           </Button>
         </form>
       </CardContent>

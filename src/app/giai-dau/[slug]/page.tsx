@@ -52,10 +52,38 @@ const ruleIcons: Record<string, React.ReactNode> = {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
-  const { data: t } = await supabase.from('tournaments').select('title, short_description').eq('slug', slug).single();
+  const { data: t } = await supabase.from('tournaments').select('title, short_description, cover_image, slug').eq('slug', slug).single();
+  
+  const title = t?.title ? `${t.title} | TOPPLAY` : 'Giải đấu | TOPPLAY';
+  const description = t?.short_description || 'Thông tin giải đấu thể thao trực tuyến';
+  const images = t?.cover_image ? [t.cover_image] : ['https://topplay.vn/images/default-share.jpg'];
+  const url = `https://topplay.vn/giai-dau/${t?.slug || slug}`;
+
   return {
-    title: t ? `${t.title} | TOPPLAY` : 'Giải đấu | TOPPLAY',
-    description: t?.short_description || 'Thông tin giải đấu thể thao trực tuyến',
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: 'TOPPLAY',
+      images: [
+        {
+          url: images[0],
+          width: 1200,
+          height: 630,
+          alt: title,
+        }
+      ],
+      locale: 'vi_VN',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+      images,
+    },
   };
 }
 

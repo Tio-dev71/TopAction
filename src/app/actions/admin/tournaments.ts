@@ -321,3 +321,18 @@ export async function saveOrganizer(tournamentId: string, prevState: any, formDa
   revalidatePath(`/admin/giai-dau/${tournamentId}`)
   return { success: true }
 }
+
+export async function deleteOrganizer(organizerId: string, tournamentId: string) {
+  await requireStaff()
+  const supabase = await createClient()
+
+  const { error } = await supabase
+    .from('organizers')
+    .delete()
+    .eq('id', organizerId)
+
+  if (error) return { error: error.message }
+
+  revalidatePath(`/admin/giai-dau/${tournamentId}`)
+  return { success: true }
+}

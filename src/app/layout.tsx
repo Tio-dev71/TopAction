@@ -10,9 +10,32 @@ const beVietnamPro = Be_Vietnam_Pro({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://topplay.vn'),
   title: "TOPPLAY - Nền tảng giải đấu thể thao trực tuyến",
   description:
     "Khám phá và tham gia các giải đấu thể thao hàng đầu Việt Nam. Đăng ký, theo dõi bảng xếp hạng, và ủng hộ vận động viên.",
+  openGraph: {
+    title: "TOPPLAY - Nền tảng giải đấu thể thao trực tuyến",
+    description: "Khám phá và tham gia các giải đấu thể thao hàng đầu Việt Nam.",
+    url: 'https://topplay.vn',
+    siteName: 'TOPPLAY',
+    images: [
+      {
+        url: 'https://topplay.vn/images/default-share.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'TOPPLAY',
+      }
+    ],
+    locale: 'vi_VN',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "TOPPLAY - Nền tảng giải đấu thể thao trực tuyến",
+    description: "Khám phá và tham gia các giải đấu thể thao hàng đầu Việt Nam.",
+    images: ['https://topplay.vn/images/default-share.jpg'],
+  },
 };
 
 export default function RootLayout({
