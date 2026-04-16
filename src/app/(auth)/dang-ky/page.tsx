@@ -43,6 +43,19 @@ export default function SignupPage() {
       return
     }
 
+    // Detect in-app browsers (Zalo, Facebook, Instagram)
+    const isAppBrowser = /FBAN|FBAV|Zalo|Instagram|Line|Messenger/i.test(navigator.userAgent)
+    if (isAppBrowser) {
+      toast.error("Trình duyệt này không hỗ trợ đăng nhập Google. Vui lòng mở bằng Safari, Chrome hoặc Edge.", {
+        duration: 8000,
+        action: {
+          label: "Đã hiểu",
+          onClick: () => console.log("User acknowledged"),
+        },
+      });
+      return
+    }
+
     setGoogleLoading(true)
     try {
       const { createClient } = await import('@/lib/supabase/client')

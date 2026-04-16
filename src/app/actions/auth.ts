@@ -77,17 +77,20 @@ export async function signup(state: any, formData: FormData) {
     return { error: error.message }
   }
 
-  // If user is created and they have session (auto log in), sync profile
-  if (data.user && data.session) {
-      // Create profile since they have active session
+  // If user is created, guarantee their profile is saved
+  if (data.user) {
       await supabase.from('profiles').upsert(
         {
           id: data.user.id,
           email: data.user.email as string,
           full_name: fullName,
         },
-        { onConflict: 'id' }
+        { onConflict: 'id', ignoreDuplicates: true }
       )
+  }
+
+  // If user has session (auto log in because confirm email is off), sync profile
+  if (data.session) {
       return { success: true, redirect: '/ca-nhan' }
   } 
 
