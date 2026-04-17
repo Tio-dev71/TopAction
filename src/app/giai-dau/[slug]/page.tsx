@@ -20,6 +20,7 @@ import { FacebookEmbed } from "./FacebookEmbed";
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { LiveStatsBanner } from "@/components/home/LiveStatsBanner";
+import { LeaderboardPodium } from "./LeaderboardPodium";
 
 /* ────────────── helpers ────────────── */
 
@@ -382,7 +383,9 @@ export default async function TournamentDetailPage({
                       <Medal className="h-5 w-5 text-[#FC4C02]" />
                       Bảng xếp hạng (Top 10)
                     </h3>
-                    <FadeIn className="td-leaderboard__table-wrap">
+                    <LeaderboardPodium results={results} />
+                    {results.length > 3 && (
+                    <FadeIn className="td-leaderboard__table-wrap mt-4">
                       <table className="td-leaderboard__table">
                         <thead>
                           <tr>
@@ -393,17 +396,12 @@ export default async function TournamentDetailPage({
                           </tr>
                         </thead>
                         <tbody>
-                          {results.map((r: any, idx: number) => {
-                            const isTop3 = idx < 3;
-                            const colors = ['text-yellow-500', 'text-gray-400', 'text-amber-600'];
+                          {results.slice(3).map((r: any, idx: number) => {
+                            const rank = idx + 4;
                             return (
                               <tr key={r.id} className="td-leaderboard__row">
                                 <td className="td-leaderboard__td td-leaderboard__td--rank">
-                                  {isTop3 ? (
-                                    <span className={colors[idx]}><Medal className="h-5 w-5 inline-block" /></span>
-                                  ) : (
-                                    idx + 1
-                                  )}
+                                  {rank}
                                 </td>
                                 <td className="td-leaderboard__td td-leaderboard__td--name">
                                   <div className="td-leaderboard__athlete">
@@ -437,6 +435,7 @@ export default async function TournamentDetailPage({
                         </tbody>
                       </table>
                     </FadeIn>
+                    )}
                   </div>
                 )}
               </FadeIn>

@@ -183,6 +183,36 @@ export function LiveStatsBanner({
           </div>
 
         </div>
+        
+        {/* Horizontal Ticker Strip for Recent Activities */}
+        {recentActivities && recentActivities.length > 0 && (
+          <div className="relative z-10 mt-10 w-full overflow-hidden border-t border-white/10 pt-4">
+            <motion.div
+              className="flex whitespace-nowrap gap-4 px-4 items-center"
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
+              style={{ width: "fit-content" }}
+            >
+              {/* Duplicate list to create seamless loop */}
+              {[...recentActivities, ...recentActivities, ...recentActivities, ...recentActivities].map((stat, i) => (
+                <div
+                  key={i}
+                  className="flex shrink-0 items-center justify-center gap-3 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm border border-white/20 shadow-sm"
+                >
+                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-white shrink-0">
+                    <span className="text-xs font-bold uppercase">{stat.name.charAt(0)}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-bold text-white">{stat.name}</span>
+                    <span className="text-[13px] font-medium text-blue-200">
+                      Vừa chạy được {stat.distance.toLocaleString("vi-VN", { maximumFractionDigits: 2 })} km
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </motion.div>
+          </div>
+        )}
       </div>
     </section>
   );

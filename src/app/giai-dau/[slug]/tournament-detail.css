@@ -167,8 +167,8 @@
 }
 
 .td-hero__sponsor-logo {
-  height: 2.5rem;
-  max-width: 120px;
+  height: 3.5rem;
+  max-width: 160px;
   object-fit: contain;
 }
 
@@ -1040,8 +1040,8 @@
 }
 
 .td-organizers__logo-img {
-  height: 4rem;
-  max-width: 180px;
+  height: 5.5rem;
+  max-width: 220px;
   object-fit: contain;
 }
 
