@@ -56,7 +56,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { data: t } = await supabase.from('tournaments').select('title, short_description, cover_image, slug').eq('slug', slug).single();
 
   const title = t?.title ? `${t.title} | TOPPLAY` : 'Giải đấu | TOPPLAY';
-  const description = t?.short_description || 'Thông tin giải đấu thể thao trực tuyến';
+  const descriptionText = t?.short_description?.replace(/<[^>]*>?/gm, '') || 'Thông tin giải đấu thể thao trực tuyến';
+  const description = descriptionText.substring(0, 160);
   const images = t?.cover_image ? [t.cover_image] : ['https://topplay.vn/images/default-share.jpg'];
   const url = `https://topplay.vn/giai-dau/${t?.slug || slug}`;
 
@@ -385,6 +386,15 @@ export default async function TournamentDetailPage({
                   icon="activity"
                 />
 
+                {/* ─── General Rules ─── */}
+                {tournament.short_description && (
+                  <CollapsibleSection
+                    title="Quy định chung"
+                    content={tournament.short_description}
+                    icon="info"
+                  />
+                )}
+
                 {/* ─── Leaderboard ─── */}
                 <div className="td-leaderboard">
                   <h3 className="td-section-title">
@@ -511,16 +521,6 @@ export default async function TournamentDetailPage({
                     pageUrl={tournament.facebook_page_url}
                     pageName={tournament.facebook_page_name || "TOPPLAY"}
                   />
-                </FadeIn>
-              )}
-
-              {/* Tournament Info */}
-              {tournament.description && (
-                <FadeIn delay={0.5} className="td-sidebar__info">
-                  <h3 className="td-sidebar__info-title">Quy định chung</h3>
-                  <p className="td-sidebar__info-text">
-                    {tournament.short_description || tournament.description?.substring(0, 200)}
-                  </p>
                 </FadeIn>
               )}
 

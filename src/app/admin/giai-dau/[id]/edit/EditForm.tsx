@@ -98,8 +98,13 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="short_description">Mô tả ngắn</Label>
-                  <Textarea id="short_description" name="short_description" rows={2} defaultValue={tournament.short_description || ''} />
+                  <Label htmlFor="short_description">Quy định chung (Mô tả ngắn)</Label>
+                  <TextareaWithImageUpload
+                    id="short_description"
+                    name="short_description"
+                    defaultValue={tournament.short_description || ''}
+                    folder="tournaments"
+                  />
                 </div>
 
                 <div className="space-y-2">
