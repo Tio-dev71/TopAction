@@ -53,11 +53,11 @@ interface LiveStatsBannerProps {
 
 function BubblingActivities({ activities }: { activities: LiveActivity[] }) {
   // If there's no real data yet, use some mock data to keep the banner lively and demonstrate the UI
-  const mockActivities = [
-    { name: "Nguyễn Văn A", distance: 5.2 },
-    { name: "Trần Thị B", distance: 3.8 },
-    { name: "Lê Hoàng C", distance: 10.5 },
-    { name: "Phạm D", distance: 2.1 }
+  const mockActivities: LiveActivity[] = [
+    { name: "Nguyễn Văn A", distance: 5.2, type: 'run' },
+    { name: "Trần Thị B", distance: 3.8, type: 'run' },
+    { name: "Lê Hoàng C", distance: 10.5, type: 'run' },
+    { name: "Phạm D", distance: 2.1, type: 'run' }
   ];
 
   const actualActivities = activities && activities.length > 0 ? activities : mockActivities;
