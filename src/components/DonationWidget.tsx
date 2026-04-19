@@ -253,7 +253,7 @@ export function DonationWidget({
           <span className="text-[10px] font-normal text-green-600">LIVE</span>
         </div>
 
-        <div className="space-y-3">
+        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
           {loading ? (
             <div className="flex justify-center p-4">
               <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
@@ -261,7 +261,7 @@ export function DonationWidget({
           ) : donations.length === 0 ? (
             <p className="text-xs text-muted-foreground italic">Chưa có lượt ủng hộ nào.</p>
           ) : (
-            donations.slice(0, 5).map((d, i) => (
+            donations.map((d, i) => (
               <div
                 key={d.id || i}
                 className={`flex items-start gap-3 rounded-lg p-2 transition-all duration-500 ${newDonationId === d.id

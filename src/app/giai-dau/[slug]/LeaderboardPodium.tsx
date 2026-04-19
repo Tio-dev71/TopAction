@@ -14,7 +14,7 @@ interface Result {
 }
 
 export function LeaderboardPodium({ results }: { results: Result[] }) {
-  if (!results || results.length === 0) return null;
+  // if (!results || results.length === 0) return null;
 
   const top3 = results.slice(0, 3);
   const first = top3.length > 0 ? top3[0] : undefined;
@@ -29,9 +29,10 @@ export function LeaderboardPodium({ results }: { results: Result[] }) {
     colorClass: string,
     delay: number
   ) => {
-    if (!result) return <div className="w-[30%] opacity-0" />;
-
-    const initials = result.profiles?.full_name?.charAt(0) || "?";
+    const initials = result?.profiles?.full_name?.charAt(0) || "?";
+    const name = result?.profiles?.full_name || "Chưa có VĐV";
+    const avatarUrl = result?.profiles?.avatar_url;
+    const distanceText = result ? `${(result.total_distance / 1000).toLocaleString("vi-VN", { maximumFractionDigits: 2 })} km` : "--";
     
     return (
       <motion.div 
@@ -42,20 +43,20 @@ export function LeaderboardPodium({ results }: { results: Result[] }) {
       >
         <div className="flex flex-col items-center mb-3 z-10 w-full">
           <div className={`relative mb-2 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full border-[3px] border-white ${colorClass} text-white shadow-lg`}>
-             {result.profiles?.avatar_url ? (
-               <img src={result.profiles.avatar_url} alt="" className="h-full w-full rounded-full object-cover" />
+             {avatarUrl ? (
+               <img src={avatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
              ) : (
-               <span className="text-xl font-bold">{initials}</span>
+               <span className="text-xl font-bold">{result ? initials : "-"}</span>
              )}
              <div className={`absolute -bottom-2 flex h-6 w-6 items-center justify-center rounded-full border-2 border-white ${colorClass} text-xs font-bold shadow-sm`}>
                {place}
              </div>
           </div>
           <span className="text-sm font-bold text-center leading-tight line-clamp-2 max-w-[90px] text-zinc-900">
-            {result.profiles?.full_name || "VĐV Ẩn danh"}
+            {name}
           </span>
           <span className="text-xs font-bold mt-1 text-slate-600">
-            {(result.total_distance / 1000).toLocaleString("vi-VN", { maximumFractionDigits: 2 })} km
+            {distanceText}
           </span>
         </div>
         <div className={`w-full rounded-t-xl bg-gradient-to-b from-[#e5f1fb] to-[#c4e1f6] ${heightClass} shadow-[inset_0_2px_4px_rgba(255,255,255,0.8)] flex items-start justify-center pt-2 md:pt-4 border-t border-white/60`}>

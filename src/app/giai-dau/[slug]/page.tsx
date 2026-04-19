@@ -124,7 +124,7 @@ export default async function TournamentDetailPage({
     .eq("tournament_id", tournament.id)
     .eq("status", "paid")
     .order("created_at", { ascending: false })
-    .limit(10);
+    .limit(50);
 
   const donationList = (donations || []).map((d: any) => ({
     ...d,
@@ -377,14 +377,13 @@ export default async function TournamentDetailPage({
                 />
 
                 {/* ─── Leaderboard ─── */}
-                {results && results.length > 0 && (
-                  <div className="td-leaderboard">
-                    <h3 className="td-section-title">
-                      <Medal className="h-5 w-5 text-[#FC4C02]" />
-                      Bảng xếp hạng (Top 10)
-                    </h3>
-                    <LeaderboardPodium results={results} />
-                    {results.length > 3 && (
+                <div className="td-leaderboard">
+                  <h3 className="td-section-title">
+                    <Medal className="h-5 w-5 text-[#FC4C02]" />
+                    Bảng xếp hạng (Top 10)
+                  </h3>
+                  <LeaderboardPodium results={results || []} />
+                  {results && results.length > 3 && (
                     <FadeIn className="td-leaderboard__table-wrap mt-4">
                       <table className="td-leaderboard__table">
                         <thead>
@@ -436,8 +435,7 @@ export default async function TournamentDetailPage({
                       </table>
                     </FadeIn>
                     )}
-                  </div>
-                )}
+                </div>
               </FadeIn>
             </div>
 
