@@ -166,6 +166,15 @@ export default async function TournamentDetailPage({
     recentActivities.push(...allResults.slice(0, 5).map((r: any) => ({
       name: r.profiles?.full_name || 'VĐV Ẩn danh',
       distance: (r.total_distance || 0) / 1000,
+      type: 'run'
+    })));
+  }
+
+  if (donationList && donationList.length > 0) {
+    recentActivities.push(...donationList.slice(0, 5).map((d: any) => ({
+      name: d.donor_name || 'Ẩn danh',
+      amount: d.amount,
+      type: 'donate'
     })));
   }
 
