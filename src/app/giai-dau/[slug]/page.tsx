@@ -152,7 +152,7 @@ export default async function TournamentDetailPage({
 
   let totalDistanceBanner = 0;
   let todayParticipantsCount = 0;
-  const recentActivities = [];
+  const recentActivities: any[] = [];
 
   if (allResults) {
     const today = new Date().toISOString().split('T')[0];
@@ -166,7 +166,7 @@ export default async function TournamentDetailPage({
     recentActivities.push(...allResults.slice(0, 5).map((r: any) => ({
       name: r.profiles?.full_name || 'VĐV Ẩn danh',
       distance: (r.total_distance || 0) / 1000,
-      type: 'run'
+      type: 'run' as 'run'
     })));
   }
 
@@ -174,7 +174,7 @@ export default async function TournamentDetailPage({
     recentActivities.push(...donationList.slice(0, 5).map((d: any) => ({
       name: d.donor_name || 'Ẩn danh',
       amount: d.amount,
-      type: 'donate'
+      type: 'donate' as 'donate'
     })));
   }
 
