@@ -54,7 +54,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const supabase = await createClient();
   const { data: t } = await supabase.from('tournaments').select('title, short_description, cover_image, slug').eq('slug', slug).single();
-  
+
   const title = t?.title ? `${t.title} | TOPPLAY` : 'Giải đấu | TOPPLAY';
   const description = t?.short_description || 'Thông tin giải đấu thể thao trực tuyến';
   const images = t?.cover_image ? [t.cover_image] : ['https://topplay.vn/images/default-share.jpg'];
@@ -369,8 +369,8 @@ export default async function TournamentDetailPage({
 
                 {/* ─── Rewards Section ─── */}
                 {tournament.rewards_description && (
-                  <CollapsibleSection 
-                    title={tournament.rewards_title || "Giải thưởng"} 
+                  <CollapsibleSection
+                    title={tournament.rewards_title || "Giải thưởng"}
                     content={tournament.rewards_description}
                     icon="medal"
                     defaultExpanded={true}
@@ -379,8 +379,8 @@ export default async function TournamentDetailPage({
                 )}
 
                 {/* ─── Description ─── */}
-                <CollapsibleSection 
-                  title="Giới thiệu giải đấu" 
+                <CollapsibleSection
+                  title="Giới thiệu giải đấu"
                   content={tournament.description}
                   icon="activity"
                 />
@@ -443,7 +443,7 @@ export default async function TournamentDetailPage({
                         </tbody>
                       </table>
                     </FadeIn>
-                    )}
+                  )}
                 </div>
               </FadeIn>
             </div>
@@ -517,7 +517,7 @@ export default async function TournamentDetailPage({
               {/* Tournament Info */}
               {tournament.description && (
                 <FadeIn delay={0.5} className="td-sidebar__info">
-                  <h3 className="td-sidebar__info-title">Thông tin giải đấu</h3>
+                  <h3 className="td-sidebar__info-title">Quy định chung</h3>
                   <p className="td-sidebar__info-text">
                     {tournament.short_description || tournament.description?.substring(0, 200)}
                   </p>
