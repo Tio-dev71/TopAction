@@ -149,7 +149,7 @@ export function LiveStatsBanner({
       <div className="relative mx-auto flex min-h-[300px] w-full flex-col items-center justify-center px-4 py-10 sm:px-6 z-10">
         
         {/* Center Stats Grid */}
-        <div className="grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 mt-4">
+        <div className="grid w-full max-w-4xl grid-cols-1 items-end gap-6 md:grid-cols-3 lg:gap-8 mt-4">
           
           {/* Stat 1 */}
           <div className="flex flex-col items-center">
