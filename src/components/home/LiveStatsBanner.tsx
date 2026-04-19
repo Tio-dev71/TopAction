@@ -49,13 +49,61 @@ interface LiveStatsBannerProps {
   recentActivities?: LiveActivity[];
 }
 
-const floatingLayout = [
-  { top: "15%", left: "5%", size: "scale-100", delay: 0 },
-  { top: "8%", left: "35%", size: "scale-100", delay: 1 },
-  { top: "18%", left: "75%", size: "scale-75", delay: 2, hideOnMobile: true },
-  { top: "78%", left: "40%", size: "scale-100", delay: 1.5 },
-  { top: "82%", left: "75%", size: "scale-75", delay: 0.5, hideOnMobile: true },
-];
+function BubblingActivities({ activities }: { activities: LiveActivity[] }) {
+  if (!activities || activities.length === 0) return null;
+
+  // We want to create enough bubbles to make it look lively, so if we have only a few activities, we can duplicate them.
+  const displayActivities = activities.length < 5 ? [...activities, ...activities] : activities;
+
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {displayActivities.map((activity, i) => {
+        // Distribute horizontally
+        const leftPos = 10 + (i * 30) % 70;
+        // Stagger their appearances
+        const delay = i * 2.5; 
+        
+        return (
+          <motion.div
+            key={i}
+            initial={{ y: "100%", opacity: 0, scale: 0.8 }}
+            animate={{ 
+              y: ["100%", "-200%"],
+              opacity: [0, 1, 1, 0],
+              scale: [0.8, 1, 1, 0.9],
+              x: [0, (i % 2 === 0 ? 40 : -40), 0]
+            }}
+            transition={{
+              repeat: Infinity,
+              duration: 15,
+              delay: delay,
+              ease: "linear"
+            }}
+            className="absolute flex items-center gap-2.5 rounded-full bg-white/10 px-3 py-1.5 shadow-lg backdrop-blur-md border border-white/20"
+            style={{ 
+              left: `${leftPos}%`, 
+              bottom: '0%' 
+            }}
+          >
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#0eb2b2] text-white">
+              <span className="font-sans text-xs font-bold leading-none uppercase">
+                {activity.name.charAt(0)}
+              </span>
+            </div>
+            <div className="flex flex-col pr-1">
+              <span className="text-sm font-bold leading-tight text-white drop-shadow-md">
+                {activity.name}
+              </span>
+              <span className="mt-[1px] text-[11px] font-medium text-teal-100">
+                Vừa chạy được {activity.distance.toLocaleString("vi-VN", { maximumFractionDigits: 2 })} km
+              </span>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+}
 
 export function LiveStatsBanner({
   todayParticipants,
@@ -63,14 +111,8 @@ export function LiveStatsBanner({
   totalParticipants,
   recentActivities = [],
 }: LiveStatsBannerProps) {
-  // Use up to 5 recent activities, mapped to our predefined layout positions.
-  const floatingStats = recentActivities.slice(0, 5).map((activity, i) => ({
-    ...activity,
-    ...floatingLayout[i],
-  }));
-
   return (
-    <section className="relative w-full overflow-hidden rounded-2xl border border-border/60 bg-slate-900 shadow-md">
+    <section className="relative w-full overflow-hidden rounded-2xl border border-border/60 bg-slate-900 shadow-xl">
       {/* Background Image */}
       <div
         className="absolute inset-0 bg-cover bg-center opacity-60"
@@ -81,52 +123,16 @@ export function LiveStatsBanner({
       />
 
       {/* Overlay gradient for readability */}
-      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/70 via-slate-900/30 to-slate-900/50" />
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/50 to-slate-900/50" />
+
+      {/* Bubbling effect container */}
+      <BubblingActivities activities={recentActivities} />
 
       {/* Main Content Area */}
-      <div className="relative mx-auto flex min-h-[300px] w-full flex-col items-center justify-center px-4 py-10 sm:px-6">
-        {/* Floating Avatars */}
-        <div className="pointer-events-none absolute inset-0 overflow-hidden">
-          {floatingStats.map((stat, i) => (
-            <motion.div
-              key={i}
-              initial={{ y: 0 }}
-              animate={{ y: [-10, 10, -10] }}
-              transition={{
-                repeat: Infinity,
-                duration: 5 + i,
-                delay: stat.delay,
-                ease: "easeInOut",
-              }}
-              className={`absolute flex items-center gap-2.5 rounded-full bg-white/95 px-3 py-1.5 shadow-lg backdrop-blur-md border border-white/40 ${
-                stat.size
-              } ${stat.hideOnMobile ? "hidden md:flex" : "flex"}`}
-              style={{
-                top: stat.top,
-                // On small screens we might want to tweak left so they don't get extremely cut off, 
-                // but using a dynamic class approach or just left percentage works well.
-                left: stat.left,
-              }}
-            >
-              <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[#4169e1] text-white">
-                <span className="font-sans text-xs font-bold leading-none italic tracking-wider">
-                  R
-                </span>
-              </div>
-              <div className="flex flex-col pr-1">
-                <span className="text-sm font-bold leading-tight text-slate-800">
-                  {stat.name}
-                </span>
-                <span className="mt-[1px] text-[11px] font-medium text-slate-500">
-                  Vừa chạy được {stat.distance.toLocaleString("vi-VN", { maximumFractionDigits: 2 })} km
-                </span>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
+      <div className="relative mx-auto flex min-h-[300px] w-full flex-col items-center justify-center px-4 py-10 sm:px-6 z-10">
+        
         {/* Center Stats Grid */}
-        <div className="relative z-10 grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 mt-4">
+        <div className="grid w-full max-w-4xl grid-cols-1 gap-6 md:grid-cols-3 lg:gap-8 mt-4">
           
           {/* Stat 1 */}
           <div className="flex flex-col items-center">
@@ -183,36 +189,6 @@ export function LiveStatsBanner({
           </div>
 
         </div>
-        
-        {/* Horizontal Ticker Strip for Recent Activities */}
-        {recentActivities && recentActivities.length > 0 && (
-          <div className="relative z-10 mt-10 w-full overflow-hidden border-t border-white/10 pt-4">
-            <motion.div
-              className="flex whitespace-nowrap gap-4 px-4 items-center"
-              animate={{ x: ["0%", "-50%"] }}
-              transition={{ repeat: Infinity, duration: 25, ease: "linear" }}
-              style={{ width: "fit-content" }}
-            >
-              {/* Duplicate list to create seamless loop */}
-              {[...recentActivities, ...recentActivities, ...recentActivities, ...recentActivities].map((stat, i) => (
-                <div
-                  key={i}
-                  className="flex shrink-0 items-center justify-center gap-3 rounded-full bg-white/10 px-4 py-2 backdrop-blur-sm border border-white/20 shadow-sm"
-                >
-                  <div className="flex h-7 w-7 items-center justify-center rounded-full bg-blue-500 text-white shrink-0">
-                    <span className="text-xs font-bold uppercase">{stat.name.charAt(0)}</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-white">{stat.name}</span>
-                    <span className="text-[13px] font-medium text-blue-200">
-                      Vừa chạy được {stat.distance.toLocaleString("vi-VN", { maximumFractionDigits: 2 })} km
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </motion.div>
-          </div>
-        )}
       </div>
     </section>
   );
