@@ -45,7 +45,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="vi" className={`h-full antialiased ${beVietnamPro.variable}`} suppressHydrationWarning>
-      <body className="min-h-full flex flex-col font-sans">
+      <body className="min-h-full flex flex-col font-sans overflow-x-hidden">
         {children}
         <Toaster position="top-center" richColors />
       </body>
