@@ -66,7 +66,7 @@ function BubblingActivities({ activities }: { activities: LiveActivity[] }) {
   const displayActivities = actualActivities.length < 5 ? [...actualActivities, ...actualActivities] : actualActivities;
 
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+    <div className="pointer-events-none absolute inset-0 overflow-hidden hidden sm:block">
       {displayActivities.map((activity, i) => {
         // Distribute horizontally
         const leftPos = 10 + (i * 30) % 70;
@@ -146,7 +146,7 @@ export function LiveStatsBanner({
       <BubblingActivities activities={recentActivities} />
 
       {/* Main Content Area */}
-      <div className="relative mx-auto flex min-h-[300px] w-full flex-col items-center justify-center px-4 py-10 sm:px-6 z-10">
+      <div className="relative mx-auto flex min-h-[200px] sm:min-h-[300px] w-full flex-col items-center justify-center px-4 py-6 sm:py-10 sm:px-6 z-10">
         
         {/* Center Stats Grid */}
         <div className="grid w-full max-w-4xl grid-cols-1 items-end gap-6 md:grid-cols-3 lg:gap-8 mt-4">
