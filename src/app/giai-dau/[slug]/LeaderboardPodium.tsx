@@ -42,7 +42,7 @@ export function LeaderboardPodium({ results }: { results: Result[] }) {
         className="flex flex-col items-center justify-end w-[32%]"
       >
         <div className="flex flex-col items-center mb-3 z-10 w-full">
-          <div className={`relative mb-2 flex h-14 w-14 sm:h-16 sm:w-16 items-center justify-center rounded-full border-[3px] border-white ${colorClass} text-white shadow-lg`}>
+          <div className={`relative mb-2 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-full border-[3px] border-white ${colorClass} text-white shadow-lg`}>
              {avatarUrl ? (
                <img src={avatarUrl} alt="" className="h-full w-full rounded-full object-cover" />
              ) : (
@@ -60,14 +60,14 @@ export function LeaderboardPodium({ results }: { results: Result[] }) {
           </span>
         </div>
         <div className={`w-full rounded-t-xl bg-gradient-to-b from-[#e5f1fb] to-[#c4e1f6] ${heightClass} shadow-[inset_0_2px_4px_rgba(255,255,255,0.8)] flex items-start justify-center pt-2 md:pt-4 border-t border-white/60`}>
-          <span className="text-4xl md:text-5xl font-extrabold text-[#9ecceb] drop-shadow-sm">{place}</span>
+          <span className="text-3xl sm:text-5xl font-extrabold text-[#9ecceb] drop-shadow-sm">{place}</span>
         </div>
       </motion.div>
     );
   };
 
   return (
-    <div className="relative mb-6 flex justify-center items-end h-[340px] rounded-2xl bg-gradient-to-b from-[#f4f9fd] to-white px-2 pb-0 pt-10 shadow-sm border border-blue-50 overflow-hidden">
+    <div className="relative mb-6 flex justify-center items-end h-[260px] sm:h-[340px] rounded-2xl bg-gradient-to-b from-[#f4f9fd] to-white px-2 pb-0 pt-6 sm:pt-10 shadow-sm border border-blue-50 overflow-hidden">
       {/* Decorative background light rays */}
       <div className="absolute inset-0 overflow-hidden rounded-2xl pointer-events-none flex justify-center">
         <div className="absolute top-[10%] w-full h-[80%] bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-100/50 via-transparent to-transparent"></div>
@@ -83,9 +83,9 @@ export function LeaderboardPodium({ results }: { results: Result[] }) {
       </div>
       
       <div className="relative flex w-full max-w-[500px] items-end justify-center gap-1 sm:gap-3 z-10 bottom-0">
-        {renderStep(second, 2, "h-[100px] md:h-[120px]", "bg-slate-300", 0.4)}
-        {renderStep(first, 1, "h-[140px] md:h-[160px]", "bg-[#ffd700]", 0.6)}
-        {renderStep(third, 3, "h-[80px] md:h-[100px]", "bg-[#cd7f32]", 0.2)}
+        {renderStep(second, 2, "h-[80px] sm:h-[120px]", "bg-slate-300", 0.4)}
+        {renderStep(first, 1, "h-[110px] sm:h-[160px]", "bg-[#ffd700]", 0.6)}
+        {renderStep(third, 3, "h-[60px] sm:h-[100px]", "bg-[#cd7f32]", 0.2)}
       </div>
     </div>
   );
