@@ -21,6 +21,7 @@ export const tournamentSchema = z.object({
   short_description: z.string().optional().or(z.literal('')),
   description: z.string().optional().or(z.literal('')),
   cover_image: z.string().optional().or(z.literal('')),
+  home_cover_image: z.string().optional().or(z.literal('')),
   banner_image: z.string().optional().or(z.literal('')),
   category: z.string().max(100).optional().or(z.literal('')),
   start_date: z.string().optional().or(z.literal('')),

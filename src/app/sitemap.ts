@@ -25,7 +25,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily' as const,
       priority: 1,
     },
-    // Bạn có thể thêm các trang tĩnh khác ở đây, ví dụ: /gioi-thieu, /tin-tuc...
   ];
 
   return [...staticUrls, ...tournamentUrls];

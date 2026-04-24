@@ -144,12 +144,20 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                   <Input id="location" name="location" defaultValue={tournament.location || ''} />
                 </div>
 
-                <ImageUploadField
-                  name="cover_image"
-                  label="Ảnh bìa"
-                  defaultValue={tournament.cover_image || ''}
-                  folder="tournaments"
-                />
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <ImageUploadField
+                    name="cover_image"
+                    label="Ảnh bìa"
+                    defaultValue={tournament.cover_image || ''}
+                    folder="tournaments"
+                  />
+                  <ImageUploadField
+                    name="home_cover_image"
+                    label="Ảnh bìa nhỏ (Trang chủ)"
+                    defaultValue={tournament.home_cover_image || ''}
+                    folder="tournaments"
+                  />
+                </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">

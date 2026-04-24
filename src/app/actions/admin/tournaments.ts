@@ -70,6 +70,7 @@ export async function createTournament(prevState: any, formData: FormData) {
     display_title: raw.display_title as string,
     rewards_title: raw.rewards_title as string,
     rewards_description: raw.rewards_description as string,
+    home_cover_image: raw.home_cover_image as string,
   })
 
   if (!parsed.success) {
@@ -122,6 +123,7 @@ export async function updateTournament(id: string, prevState: any, formData: For
     display_title: raw.display_title as string,
     rewards_title: raw.rewards_title as string,
     rewards_description: raw.rewards_description as string,
+    home_cover_image: raw.home_cover_image as string,
   })
 
   if (!parsed.success) {

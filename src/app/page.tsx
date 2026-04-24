@@ -101,6 +101,7 @@ interface TournamentCardData {
   display_title: string | null;
   category: string | null;
   cover_image: string | null;
+  home_cover_image?: string | null;
   start_date: string | null;
   end_date: string | null;
   participant_count: number;
@@ -121,9 +122,9 @@ function TournamentCard({ tournament }: { tournament: TournamentCardData }) {
       className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5"
     >
       <div className="relative aspect-[16/9] overflow-hidden bg-secondary/30">
-        {tournament.cover_image ? (
+        {tournament.home_cover_image || tournament.cover_image ? (
           <img
-            src={tournament.cover_image}
+            src={tournament.home_cover_image || tournament.cover_image!}
             alt={tournament.title}
             className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
           />
@@ -344,7 +345,7 @@ export default async function Home() {
   const { data: tournaments } = await supabase
     .from('tournaments')
     .select(`
-      slug, title, display_title, category, cover_image, start_date, end_date,
+      slug, title, display_title, category, cover_image, home_cover_image, start_date, end_date,
       participant_count, location, is_featured, rewards_title,
       categories:tournament_categories(name, distance)
     `)

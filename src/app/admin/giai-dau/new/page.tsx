@@ -142,11 +142,18 @@ export default function NewTournamentPage() {
               <Input id="location" name="location" placeholder="Địa điểm thi đấu" />
             </div>
 
-            <ImageUploadField
-              name="cover_image"
-              label="Ảnh bìa"
-              folder="tournaments"
-            />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <ImageUploadField
+                name="cover_image"
+                label="Ảnh bìa"
+                folder="tournaments"
+              />
+              <ImageUploadField
+                name="home_cover_image"
+                label="Ảnh bìa nhỏ (Trang chủ)"
+                folder="tournaments"
+              />
+            </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
