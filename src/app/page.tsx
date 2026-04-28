@@ -32,10 +32,10 @@ function fmtDate(iso: string | null) {
 function Hero() {
   return (
     <section className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute -top-24 left-1/2 h-[500px] w-[800px] -translate-x-1/2 rounded-full bg-primary/8 blur-3xl" />
-        <div className="absolute top-20 right-0 h-[300px] w-[400px] rounded-full bg-accent/10 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-[200px] w-[300px] rounded-full bg-chart-3/8 blur-3xl" />
+      <div className="absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute -top-24 left-1/2 h-[500px] w-full max-w-[800px] -translate-x-1/2 rounded-full bg-primary/8 blur-3xl" />
+        <div className="absolute top-20 right-0 h-[300px] w-[60vw] max-w-[400px] rounded-full bg-accent/10 blur-3xl" />
+        <div className="absolute bottom-0 left-0 h-[200px] w-[50vw] max-w-[300px] rounded-full bg-chart-3/8 blur-3xl" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
@@ -355,7 +355,7 @@ export default async function Home() {
     .limit(8);
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       <Navbar />
       <main className="flex-1">
         <Hero />
@@ -363,6 +363,6 @@ export default async function Home() {
         <TournamentsSection tournaments={tournaments || []} />
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

@@ -197,7 +197,7 @@ export default async function TournamentDetailPage({
     || (minPrice > 0 ? `${fmtMoney(minPrice)} VND` : 'Miễn phí');
 
   return (
-    <>
+    <div className="overflow-x-hidden">
       <Navbar />
       <main className="tournament-detail">
         {/* ─── Hero Banner ─── */}
@@ -616,6 +616,6 @@ export default async function TournamentDetailPage({
       </main>
 
       <Footer />
-    </>
+    </div>
   );
 }
