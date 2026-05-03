@@ -204,10 +204,7 @@ export default async function TournamentDetailPage({
         <section className="td-hero">
           <div className="td-hero__bg">
             {tournament.cover_image ? (
-              <>
-                <img src={tournament.cover_image} alt="" className="td-hero__bg-blur" />
-                <img src={tournament.cover_image} alt="" className="td-hero__bg-img" />
-              </>
+              <img src={tournament.cover_image} alt="" className="td-hero__bg-img" />
             ) : (
               <div className="td-hero__bg-gradient" />
             )}
