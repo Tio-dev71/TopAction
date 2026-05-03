@@ -514,15 +514,22 @@ export default async function TournamentDetailPage({
                 </div>
               </FadeIn>
 
-              {/* Facebook Fanpage */}
-              {tournament.facebook_page_url && (
-                <FadeIn delay={0.4}>
-                  <FacebookEmbed
-                    pageUrl={tournament.facebook_page_url}
-                    pageName={tournament.facebook_page_name || "TOPPLAY"}
-                  />
-                </FadeIn>
-              )}
+              {/* Facebook Fanpage(s) */}
+              {(() => {
+                // Fallback to legacy fields if JSONB isn't populated yet
+                const pages = tournament.facebook_pages && tournament.facebook_pages.length > 0
+                  ? tournament.facebook_pages
+                  : (tournament.facebook_page_url ? [{ name: tournament.facebook_page_name || 'TOPPLAY', url: tournament.facebook_page_url }] : []);
+                
+                return pages.map((page: any, index: number) => (
+                  <FadeIn delay={0.4 + (index * 0.1)} key={index}>
+                    <FacebookEmbed
+                      pageUrl={page.url}
+                      pageName={page.name || "TOPPLAY"}
+                    />
+                  </FadeIn>
+                ));
+              })()}
 
               {/* Donation Widget */}
               <FadeIn delay={0.6}>

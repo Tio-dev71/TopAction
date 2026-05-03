@@ -36,8 +36,10 @@ export const tournamentSchema = z.object({
   valid_activity_types: z.array(z.string()).default(['Run']),
   min_pace: z.number().int().nonnegative().default(240),
   max_pace: z.number().int().nonnegative().default(900),
-  facebook_page_url: z.string().optional().or(z.literal('')),
-  facebook_page_name: z.string().optional().or(z.literal('')),
+  facebook_pages: z.array(z.object({
+    name: z.string().min(1, 'Tên fanpage không được trống'),
+    url: z.string().url('Link Fanpage không hợp lệ')
+  })).optional().default([]),
   donation_goal: z.number().int().min(0).optional().nullable(),
   donation_description: z.string().optional().or(z.literal('')),
   charity_iframe_url: z.string().url('Link không hợp lệ').optional().or(z.literal('')),

@@ -71,6 +71,7 @@ export async function createTournament(prevState: any, formData: FormData) {
     rewards_title: raw.rewards_title as string,
     rewards_description: raw.rewards_description as string,
     home_cover_image: raw.home_cover_image as string,
+    facebook_pages: raw.facebook_pages ? JSON.parse(raw.facebook_pages as string) : [],
   })
 
   if (!parsed.success) {
@@ -124,6 +125,7 @@ export async function updateTournament(id: string, prevState: any, formData: For
     rewards_title: raw.rewards_title as string,
     rewards_description: raw.rewards_description as string,
     home_cover_image: raw.home_cover_image as string,
+    facebook_pages: raw.facebook_pages ? JSON.parse(raw.facebook_pages as string) : [],
   })
 
   if (!parsed.success) {

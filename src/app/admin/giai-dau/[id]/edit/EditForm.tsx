@@ -36,6 +36,14 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
   const boundUpdate = updateTournament.bind(null, tournament.id)
   const [state, formAction, pending] = useActionState(boundUpdate, null)
 
+  const [facebookPages, setFacebookPages] = useState<{ name: string; url: string }[]>(
+    tournament.facebook_pages || (
+      tournament.facebook_page_url 
+      ? [{ name: tournament.facebook_page_name || 'TOPPLAY', url: tournament.facebook_page_url }] 
+      : []
+    )
+  )
+
   useEffect(() => {
     if (state?.success) {
       toast.success('Cập nhật thành công!')
@@ -159,15 +167,68 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                  <div className="space-y-2">
-                    <Label htmlFor="facebook_page_name">Tên Fanpage Facebook</Label>
-                    <Input id="facebook_page_name" name="facebook_page_name" defaultValue={tournament.facebook_page_name || ''} placeholder="VD: TOPPLAY" />
+                <div className="space-y-4 rounded-xl border border-border/60 bg-secondary/10 p-4">
+                  <div className="flex items-center justify-between">
+                    <h3 className="font-bold text-sm">Danh sách Fanpage Facebook</h3>
+                    <Button 
+                      type="button" 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={() => setFacebookPages([...facebookPages, { name: '', url: '' }])}
+                      className="gap-1 h-8"
+                    >
+                      <Plus className="h-3.5 w-3.5" /> Thêm Fanpage
+                    </Button>
                   </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="facebook_page_url">Link Fanpage Facebook</Label>
-                    <Input id="facebook_page_url" name="facebook_page_url" defaultValue={tournament.facebook_page_url || ''} placeholder="https://facebook.com/..." />
-                  </div>
+                  
+                  {facebookPages.length === 0 && (
+                    <p className="text-xs text-muted-foreground text-center py-2">Chưa có fanpage nào. Bấm nút thêm để bắt đầu.</p>
+                  )}
+
+                  {facebookPages.map((page, index) => (
+                    <div key={index} className="flex items-start gap-3 p-3 bg-background rounded-lg border border-border/40">
+                      <div className="flex-1 space-y-3">
+                        <div className="space-y-1">
+                          <Label className="text-xs">Tên Fanpage {index + 1}</Label>
+                          <Input 
+                            placeholder="VD: TOPPLAY" 
+                            value={page.name}
+                            onChange={(e) => {
+                              const newPages = [...facebookPages]
+                              newPages[index].name = e.target.value
+                              setFacebookPages(newPages)
+                            }}
+                          />
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-xs">Link Fanpage {index + 1}</Label>
+                          <Input 
+                            placeholder="https://facebook.com/..." 
+                            value={page.url}
+                            onChange={(e) => {
+                              const newPages = [...facebookPages]
+                              newPages[index].url = e.target.value
+                              setFacebookPages(newPages)
+                            }}
+                          />
+                        </div>
+                      </div>
+                      <Button 
+                        type="button" 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 text-destructive mt-6"
+                        onClick={() => {
+                          const newPages = [...facebookPages]
+                          newPages.splice(index, 1)
+                          setFacebookPages(newPages)
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  ))}
+                  <input type="hidden" name="facebook_pages" value={JSON.stringify(facebookPages)} />
                 </div>
 
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">

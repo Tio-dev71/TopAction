@@ -82,6 +82,7 @@ export interface DbTournament {
   rewards_title: string | null
   rewards_description: string | null
   charity_iframe_url: string | null
+  facebook_pages: { name: string; url: string }[] | null
 }
 
 export interface DbTournamentCategory {
