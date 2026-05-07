@@ -43,10 +43,6 @@ export function FacebookEmbed({ pageUrl, pageName = "Facebook" }: FacebookEmbedP
             <h3 className="mt-1 truncate text-lg font-bold text-slate-950">
               {pageName || "Cộng đồng Facebook"}
             </h3>
-            <p className="mt-1 text-sm leading-6 text-slate-600">
-              Link này là nhóm/chia sẻ/profile nên Facebook không cho nhúng bằng Page Plugin.
-              Bạn vẫn có thể quản lý link này trong admin và bấm nút bên dưới để mở trực tiếp trên Facebook.
-            </p>
             <a
               href={pageUrl}
               target="_blank"
