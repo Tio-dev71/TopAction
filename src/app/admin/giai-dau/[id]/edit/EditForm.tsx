@@ -169,7 +169,7 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
 
                 <div className="space-y-4 rounded-xl border border-border/60 bg-secondary/10 p-4">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-sm">Danh sách Fanpage Facebook</h3>
+                    <h3 className="font-bold text-sm">Danh sách link Facebook</h3>
                     <Button 
                       type="button" 
                       variant="outline" 
@@ -177,21 +177,21 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                       onClick={() => setFacebookPages([...facebookPages, { name: '', url: '' }])}
                       className="gap-1 h-8"
                     >
-                      <Plus className="h-3.5 w-3.5" /> Thêm Fanpage
+                      <Plus className="h-3.5 w-3.5" /> Thêm Link
                     </Button>
                   </div>
                   
                   {facebookPages.length === 0 && (
-                    <p className="text-xs text-muted-foreground text-center py-2">Chưa có fanpage nào. Bấm nút thêm để bắt đầu.</p>
+                    <p className="text-xs text-muted-foreground text-center py-2">Chưa có link Facebook nào. Bấm nút thêm để bắt đầu.</p>
                   )}
 
                   {facebookPages.map((page, index) => (
                     <div key={index} className="flex items-start gap-3 p-3 bg-background rounded-lg border border-border/40">
                       <div className="flex-1 space-y-3">
                         <div className="space-y-1">
-                          <Label className="text-xs">Tên Fanpage {index + 1}</Label>
+                          <Label className="text-xs">Tên hiển thị {index + 1}</Label>
                           <Input 
-                            placeholder="VD: TOPPLAY" 
+                            placeholder="VD: TOPMEDIA, Nhóm chạy bộ..." 
                             value={page.name}
                             onChange={(e) => {
                               const newPages = [...facebookPages]
@@ -201,7 +201,7 @@ export function TournamentEditForm({ tournament }: { tournament: any }) {
                           />
                         </div>
                         <div className="space-y-1">
-                          <Label className="text-xs">Link Fanpage {index + 1}</Label>
+                          <Label className="text-xs">Link Facebook {index + 1} (Page/Nhóm/Chia sẻ/Profile)</Label>
                           <Input 
                             placeholder="https://facebook.com/..." 
                             value={page.url}
