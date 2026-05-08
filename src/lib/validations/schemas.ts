@@ -88,7 +88,7 @@ export const donationSchema = z.object({
   donor_name: z.string().min(2, 'Tên phải có ít nhất 2 ký tự').max(100),
   email: z.string().email('Email không hợp lệ').optional().or(z.literal('')),
   phone: z.string().max(20).optional().or(z.literal('')),
-  amount: z.number().int().min(10000, 'Số tiền tối thiểu 10.000đ').max(1000000000),
+  amount: z.number().int().min(10000, 'Số tiền tối thiểu 10.000đ'),
   message: z.string().max(500).optional().or(z.literal('')),
   is_anonymous: z.boolean().default(false),
 })

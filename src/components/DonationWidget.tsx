@@ -237,7 +237,7 @@ export function DonationWidget({
             </Button>
           </div>
           <p className="text-[10px] text-muted-foreground mt-2 text-center">
-            Quyên góp từ 10.000 đ - 20.000.000 đ
+            Quyên góp từ 10.000 đ trở lên, không giới hạn
           </p>
         </div>
       </div>

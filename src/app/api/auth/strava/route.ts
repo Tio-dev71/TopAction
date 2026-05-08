@@ -15,8 +15,12 @@ export async function GET(request: Request) {
     return NextResponse.redirect(`${origin}/dang-nhap?redirect=/ca-nhan&error=auth_required`)
   }
 
-  // Generate the callback URL which we'll configure in Strava
-  const redirectUri = `${origin}/api/auth/strava/callback`
+  // Generate the callback URL registered in Strava.
+  // Prefer the configured public app URL because Strava validates the exact
+  // callback host; request.origin can be a preview/proxy host in mobile webviews.
+  const configuredAppUrl = process.env.NEXT_PUBLIC_APP_URL?.replace(/\/$/, '')
+  const callbackOrigin = configuredAppUrl || origin
+  const redirectUri = `${callbackOrigin}/api/auth/strava/callback`
 
   try {
     const authUrl = getStravaAuthUrl(redirectUri)
