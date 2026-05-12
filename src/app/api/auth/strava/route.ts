@@ -22,6 +22,15 @@ export async function GET(request: Request) {
   const callbackOrigin = configuredAppUrl || origin
   const redirectUri = `${callbackOrigin}/api/auth/strava/callback`
 
+  console.log('[Strava Debug]', {
+    origin,
+    configuredAppUrl,
+    callbackOrigin,
+    redirectUri,
+    NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
+    STRAVA_CLIENT_ID: process.env.STRAVA_CLIENT_ID,
+  })
+
   try {
     const authUrl = getStravaAuthUrl(redirectUri)
     // We append the internal next redirect path as state so we know where to go back to

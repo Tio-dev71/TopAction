@@ -664,7 +664,7 @@ CREATE POLICY "reg_logs_insert_admin" ON registration_status_logs FOR INSERT
 
 -- ---- DONATIONS ----
 CREATE POLICY "donations_select_public_paid" ON donations FOR SELECT
-  USING (status = 'paid' AND is_anonymous = FALSE);
+  USING (status = 'paid');
 CREATE POLICY "donations_select_own" ON donations FOR SELECT
   USING (auth.uid() = user_id);
 CREATE POLICY "donations_select_admin" ON donations FOR SELECT

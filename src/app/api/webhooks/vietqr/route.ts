@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/admin'
+import { revalidatePath } from 'next/cache'
 
 export async function POST(request: NextRequest) {
   try {
@@ -43,100 +44,156 @@ export async function POST(request: NextRequest) {
 
     // 2. Extract our 10-character code using Regex
     const matchedCodes = content.match(/[A-Z0-9]{10}/ig)
-
-    if (!matchedCodes || matchedCodes.length === 0) {
-      return NextResponse.json({ success: true, message: 'No valid code found in content' })
-    }
-
     let processedCount = 0;
 
-    // Check each potential code found in the transfer content
-    for (const rawCode of matchedCodes) {
-      const code = rawCode.toUpperCase()
+    if (matchedCodes && matchedCodes.length > 0) {
+      // Check each potential code found in the transfer content
+      for (const rawCode of matchedCodes) {
+        const code = rawCode.toUpperCase()
 
-      // A) Check Donations
-      const { data: donation } = await supabase
-        .from('donations')
-        .select('id, status, amount, tournament_id')
-        .eq('donation_code', code)
-        .single()
-
-      if (donation && donation.status !== 'paid') {
-        // Mark as paid
-        await supabase
+        // A) Check Donations
+        const { data: donation } = await supabase
           .from('donations')
-          .update({
+          .select('id, status, amount, tournament_id')
+          .eq('donation_code', code)
+          .single()
+
+        if (donation && donation.status !== 'paid') {
+          // Mark as paid
+          await supabase
+            .from('donations')
+            .update({
+              status: 'paid',
+              payment_status: 'paid',
+              provider: 'vietqr',
+              provider_transaction_id: transactionId.toString(),
+            })
+            .eq('id', donation.id)
+
+          // Also record in payment_transactions
+          await supabase.from('payment_transactions').insert({
+            transaction_type: 'donation',
+            donation_id: donation.id,
+            provider: 'vietqr',
+            provider_order_id: code,
+            amount: amount,
+            status: 'success',
+            paid_at: new Date().toISOString(),
+            raw_response: body
+          })
+
+          processedCount++;
+          continue;
+        }
+
+        // B) Check Registrations (if any)
+        const { data: registration } = await supabase
+          .from('registrations')
+          .select('id, status, amount_due')
+          .eq('registration_code', code)
+          .single()
+
+        if (registration && registration.status === 'pending_payment') {
+          await supabase
+            .from('registrations')
+            .update({
+              status: 'registered',
+              payment_status: 'paid',
+              amount_paid: amount,
+            })
+            .eq('id', registration.id)
+
+          await supabase.from('registration_status_logs').insert({
+            registration_id: registration.id,
+            old_status: 'pending_payment',
+            new_status: 'registered',
+            note: `Thanh toán qua VietQR (Biến động số dư)`,
+          })
+
+          // Also record in payment_transactions
+          await supabase.from('payment_transactions').insert({
+            transaction_type: 'registration',
+            registration_id: registration.id,
+            provider: 'vietqr',
+            provider_order_id: code,
+            amount: amount,
+            status: 'success',
+            paid_at: new Date().toISOString(),
+            raw_response: body
+          })
+
+          processedCount++;
+        }
+      }
+    }
+
+    // 3. Fallback: Tự động ghi nhận chuyển khoản tự do không có mã thành lượt ủng hộ trực tiếp
+    if (processedCount === 0) {
+      const txId = transactionId.toString()
+      if (txId) {
+        const { data: existing } = await supabase
+          .from('donations')
+          .select('id')
+          .eq('provider_transaction_id', txId)
+          .single()
+
+        if (existing) {
+          revalidatePath('/', 'layout')
+          return NextResponse.json({ success: true, message: 'Already captured in fallback' })
+        }
+      }
+
+      // Tìm giải đấu chính đang publish
+      const { data: tournaments } = await supabase
+        .from('tournaments')
+        .select('id')
+        .eq('status', 'published')
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      if (tournaments && tournaments.length > 0) {
+        const tournamentId = tournaments[0].id
+        // Lấy tên người chuyển từ nội dung
+        const cleanName = content
+          .replace(/chuyen tien|chuyển tiền|remit|transfer|thanh toan|thanh toán/gi, '')
+          .replace(/\s+/g, ' ')
+          .trim() || 'Nhà hảo tâm'
+
+        const { data: newDonation } = await supabase
+          .from('donations')
+          .insert({
+            tournament_id: tournamentId,
+            donor_name: cleanName,
+            amount: amount,
+            message: content,
             status: 'paid',
             payment_status: 'paid',
             provider: 'vietqr',
-            provider_transaction_id: transactionId.toString(),
+            provider_transaction_id: txId,
           })
-          .eq('id', donation.id)
+          .select('id')
+          .single()
 
-        // Also record in payment_transactions
-        await supabase.from('payment_transactions').insert({
-          transaction_type: 'donation',
-          donation_id: donation.id,
-          provider: 'vietqr',
-          provider_order_id: code,
-          amount: amount,
-          status: 'success',
-          paid_at: new Date().toISOString(),
-          raw_response: body
-        })
-
-        // NOTE: The `update_tournament_donation_total_on_paid` trigger in Supabase (from 001_complete_schema) 
-        // will automatically aggregate this into `tournaments.donation_total`.
-
-        processedCount++;
-        continue;
-      }
-
-      // B) Check Registrations (if any)
-      const { data: registration } = await supabase
-        .from('registrations')
-        .select('id, status, amount_due')
-        .eq('registration_code', code)
-        .single()
-
-      if (registration && registration.status === 'pending_payment') {
-        await supabase
-          .from('registrations')
-          .update({
-            status: 'registered',
-            payment_status: 'paid',
-            amount_paid: amount,
+        if (newDonation) {
+          await supabase.from('payment_transactions').insert({
+            transaction_type: 'donation',
+            donation_id: newDonation.id,
+            provider: 'vietqr',
+            provider_order_id: 'DIRECT_TRANSFER',
+            amount: amount,
+            status: 'success',
+            paid_at: new Date().toISOString(),
+            raw_response: body
           })
-          .eq('id', registration.id)
-
-        await supabase.from('registration_status_logs').insert({
-          registration_id: registration.id,
-          old_status: 'pending_payment',
-          new_status: 'registered',
-          note: `Thanh toán qua VietQR (Biến động số dư)`,
-        })
-
-        // Also record in payment_transactions
-        await supabase.from('payment_transactions').insert({
-          transaction_type: 'registration',
-          registration_id: registration.id,
-          provider: 'vietqr',
-          provider_order_id: code,
-          amount: amount,
-          status: 'success',
-          paid_at: new Date().toISOString(),
-          raw_response: body
-        })
-
-        processedCount++;
+          processedCount++;
+        }
       }
     }
 
-    if (processedCount > 0) {
-      return NextResponse.json({ success: true, message: `Processed ${processedCount} transactions successfully` })
-    } else {
-      return NextResponse.json({ success: true, message: 'Code matched but no pending transactions found' })
-    }
+    // Luôn gọi revalidatePath để làm mới giao diện web ngay lập tức
+    revalidatePath('/', 'layout')
+
+    return NextResponse.json({ success: true, message: `Processed ${processedCount} transactions successfully` })
 
   } catch (error) {
     console.error('[VIETQR WEBHOOK ERROR]', error)
