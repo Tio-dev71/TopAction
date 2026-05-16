@@ -21,6 +21,21 @@ function formatDate(iso: string | null) {
   });
 }
 
+function formatPostContent(content: string | null, fallback: string | null) {
+  const source = (content || fallback || "Nội dung đang được cập nhật.").trim();
+
+  if (/<\/?[a-z][\s\S]*>/i.test(source)) {
+    return source;
+  }
+
+  return source
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.trim())
+    .filter(Boolean)
+    .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br />")}</p>`)
+    .join("");
+}
+
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const supabase = await createClient();
@@ -137,7 +152,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                 <div className="p-6 sm:p-8 lg:p-10">
                   <div
                     className="prose prose-slate max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-p:leading-8 prose-p:text-slate-700 prose-strong:text-slate-900 prose-img:rounded-2xl prose-a:text-primary prose-li:leading-8"
-                    dangerouslySetInnerHTML={{ __html: post.content || `<p>${post.excerpt || "Nội dung đang được cập nhật."}</p>` }}
+                    dangerouslySetInnerHTML={{ __html: formatPostContent(post.content, post.excerpt) }}
                   />
                 </div>
               </article>
