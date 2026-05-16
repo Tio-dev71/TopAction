@@ -66,6 +66,7 @@ export function Navbar() {
           {[
             { label: "Trang chủ", href: "/" },
             { label: "Giải đấu", href: "/#tournaments" },
+            { label: "Tin tức", href: "/tin-tuc" },
           ].map((item) => (
             <Link
               key={item.href}
@@ -120,6 +121,7 @@ export function Navbar() {
             {[
               { label: "Trang chủ", href: "/" },
               { label: "Giải đấu", href: "/#tournaments" },
+              { label: "Tin tức", href: "/tin-tuc" },
             ].map((item) => (
               <Link
                 key={item.href}

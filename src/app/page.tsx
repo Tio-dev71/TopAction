@@ -25,7 +25,7 @@ import { NewsPopup } from "@/components/home/NewsPopup";
 export const metadata: Metadata = {
   title: "TOPPLAY - Giải đấu thể thao & tin tức nổi bật",
   description:
-    "Khám phá giải đấu thể thao trực tuyến và cập nhật tin tức mới nhất từ TOPPLAY ngay trên trang chủ.",
+    "Khám phá giải đấu thể thao trực tuyến, đọc tin tức mới nhất và theo dõi các chiến dịch nổi bật từ TOPPLAY.",
 };
 
 /* ─────────────────── helpers ─────────────────── */

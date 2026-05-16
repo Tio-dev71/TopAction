@@ -120,7 +120,7 @@ export function NewsPopup({ post }: NewsPopupProps) {
             </div>
 
             <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-              <Link href={`/#tin-tuc-${post.slug}`} onClick={closePopup}>
+              <Link href={`/tin-tuc/${post.slug}`} onClick={closePopup}>
                 <Button
                   id="homepage-news-popup-readmore"
                   size="lg"

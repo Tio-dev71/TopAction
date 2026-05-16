@@ -58,15 +58,14 @@ export function NewsSection({ posts }: NewsSectionProps) {
           </div>
         </div>
 
-        <FadeInStagger className="grid gap-6 lg:grid-cols-[1.15fr_0.85fr]">
+        <FadeInStagger className="grid gap-6 lg:grid-cols-3">
           {posts.slice(0, 1).map((post) => (
-            <FadeIn key={post.slug}>
+            <FadeIn key={post.slug} className="lg:col-span-2">
               <Link
-                href={`/#tin-tuc-${post.slug}`}
-                id={`tin-tuc-${post.slug}`}
-                className="group relative flex h-full min-h-[460px] flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-[0_18px_60px_rgba(78,99,255,0.12)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(78,99,255,0.2)]"
+                href={`/tin-tuc/${post.slug}`}
+                className="group relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-[0_18px_60px_rgba(78,99,255,0.12)] transition-all duration-500 hover:-translate-y-1 hover:shadow-[0_30px_90px_rgba(78,99,255,0.2)]"
               >
-                <div className="relative flex-1 overflow-hidden bg-secondary/30">
+                <div className="relative aspect-[16/10] overflow-hidden bg-secondary/30">
                   {post.cover_image ? (
                     <img
                       src={post.cover_image}
@@ -74,7 +73,7 @@ export function NewsSection({ posts }: NewsSectionProps) {
                       className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="flex h-full min-h-[280px] items-center justify-center bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_45%),linear-gradient(135deg,rgba(79,70,229,0.16),rgba(14,165,233,0.14))]">
+                    <div className="flex h-full min-h-[220px] items-center justify-center bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_45%),linear-gradient(135deg,rgba(79,70,229,0.16),rgba(14,165,233,0.14))]">
                       <div className="rounded-3xl border border-border/60 bg-background/80 p-5 shadow-lg backdrop-blur-md">
                         <Newspaper className="h-12 w-12 text-primary" />
                       </div>
@@ -88,17 +87,21 @@ export function NewsSection({ posts }: NewsSectionProps) {
                   </div>
                 </div>
 
-                <div className="absolute inset-x-0 bottom-0 p-6 text-white sm:p-8">
-                  <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-medium backdrop-blur-md">
+                <div className="p-5 sm:p-6">
+                  <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-secondary/50 px-3 py-1 text-xs font-medium text-muted-foreground backdrop-blur-md">
                     <CalendarDays className="h-3.5 w-3.5" />
                     {formatDate(post.published_at)}
                   </div>
-                  <h3 className="mt-4 text-2xl font-extrabold leading-tight tracking-tight sm:text-3xl">
+                  <h3 className="mt-4 text-xl font-extrabold leading-tight tracking-tight text-card-foreground sm:text-2xl">
                     {post.title}
                   </h3>
-                  <p className="mt-3 max-w-2xl text-sm leading-7 text-white/82 sm:text-[15px]">
+                  <p className="mt-3 max-w-2xl text-sm leading-7 text-muted-foreground sm:text-[15px]">
                     {getPreview(post)}{getPreview(post) ? "..." : ""}
                   </p>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                    Xem thêm
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                  </span>
                 </div>
               </Link>
             </FadeIn>
@@ -108,8 +111,7 @@ export function NewsSection({ posts }: NewsSectionProps) {
             {posts.slice(1, 3).map((post) => (
               <FadeIn key={post.slug}>
                 <Link
-                  href={`/#tin-tuc-${post.slug}`}
-                  id={`tin-tuc-${post.slug}`}
+                  href={`/tin-tuc/${post.slug}`}
                   className="group flex h-full gap-4 overflow-hidden rounded-[1.75rem] border border-border/60 bg-card p-4 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10 sm:p-5"
                 >
                   <div className="relative h-28 w-28 shrink-0 overflow-hidden rounded-2xl bg-secondary/40 sm:h-32 sm:w-32">
