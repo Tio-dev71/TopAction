@@ -81,43 +81,51 @@ export default async function NewsPage() {
                 <p className="mt-4 text-muted-foreground">Chưa có bài viết nào được xuất bản.</p>
               </div>
             ) : (
-              <FadeInStagger className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
+              <FadeInStagger className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {posts.map((post) => (
                   <FadeIn key={post.slug}>
                     <Link
                       href={`/tin-tuc/${post.slug}`}
                       className="group flex h-full flex-col overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/10"
                     >
-                      <div className="relative aspect-[16/10] overflow-hidden bg-secondary/30">
-                        {post.cover_image ? (
-                          <img
-                            src={post.cover_image}
-                            alt={post.title}
-                            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                          />
-                        ) : (
-                          <div className="flex h-full items-center justify-center bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_45%),linear-gradient(135deg,rgba(79,70,229,0.16),rgba(14,165,233,0.14))]">
-                            <Newspaper className="h-12 w-12 text-primary/80" />
+                      <div className="relative overflow-hidden rounded-t-[2rem] bg-[linear-gradient(180deg,rgba(248,250,252,0.96),rgba(241,245,249,0.92))] p-4">
+                        <div className="absolute inset-x-4 top-4 z-10 flex items-center justify-between">
+                          <Badge className="border-0 bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-slate-900 shadow-sm">
+                            Bài viết
+                          </Badge>
+                          <div className="rounded-full bg-primary px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-primary-foreground shadow-sm">
+                            TOPPLAY
                           </div>
-                        )}
-                        <div className="absolute left-4 top-4">
-                          <Badge className="border-0 bg-white/85 text-slate-900 shadow-sm">Bài viết</Badge>
+                        </div>
+
+                        <div className="flex min-h-[220px] items-center justify-center rounded-[1.5rem] bg-white/90 pt-10 shadow-inner ring-1 ring-black/5">
+                          {post.cover_image ? (
+                            <img
+                              src={post.cover_image}
+                              alt={post.title}
+                              className="max-h-[200px] w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                            />
+                          ) : (
+                            <div className="flex h-[180px] w-full items-center justify-center rounded-[1.25rem] bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.18),transparent_45%),linear-gradient(135deg,rgba(79,70,229,0.16),rgba(14,165,233,0.14))]">
+                              <Newspaper className="h-12 w-12 text-primary/80" />
+                            </div>
+                          )}
                         </div>
                       </div>
 
-                      <div className="flex flex-1 flex-col p-5 sm:p-6">
-                        <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-primary/80">
-                          <CalendarDays className="h-3.5 w-3.5" />
+                      <div className="flex flex-1 flex-col p-5">
+                        <div className="inline-flex items-center gap-2 text-xs font-medium text-muted-foreground">
+                          <CalendarDays className="h-3.5 w-3.5 text-primary" />
                           {formatDate(post.published_at)}
                         </div>
-                        <h2 className="mt-3 line-clamp-2 text-xl font-extrabold leading-tight tracking-tight transition-colors group-hover:text-primary">
+                        <h2 className="mt-3 line-clamp-2 text-[1.45rem] font-extrabold leading-tight tracking-tight text-card-foreground transition-colors group-hover:text-primary sm:text-[1.6rem]">
                           {post.title}
                         </h2>
-                        <p className="mt-3 line-clamp-4 text-sm leading-7 text-muted-foreground">
+                        <p className="mt-3 line-clamp-3 text-sm leading-7 text-muted-foreground">
                           {getPreview(post.excerpt, post.content)}
                           {getPreview(post.excerpt, post.content) ? "..." : ""}
                         </p>
-                        <span className="mt-auto pt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
+                        <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-primary">
                           Đọc bài viết
                           <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                         </span>

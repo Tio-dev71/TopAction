@@ -121,16 +121,22 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
         <section className="py-12 sm:py-16">
           <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-8">
             <FadeIn className="min-w-0">
-              <article className="overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-sm">
+              <article className="overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-[0_20px_70px_rgba(15,23,42,0.08)]">
                 {post.cover_image && (
-                  <div className="relative aspect-[16/8] overflow-hidden bg-secondary/30">
-                    <img src={post.cover_image} alt={post.title} className="h-full w-full object-cover" />
+                  <div className="border-b border-border/60 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.94))] p-5 sm:p-6">
+                    <div className="overflow-hidden rounded-[1.5rem] bg-white/90 p-4 shadow-inner ring-1 ring-black/5">
+                      <img
+                        src={post.cover_image}
+                        alt={post.title}
+                        className="mx-auto max-h-[460px] w-full object-contain"
+                      />
+                    </div>
                   </div>
                 )}
 
                 <div className="p-6 sm:p-8 lg:p-10">
                   <div
-                    className="prose prose-slate max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-p:leading-8 prose-img:rounded-2xl prose-a:text-primary"
+                    className="prose prose-slate max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-p:leading-8 prose-p:text-slate-700 prose-strong:text-slate-900 prose-img:rounded-2xl prose-a:text-primary prose-li:leading-8"
                     dangerouslySetInnerHTML={{ __html: post.content || `<p>${post.excerpt || "Nội dung đang được cập nhật."}</p>` }}
                   />
                 </div>
@@ -163,11 +169,11 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                         <FadeIn key={item.slug}>
                           <Link href={`/tin-tuc/${item.slug}`} className="group block rounded-2xl border border-border/60 p-3 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
                             <div className="flex gap-3">
-                              <div className="h-18 w-18 shrink-0 overflow-hidden rounded-xl bg-secondary/30">
+                              <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(180deg,rgba(248,250,252,0.96),rgba(241,245,249,0.92))] p-2 ring-1 ring-black/5">
                                 {item.cover_image ? (
-                                  <img src={item.cover_image} alt={item.title} className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105" />
+                                  <img src={item.cover_image} alt={item.title} className="max-h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]" />
                                 ) : (
-                                  <div className="flex h-full items-center justify-center bg-primary/8">
+                                  <div className="flex h-full w-full items-center justify-center rounded-lg bg-primary/8">
                                     <Newspaper className="h-5 w-5 text-primary/70" />
                                   </div>
                                 )}
@@ -180,7 +186,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
                                   {item.title}
                                 </h3>
                                 <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                                  {stripHtml(item.excerpt).slice(0, 80)}
+                                  {stripHtml(item.excerpt || "").slice(0, 80)}
                                 </p>
                               </div>
                             </div>
