@@ -12,6 +12,7 @@ import { updatePost } from '@/app/actions/admin/posts'
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft, Save } from 'lucide-react'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
+import { RichTextEditor } from '@/components/admin/RichTextEditor'
 
 export function PostEditForm({ post }: { post: any }) {
   const router = useRouter()
@@ -38,15 +39,21 @@ export function PostEditForm({ post }: { post: any }) {
             <div className="space-y-2"><Label htmlFor="title">Tiêu đề hiển thị *</Label><Input id="title" name="title" defaultValue={post.title} required /></div>
             <div className="space-y-2"><Label htmlFor="slug">Slug *</Label><Input id="slug" name="slug" defaultValue={post.slug} required /></div>
             <div className="space-y-2"><Label htmlFor="excerpt">Mô tả ngắn</Label><Textarea id="excerpt" name="excerpt" rows={3} defaultValue={post.excerpt || ''} /></div>
-            <div className="space-y-2"><Label htmlFor="content">Nội dung bài viết</Label><Textarea id="content" name="content" rows={12} defaultValue={post.content || ''} /></div>
+            <RichTextEditor
+              name="content"
+              label="Nội dung bài viết"
+              folder="posts"
+              defaultValue={post.content || ''}
+              placeholder="Soạn lại bài viết, chèn ảnh vào giữa nội dung và trình bày như một bài báo hoàn chỉnh."
+            />
             <ImageUploadField
               name="cover_image"
-              label="Ảnh bài viết"
+              label="Ảnh bìa bài viết"
               defaultValue={post.cover_image || ''}
               folder="posts"
             />
             <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4 text-sm text-muted-foreground">
-              Khu vực này dùng để admin chỉnh trực tiếp <strong>tiêu đề</strong>, <strong>nội dung</strong> và <strong>ảnh</strong>. Bài viết published có thể hiển thị ở popup trang chủ và mục tin tức.
+              Khu vực này dùng để admin chỉnh trực tiếp <strong>tiêu đề</strong>, <strong>nội dung</strong>, <strong>ảnh bìa</strong> và chèn <strong>ảnh vào giữa bài viết</strong>. Bài viết published có thể hiển thị ở popup trang chủ và mục tin tức.
             </div>
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>

@@ -7,12 +7,13 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { createPost } from '@/app/actions/admin/posts'
 import { generateSlug } from '@/lib/validations/schemas'
 import { toast } from 'sonner'
 import { Loader2, ArrowLeft } from 'lucide-react'
 import { ImageUploadField } from '@/components/admin/ImageUploadField'
+import { RichTextEditor } from '@/components/admin/RichTextEditor'
 
 export default function NewPostPage() {
   const router = useRouter()
@@ -50,17 +51,19 @@ export default function NewPostPage() {
               <Label htmlFor="excerpt">Mô tả ngắn</Label>
               <Textarea id="excerpt" name="excerpt" rows={3} placeholder="Đoạn mô tả ngắn dùng cho card tin tức và popup trang chủ" />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="content">Nội dung bài viết</Label>
-              <Textarea id="content" name="content" rows={12} placeholder="Nhập nội dung chi tiết bài viết để hiển thị trên popup và trang tin tức" />
-            </div>
+            <RichTextEditor
+              name="content"
+              label="Nội dung bài viết"
+              folder="posts"
+              placeholder="Soạn bài viết dạng thông cáo, bài báo, chiến dịch... Bạn có thể chèn ảnh vào giữa nội dung ở bất kỳ vị trí nào."
+            />
             <ImageUploadField
               name="cover_image"
-              label="Ảnh bài viết"
+              label="Ảnh bìa bài viết"
               folder="posts"
             />
             <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4 text-sm text-muted-foreground">
-              Admin có thể chỉnh trực tiếp <strong>tiêu đề</strong>, <strong>nội dung</strong> và <strong>ảnh</strong> tại đây. Khi chuyển sang <strong>Xuất bản</strong>, bài viết sẽ sẵn sàng lấy lên trang chủ.
+              Khu vực này dùng để admin chỉnh trực tiếp <strong>tiêu đề</strong>, <strong>nội dung</strong>, <strong>ảnh bìa</strong> và chèn <strong>ảnh vào giữa bài viết</strong>. Bài viết published có thể hiển thị ở popup trang chủ và mục tin tức.
             </div>
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>
