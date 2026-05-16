@@ -16,11 +16,18 @@ async function main() {
   if (error) console.error('Error fetching webhooks:', error);
   else console.log('Recent Webhooks:', JSON.stringify(webhooks, null, 2));
 
+  const { data: tournaments, error: tErr } = await supabase
+    .from('tournaments')
+    .select('id, title, status, slug');
+
+  console.log('\nTournaments:', JSON.stringify(tournaments, null, 2));
+  if (tErr) console.error('Tournaments error:', tErr);
+
   const { data: donations } = await supabase
     .from('donations')
-    .select('id, donor_name, amount, status, donation_code')
+    .select('id, donor_name, amount, status, donation_code, provider_transaction_id')
     .order('created_at', { ascending: false })
-    .limit(5);
+    .limit(10);
 
   console.log('\nRecent Donations:', JSON.stringify(donations, null, 2));
 }

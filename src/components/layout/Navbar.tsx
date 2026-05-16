@@ -56,7 +56,7 @@ export function Navbar() {
           <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-md shadow-primary/25 transition-transform group-hover:scale-105">
             <Trophy className="h-5 w-5" />
           </div>
-          <span className="text-xl font-bold tracking-tight">
+          <span className="text-[1.35rem] font-bold tracking-tight sm:text-[1.45rem]">
             <span className="text-primary">TOP</span>PLAY
           </span>
         </Link>

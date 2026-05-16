@@ -98,7 +98,7 @@ export function AdminHeader({
           </SheetContent>
         </Sheet>
 
-        <h1 className="text-lg font-bold tracking-tight sm:text-xl">{getPageTitle()}</h1>
+        <h1 className="text-xl font-bold tracking-tight sm:text-2xl">{getPageTitle()}</h1>
       </div>
 
       <div className="flex items-center gap-2">

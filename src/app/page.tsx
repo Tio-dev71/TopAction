@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,14 @@ import {
   Medal,
 } from "lucide-react";
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
+import { NewsSection } from "@/components/home/NewsSection";
+import { NewsPopup } from "@/components/home/NewsPopup";
+
+export const metadata: Metadata = {
+  title: "TOPPLAY - Giải đấu thể thao & tin tức nổi bật",
+  description:
+    "Khám phá giải đấu thể thao trực tuyến và cập nhật tin tức mới nhất từ TOPPLAY ngay trên trang chủ.",
+};
 
 /* ─────────────────── helpers ─────────────────── */
 
@@ -354,13 +363,22 @@ export default async function Home() {
     .order('start_date', { ascending: true })
     .limit(8);
 
+  const { data: posts } = await supabase
+    .from('posts')
+    .select('slug, title, excerpt, content, cover_image, published_at')
+    .eq('status', 'published')
+    .order('published_at', { ascending: false })
+    .limit(3);
+
   return (
     <div className="overflow-x-hidden">
       <Navbar />
       <main className="flex-1">
         <Hero />
+        <NewsPopup post={posts?.[0] || null} />
         <HowItWorksSection />
         <TournamentsSection tournaments={tournaments || []} />
+        <NewsSection posts={posts || []} />
       </main>
       <Footer />
     </div>

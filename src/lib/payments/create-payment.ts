@@ -11,7 +11,7 @@ let provider: PaymentProvider | null = null
  */
 export function getPaymentProvider(): PaymentProvider {
   if (!provider) {
-    const providerName = process.env.PAYMENT_PROVIDER || 'sepay' // Defaults to sepay for manual bank transfers
+    const providerName = process.env.PAYMENT_PROVIDER || 'sepay'
 
     switch (providerName) {
       case 'vnpay':

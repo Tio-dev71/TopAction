@@ -27,21 +27,27 @@ export function PostEditForm({ post }: { post: any }) {
     <div className="mx-auto max-w-3xl space-y-6">
       <div className="flex items-center gap-3">
         <Link href="/admin/bai-viet"><Button variant="ghost" size="sm" className="gap-1"><ArrowLeft className="h-4 w-4" />Quay lại</Button></Link>
-        <h2 className="text-lg font-bold">Chỉnh sửa: {post.title}</h2>
+        <div>
+          <h2 className="text-lg font-bold">Chỉnh sửa: {post.title}</h2>
+          <p className="text-sm text-muted-foreground">Cập nhật tiêu đề, nội dung và ảnh để đồng bộ tin tức hiển thị trên trang chủ.</p>
+        </div>
       </div>
       <Card className="border-border/60">
         <CardContent className="pt-6">
           <form action={formAction} className="space-y-5">
-            <div className="space-y-2"><Label htmlFor="title">Tiêu đề *</Label><Input id="title" name="title" defaultValue={post.title} required /></div>
+            <div className="space-y-2"><Label htmlFor="title">Tiêu đề hiển thị *</Label><Input id="title" name="title" defaultValue={post.title} required /></div>
             <div className="space-y-2"><Label htmlFor="slug">Slug *</Label><Input id="slug" name="slug" defaultValue={post.slug} required /></div>
-            <div className="space-y-2"><Label htmlFor="excerpt">Tóm tắt</Label><Textarea id="excerpt" name="excerpt" rows={2} defaultValue={post.excerpt || ''} /></div>
-            <div className="space-y-2"><Label htmlFor="content">Nội dung</Label><Textarea id="content" name="content" rows={12} defaultValue={post.content || ''} /></div>
+            <div className="space-y-2"><Label htmlFor="excerpt">Mô tả ngắn</Label><Textarea id="excerpt" name="excerpt" rows={3} defaultValue={post.excerpt || ''} /></div>
+            <div className="space-y-2"><Label htmlFor="content">Nội dung bài viết</Label><Textarea id="content" name="content" rows={12} defaultValue={post.content || ''} /></div>
             <ImageUploadField
               name="cover_image"
-              label="Ảnh bìa"
+              label="Ảnh bài viết"
               defaultValue={post.cover_image || ''}
               folder="posts"
             />
+            <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4 text-sm text-muted-foreground">
+              Khu vực này dùng để admin chỉnh trực tiếp <strong>tiêu đề</strong>, <strong>nội dung</strong> và <strong>ảnh</strong>. Bài viết published có thể hiển thị ở popup trang chủ và mục tin tức.
+            </div>
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>
               <select name="status" defaultValue={post.status} className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm">
