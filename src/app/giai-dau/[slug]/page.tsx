@@ -12,7 +12,7 @@ import {
   Trophy, CalendarDays, Users, ArrowLeft, MapPin,
   Dumbbell, Gauge, Map, Smartphone, CheckCircle,
   Heart, Building2, Handshake, Star, Clock, UserPlus,
-  Medal, Share2, Mountain, Activity, Footprints
+  Medal, Share2, Mountain, Activity, Footprints, Newspaper
 } from "lucide-react";
 import { CountdownTimer } from "./CountdownTimer";
 import { CharityProgress } from "./CharityProgress";
@@ -234,15 +234,20 @@ export default async function TournamentDetailPage({
                     <div className="td-hero__sponsor-group">
                       <p className="td-hero__sponsor-label">Đơn vị tài trợ</p>
                       <div className="td-hero__sponsor-logos">
-                        {sponsors.map((s: any) => (
-                          <div key={s.id} className="td-hero__sponsor-logo-wrap">
-                            {s.logo_url ? (
-                              <img src={s.logo_url} alt={s.name} className="td-hero__sponsor-logo" />
-                            ) : (
-                              <span className="td-hero__sponsor-name">{s.name}</span>
-                            )}
-                          </div>
-                        ))}
+                        {sponsors.map((s: any) => {
+                          const logoContent = s.logo_url ? (
+                            <img src={s.logo_url} alt={s.name} className="td-hero__sponsor-logo" />
+                          ) : (
+                            <span className="td-hero__sponsor-name">{s.name}</span>
+                          );
+                          return (
+                            <div key={s.id} className="td-hero__sponsor-logo-wrap">
+                              {s.website_url ? (
+                                <a href={s.website_url} target="_blank" rel="noopener noreferrer">{logoContent}</a>
+                              ) : logoContent}
+                            </div>
+                          );
+                        })}
                       </div>
                     </div>
                   )}
@@ -553,21 +558,26 @@ export default async function TournamentDetailPage({
                     Đơn vị tổ chức
                   </h3>
                   <div className="td-organizers__logos">
-                    {organizers.map((org: any) => (
-                      <div key={org.id} className="td-organizers__logo-card">
-                        {org.logo_url ? (
-                          <img src={org.logo_url} alt={org.name} className="td-organizers__logo-img" />
-                        ) : (
-                          <div className="td-organizers__logo-placeholder">
-                            <Building2 className="h-8 w-8" />
-                            <span>{org.name}</span>
-                          </div>
-                        )}
-                        {org.description && (
-                          <p className="td-organizers__logo-desc">{org.description}</p>
-                        )}
-                      </div>
-                    ))}
+                    {organizers.map((org: any) => {
+                      const logoContent = org.logo_url ? (
+                        <img src={org.logo_url} alt={org.name} className="td-organizers__logo-img" />
+                      ) : (
+                        <div className="td-organizers__logo-placeholder">
+                          <Building2 className="h-8 w-8" />
+                          <span>{org.name}</span>
+                        </div>
+                      );
+                      return (
+                        <div key={org.id} className="td-organizers__logo-card">
+                          {org.website_url ? (
+                            <a href={org.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                          ) : logoContent}
+                          {org.description && (
+                            <p className="td-organizers__logo-desc">{org.description}</p>
+                          )}
+                        </div>
+                      );
+                    })}
                   </div>
                 </FadeIn>
               )}
@@ -579,18 +589,23 @@ export default async function TournamentDetailPage({
                     Đơn vị tài trợ
                   </h3>
                   <div className="td-organizers__logos">
-                    {sponsors.map((sp: any) => (
-                      <div key={sp.id} className="td-organizers__logo-card">
-                        {sp.logo_url ? (
-                          <img src={sp.logo_url} alt={sp.name} className="td-organizers__logo-img" />
-                        ) : (
-                          <div className="td-organizers__logo-placeholder">
-                            <Star className="h-8 w-8" />
-                            <span>{sp.name}</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                    {sponsors.map((sp: any) => {
+                      const logoContent = sp.logo_url ? (
+                        <img src={sp.logo_url} alt={sp.name} className="td-organizers__logo-img" />
+                      ) : (
+                        <div className="td-organizers__logo-placeholder">
+                          <Star className="h-8 w-8" />
+                          <span>{sp.name}</span>
+                        </div>
+                      );
+                      return (
+                        <div key={sp.id} className="td-organizers__logo-card">
+                          {sp.website_url ? (
+                            <a href={sp.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                          ) : logoContent}
+                        </div>
+                      );
+                    })}
                   </div>
                 </FadeIn>
               )}
@@ -598,22 +613,27 @@ export default async function TournamentDetailPage({
               {partners.length > 0 && (
                 <FadeIn className="td-organizers__section">
                   <h3 className="td-organizers__title">
-                    <Handshake className="td-organizers__title-icon" />
-                    Đơn vị đồng hành
+                    <Newspaper className="td-organizers__title-icon" />
+                    Báo Chí
                   </h3>
                   <div className="td-organizers__logos">
-                    {partners.map((pt: any) => (
-                      <div key={pt.id} className="td-organizers__logo-card">
-                        {pt.logo_url ? (
-                          <img src={pt.logo_url} alt={pt.name} className="td-organizers__logo-img" />
-                        ) : (
-                          <div className="td-organizers__logo-placeholder">
-                            <Handshake className="h-8 w-8" />
-                            <span>{pt.name}</span>
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                    {partners.map((pt: any) => {
+                      const logoContent = pt.logo_url ? (
+                        <img src={pt.logo_url} alt={pt.name} className="td-organizers__logo-img" />
+                      ) : (
+                        <div className="td-organizers__logo-placeholder">
+                          <Newspaper className="h-8 w-8" />
+                          <span>{pt.name}</span>
+                        </div>
+                      );
+                      return (
+                        <div key={pt.id} className="td-organizers__logo-card">
+                          {pt.website_url ? (
+                            <a href={pt.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                          ) : logoContent}
+                        </div>
+                      );
+                    })}
                   </div>
                 </FadeIn>
               )}

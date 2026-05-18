@@ -490,6 +490,9 @@ function OrganizersEditor({ tournamentId, organizers }: { tournamentId: string; 
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium">{org.name} <span className="text-xs text-muted-foreground">({org.type})</span></p>
               <p className="text-xs text-muted-foreground mt-1">{org.description}</p>
+              {org.website_url && (
+                <p className="text-xs text-primary mt-0.5 truncate">🔗 {org.website_url}</p>
+              )}
             </div>
             <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => setEditingOrg(org)}>
               <Edit2 className="h-4 w-4" />
@@ -511,6 +514,10 @@ function OrganizersEditor({ tournamentId, organizers }: { tournamentId: string; 
           {editingOrg && <input type="hidden" name="id" value={editingOrg.id} />}
           <Input name="name" placeholder="Tên đơn vị" defaultValue={editingOrg?.name || ''} required />
           <Textarea name="description" placeholder="Mô tả" rows={2} defaultValue={editingOrg?.description || ''} />
+          <div className="space-y-1">
+            <Label className="text-xs">Link website (bấm vào logo sẽ mở trang này)</Label>
+            <Input name="website_url" type="url" placeholder="https://example.com" defaultValue={editingOrg?.website_url || ''} />
+          </div>
           <div className="grid grid-cols-2 gap-3">
             <select name="type" defaultValue={editingOrg?.type || 'organizer'} className="rounded-lg border border-input bg-background px-3 py-2 text-sm">
               <option value="organizer">Tổ chức</option>

@@ -125,6 +125,7 @@ export interface DbOrganizer {
   tournament_id: string
   name: string
   logo_url: string | null
+  website_url: string | null
   description: string | null
   type: OrganizerType
   sort_order: number

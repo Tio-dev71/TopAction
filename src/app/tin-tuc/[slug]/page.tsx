@@ -46,8 +46,8 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     .eq("slug", slug)
     .single();
 
-  const title = post?.title ? `${post.title} | TOPPLAY` : "Báo chí | TOPPLAY";
-  const description = stripHtml(post?.excerpt || post?.content || "Báo chí mới nhất từ TOPPLAY").slice(0, 160);
+  const title = post?.title ? `${post.title} | TOPPLAY` : "Tin tức | TOPPLAY";
+  const description = stripHtml(post?.excerpt || post?.content || "Tin tức mới nhất từ TOPPLAY").slice(0, 160);
   const image = post?.cover_image || "https://topplay.vn/images/default-share.jpg";
   const url = `https://topplay.vn/tin-tuc/${post?.slug || slug}`;
 
@@ -115,7 +115,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
             <FadeIn className="mt-6">
               <Badge className="border-0 bg-primary/10 text-primary shadow-none">
                 <Newspaper className="h-3.5 w-3.5" />
-                Báo chí TOPPLAY
+                Tin tức TOPPLAY
               </Badge>
               <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
                 {post.title}

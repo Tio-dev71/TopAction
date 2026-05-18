@@ -305,6 +305,7 @@ export async function saveOrganizer(tournamentId: string, prevState: any, formDa
     name: raw.name as string,
     description: (raw.description as string) || null,
     logo_url: (raw.logo_url as string) || null,
+    website_url: (raw.website_url as string) || null,
     type: (raw.type as string) || 'organizer',
     sort_order: parseInt(raw.sort_order as string) || 0,
   }

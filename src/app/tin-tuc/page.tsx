@@ -8,10 +8,10 @@ import { createClient } from "@/lib/supabase/server";
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
 
 export const metadata: Metadata = {
-  title: "Báo chí | TOPPLAY",
+  title: "Tin tức | TOPPLAY",
   description: "Cập nhật các bài viết, thông báo và tin tức mới nhất từ TOPPLAY.",
   openGraph: {
-    title: "Báo chí | TOPPLAY",
+    title: "Tin tức | TOPPLAY",
     description: "Cập nhật các bài viết, thông báo và tin tức mới nhất từ TOPPLAY.",
     url: "https://topplay.vn/tin-tuc",
     siteName: "TOPPLAY",
@@ -60,7 +60,7 @@ export default async function NewsPage() {
             <FadeIn className="mx-auto max-w-3xl text-center">
               <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-primary/15 bg-primary/5 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-primary">
                 <Newspaper className="h-3.5 w-3.5" />
-                Báo chí TOPPLAY
+                Tin tức TOPPLAY
               </div>
               <h1 className="text-4xl font-extrabold tracking-tight sm:text-5xl lg:text-6xl">
                 Bài viết và thông báo
