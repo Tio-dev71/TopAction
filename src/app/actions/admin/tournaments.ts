@@ -298,31 +298,45 @@ export async function saveOrganizer(tournamentId: string, prevState: any, formDa
   await requireStaff()
   const supabase = await createClient()
 
-  const raw = Object.fromEntries(formData)
-  const orgId = raw.id as string | undefined
+  const orgId = formData.get('id') as string | null
+  const typeValue = formData.get('type') as string | null
 
-  const orgData = {
-    name: raw.name as string,
-    description: (raw.description as string) || null,
-    logo_url: (raw.logo_url as string) || null,
-    website_url: (raw.website_url as string) || null,
-    type: (raw.type as string) || 'organizer',
-    sort_order: parseInt(raw.sort_order as string) || 0,
+  const orgData: Record<string, any> = {
+    name: formData.get('name') as string,
+    description: (formData.get('description') as string) || null,
+    logo_url: (formData.get('logo_url') as string) || null,
+    type: typeValue || 'organizer',
+    sort_order: parseInt(formData.get('sort_order') as string) || 0,
   }
 
-  console.log('[saveOrganizer] orgId:', orgId, 'type:', orgData.type, 'raw.type:', raw.type, 'all keys:', Object.keys(raw))
+  // Only include website_url if the value exists (safe for schema cache delay)
+  const websiteUrl = formData.get('website_url') as string | null
+  if (websiteUrl) {
+    orgData.website_url = websiteUrl
+  }
+
+  // Debug log
+  const allKeys: string[] = []
+  formData.forEach((_, key) => allKeys.push(key))
+  console.log('[saveOrganizer] orgId:', orgId, 'type:', orgData.type, 'keys:', allKeys)
 
   if (orgId) {
     const { error } = await supabase
       .from('organizers')
       .update(orgData)
       .eq('id', orgId)
-    if (error) return { error: error.message }
+    if (error) {
+      console.error('[saveOrganizer] UPDATE error:', JSON.stringify(error))
+      return { error: error.message }
+    }
   } else {
     const { error } = await supabase
       .from('organizers')
       .insert({ ...orgData, tournament_id: tournamentId })
-    if (error) return { error: error.message }
+    if (error) {
+      console.error('[saveOrganizer] INSERT error:', JSON.stringify(error))
+      return { error: error.message }
+    }
   }
 
   revalidatePath(`/admin/giai-dau/${tournamentId}`)
