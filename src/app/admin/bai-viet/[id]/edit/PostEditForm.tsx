@@ -52,19 +52,17 @@ export function PostEditForm({ post }: { post: any }) {
               defaultValue={post.cover_image || ''}
               folder="posts"
             />
-            {/* Canva Embed */}
             <div className="space-y-2">
-              <Label htmlFor="canva_embed_url">Link Canva (tùy chọn)</Label>
-              <Input
-                id="canva_embed_url"
-                name="canva_embed_url"
-                type="url"
-                defaultValue={post.canva_embed_url || ''}
-                placeholder="https://www.canva.com/design/.../view?embed"
+              <Label htmlFor="story_image_urls">Danh sách link ảnh dọc (ưu tiên thay Canva)</Label>
+              <Textarea
+                id="story_image_urls"
+                name="story_image_urls"
+                rows={5}
+                defaultValue={Array.isArray(post.story_image_urls) ? post.story_image_urls.join('\n') : ''}
+                placeholder={"Mỗi dòng 1 link ảnh\nhttps://.../story-01.jpg\nhttps://.../story-02.jpg"}
               />
               <p className="text-xs text-muted-foreground">
-                ⚡ Nếu có link này, bài viết sẽ hiển thị dạng <strong>Landing Page toàn màn hình</strong> từ Canva. <br/>
-                <strong className="text-destructive">Quan trọng:</strong> Bạn phải lấy link Embed (Chia sẻ -&gt; Xem thêm -&gt; Nhúng) và đảm bảo thiết kế được để ở chế độ <strong>Công khai (Bất kỳ ai có liên kết)</strong>, nếu không Canva sẽ từ chối kết nối. Hệ thống sẽ tự động chuyển link `/view` thành `/view?embed`.
+                ✅ Nếu có ảnh ở đây, bài viết sẽ hiển thị dạng <strong>cuộn dọc</strong> như story/mobile feed. Có thể lấy ảnh bằng cách xuất từng trang từ Canva (PNG/JPG).
               </p>
             </div>
             <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4 text-sm text-muted-foreground">

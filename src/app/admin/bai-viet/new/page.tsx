@@ -76,8 +76,17 @@ export default function NewPostPage() {
                 <strong className="text-destructive">Quan trọng:</strong> Bạn phải lấy link Embed (Chia sẻ -&gt; Xem thêm -&gt; Nhúng) và đảm bảo thiết kế được để ở chế độ <strong>Công khai (Bất kỳ ai có liên kết)</strong>, nếu không Canva sẽ từ chối kết nối. Hệ thống sẽ tự động chuyển link `/view` thành `/view?embed`.
               </p>
             </div>
-            <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4 text-sm text-muted-foreground">
-              Khu vực này dùng để admin chỉnh trực tiếp <strong>tiêu đề</strong>, <strong>nội dung</strong>, <strong>ảnh bìa</strong> và chèn <strong>ảnh vào giữa bài viết</strong>. Bài viết published có thể hiển thị ở popup trang chủ và mục tin tức.
+            <div className="space-y-2">
+              <Label htmlFor="story_image_urls">Danh sách link ảnh dọc (ưu tiên thay Canva)</Label>
+              <Textarea
+                id="story_image_urls"
+                name="story_image_urls"
+                rows={5}
+                placeholder={"Mỗi dòng 1 link ảnh\nhttps://.../story-01.jpg\nhttps://.../story-02.jpg"}
+              />
+              <p className="text-xs text-muted-foreground">
+                ✅ Nếu có ảnh ở đây, bài viết sẽ hiển thị dạng <strong>cuộn dọc</strong> như story/mobile feed. Có thể lấy ảnh bằng cách xuất từng trang từ Canva (PNG/JPG).
+              </p>
             </div>
             <div className="space-y-2">
               <Label htmlFor="status">Trạng thái</Label>

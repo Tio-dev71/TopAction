@@ -78,7 +78,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
 
   const { data: post } = await supabase
     .from("posts")
-    .select("id, slug, title, excerpt, content, cover_image, canva_embed_url, published_at, status")
+    .select("id, slug, title, excerpt, content, cover_image, canva_embed_url, story_image_urls, published_at, status")
     .eq("slug", slug)
     .single();
 
@@ -86,11 +86,44 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
     notFound();
   }
 
+  const storyImages = Array.isArray(post.story_image_urls) ? post.story_image_urls.filter(Boolean) : [];
+
+  // ── Vertical Story Image Mode ─────────────────────────────────────────────
+  if (storyImages.length > 0) {
+    return (
+      <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_40%),linear-gradient(180deg,#020617_0%,#0b1120_100%)]">
+        <header className="sticky top-0 z-50 flex w-full items-center border-b border-white/10 bg-black/45 px-4 py-3 backdrop-blur-md sm:px-6">
+          <Link
+            href="/tin-tuc"
+            className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white/20"
+          >
+            <ArrowLeft className="h-4 w-4" /> Quay lại tin tức
+          </Link>
+        </header>
+
+        <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6">
+          <h1 className="mb-5 text-center text-xl font-extrabold text-white sm:text-2xl">{post.title}</h1>
+          <div className="space-y-4">
+            {storyImages.map((src, idx) => (
+              <div key={`${src}-${idx}`} className="overflow-hidden rounded-2xl border border-white/15 bg-white/5 shadow-[0_12px_40px_rgba(2,6,23,0.45)]">
+                <img
+                  src={src}
+                  alt={`${post.title} - trang ${idx + 1}`}
+                  className="w-full h-auto object-contain"
+                  loading={idx === 0 ? "eager" : "lazy"}
+                />
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   // ── Canva Landing Page Mode (Portrait / Vertical-friendly) ───────────────
   if (post.canva_embed_url) {
     return (
       <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_40%),linear-gradient(180deg,#020617_0%,#0b1120_100%)]">
-        {/* Floating back button */}
         <header className="sticky top-0 z-50 flex w-full items-center border-b border-white/10 bg-black/40 px-4 py-3 backdrop-blur-md sm:px-6">
           <FadeIn>
             <Link

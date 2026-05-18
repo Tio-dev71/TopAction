@@ -102,6 +102,7 @@ export const postSchema = z.object({
   content: z.string().optional().or(z.literal('')),
   cover_image: z.string().optional().or(z.literal('')),
   canva_embed_url: z.string().optional().or(z.literal('')),
+  story_image_urls: z.array(z.string().url('Mỗi link ảnh phải là URL hợp lệ')).optional().default([]),
   tournament_id: z.string().uuid().optional().nullable(),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
 })

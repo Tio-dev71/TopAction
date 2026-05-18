@@ -11,8 +11,15 @@ export async function createPost(prevState: any, formData: FormData) {
   const supabase = await createClient()
 
   const raw = Object.fromEntries(formData)
+  const storyImageUrlsRaw = String(raw.story_image_urls || '')
+  const storyImageUrls = storyImageUrlsRaw
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean)
+
   const parsed = postSchema.safeParse({
     ...raw,
+    story_image_urls: storyImageUrls,
     tournament_id: raw.tournament_id || null,
   })
 
@@ -68,8 +75,15 @@ export async function updatePost(id: string, prevState: any, formData: FormData)
   const supabase = await createClient()
 
   const raw = Object.fromEntries(formData)
+  const storyImageUrlsRaw = String(raw.story_image_urls || '')
+  const storyImageUrls = storyImageUrlsRaw
+    .split('\n')
+    .map((item) => item.trim())
+    .filter(Boolean)
+
   const parsed = postSchema.safeParse({
     ...raw,
+    story_image_urls: storyImageUrls,
     tournament_id: raw.tournament_id || null,
   })
 
