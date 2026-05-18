@@ -310,6 +310,8 @@ export async function saveOrganizer(tournamentId: string, prevState: any, formDa
     sort_order: parseInt(raw.sort_order as string) || 0,
   }
 
+  console.log('[saveOrganizer] orgId:', orgId, 'type:', orgData.type, 'raw.type:', raw.type, 'all keys:', Object.keys(raw))
+
   if (orgId) {
     const { error } = await supabase
       .from('organizers')
