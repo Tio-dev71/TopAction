@@ -129,7 +129,7 @@ export default async function AdminTournamentDetailPage({
             {tournament.organizers.map((org: any) => (
               <div key={org.id} className="rounded-lg border border-border/40 p-3">
                 <p className="text-sm font-medium">{org.name}</p>
-                <p className="text-xs text-muted-foreground">{org.type} — {org.description}</p>
+                <p className="text-xs text-muted-foreground">{({ organizer: 'Tổ chức', sponsor: 'Tài trợ', partner: 'Đồng hành', press: 'Báo chí' } as Record<string, string>)[org.type] || org.type} — {org.description}</p>
               </div>
             ))}
           </div>

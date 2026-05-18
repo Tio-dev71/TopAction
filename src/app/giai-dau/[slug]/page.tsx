@@ -188,6 +188,7 @@ export default async function TournamentDetailPage({
   const organizers = (tournament.organizers || []).filter((o: any) => o.type === 'organizer');
   const sponsors = (tournament.organizers || []).filter((o: any) => o.type === 'sponsor');
   const partners = (tournament.organizers || []).filter((o: any) => o.type === 'partner');
+  const press = (tournament.organizers || []).filter((o: any) => o.type === 'press');
 
   // Registration fee display
   const minPrice = tournament.categories?.length > 0
@@ -549,7 +550,7 @@ export default async function TournamentDetailPage({
           </div>
 
           {/* ─── Organizers Section (Full Width) ─── */}
-          {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0) && (
+          {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0 || press.length > 0) && (
             <div className="td-organizers">
               {organizers.length > 0 && (
                 <FadeIn className="td-organizers__section">
@@ -613,8 +614,8 @@ export default async function TournamentDetailPage({
               {partners.length > 0 && (
                 <FadeIn className="td-organizers__section">
                   <h3 className="td-organizers__title">
-                    <Newspaper className="td-organizers__title-icon" />
-                    Báo Chí
+                    <Handshake className="td-organizers__title-icon" />
+                    Đơn vị đồng hành
                   </h3>
                   <div className="td-organizers__logos">
                     {partners.map((pt: any) => {
@@ -622,7 +623,7 @@ export default async function TournamentDetailPage({
                         <img src={pt.logo_url} alt={pt.name} className="td-organizers__logo-img" />
                       ) : (
                         <div className="td-organizers__logo-placeholder">
-                          <Newspaper className="h-8 w-8" />
+                          <Handshake className="h-8 w-8" />
                           <span>{pt.name}</span>
                         </div>
                       );
@@ -630,6 +631,34 @@ export default async function TournamentDetailPage({
                         <div key={pt.id} className="td-organizers__logo-card">
                           {pt.website_url ? (
                             <a href={pt.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                          ) : logoContent}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </FadeIn>
+              )}
+
+              {press.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Newspaper className="td-organizers__title-icon" />
+                    Báo chí
+                  </h3>
+                  <div className="td-organizers__logos">
+                    {press.map((pr: any) => {
+                      const logoContent = pr.logo_url ? (
+                        <img src={pr.logo_url} alt={pr.name} className="td-organizers__logo-img" />
+                      ) : (
+                        <div className="td-organizers__logo-placeholder">
+                          <Newspaper className="h-8 w-8" />
+                          <span>{pr.name}</span>
+                        </div>
+                      );
+                      return (
+                        <div key={pr.id} className="td-organizers__logo-card">
+                          {pr.website_url ? (
+                            <a href={pr.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
                           ) : logoContent}
                         </div>
                       );

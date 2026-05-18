@@ -523,6 +523,7 @@ function OrganizersEditor({ tournamentId, organizers }: { tournamentId: string; 
               <option value="organizer">Tổ chức</option>
               <option value="sponsor">Tài trợ</option>
               <option value="partner">Đồng hành</option>
+              <option value="press">Báo chí</option>
             </select>
             <ImageUploadField
               name="logo_url"

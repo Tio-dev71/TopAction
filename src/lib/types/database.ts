@@ -16,7 +16,7 @@ export type TransactionType = 'registration' | 'donation'
 
 export type PostStatus = 'draft' | 'published' | 'archived'
 
-export type OrganizerType = 'organizer' | 'partner' | 'sponsor'
+export type OrganizerType = 'organizer' | 'partner' | 'sponsor' | 'press'
 
 export type Gender = 'male' | 'female' | 'other'
 
