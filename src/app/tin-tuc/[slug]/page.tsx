@@ -78,7 +78,7 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
 
   const { data: post } = await supabase
     .from("posts")
-    .select("id, slug, title, excerpt, content, cover_image, published_at, status")
+    .select("id, slug, title, excerpt, content, cover_image, canva_embed_url, published_at, status")
     .eq("slug", slug)
     .single();
 
@@ -86,6 +86,39 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
     notFound();
   }
 
+  // ── Canva Landing Page Mode ──────────────────────────────────────────────
+  if (post.canva_embed_url) {
+    return (
+      <div className="flex h-screen w-full flex-col overflow-hidden bg-slate-900">
+        {/* Floating back button */}
+        <header className="absolute left-0 top-0 z-50 flex w-full items-center p-4 sm:p-5">
+          <FadeIn>
+            <Link
+              href="/tin-tuc"
+              className="flex items-center gap-2 rounded-full bg-black/50 px-4 py-2.5 text-sm font-semibold text-white shadow-lg backdrop-blur-sm transition-all hover:bg-black/70"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Quay lại tin tức
+            </Link>
+          </FadeIn>
+        </header>
+
+        {/* Full-screen Canva embed */}
+        <main className="h-full w-full">
+          <iframe
+            src={post.canva_embed_url}
+            className="h-full w-full border-none"
+            allowFullScreen
+            allow="fullscreen"
+            loading="eager"
+            title={post.title}
+          />
+        </main>
+      </div>
+    );
+  }
+
+  // ── Standard Article Mode ────────────────────────────────────────────────
   const { data: relatedPosts } = await supabase
     .from("posts")
     .select("slug, title, excerpt, cover_image, published_at")

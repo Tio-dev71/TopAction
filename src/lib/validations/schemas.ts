@@ -101,6 +101,7 @@ export const postSchema = z.object({
   excerpt: z.string().max(500).optional().or(z.literal('')),
   content: z.string().optional().or(z.literal('')),
   cover_image: z.string().optional().or(z.literal('')),
+  canva_embed_url: z.string().optional().or(z.literal('')),
   tournament_id: z.string().uuid().optional().nullable(),
   status: z.enum(['draft', 'published', 'archived']).default('draft'),
 })

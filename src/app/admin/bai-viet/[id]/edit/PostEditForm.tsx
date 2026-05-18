@@ -52,6 +52,20 @@ export function PostEditForm({ post }: { post: any }) {
               defaultValue={post.cover_image || ''}
               folder="posts"
             />
+            {/* Canva Embed */}
+            <div className="space-y-2">
+              <Label htmlFor="canva_embed_url">Link Canva (tùy chọn)</Label>
+              <Input
+                id="canva_embed_url"
+                name="canva_embed_url"
+                type="url"
+                defaultValue={post.canva_embed_url || ''}
+                placeholder="https://www.canva.com/design/.../view?embed"
+              />
+              <p className="text-xs text-muted-foreground">
+                ⚡ Nếu có link này, bài viết sẽ hiển thị dạng <strong>Landing Page toàn màn hình</strong> từ Canva thay vì dạng bài viết thông thường.
+              </p>
+            </div>
             <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4 text-sm text-muted-foreground">
               Khu vực này dùng để admin chỉnh trực tiếp <strong>tiêu đề</strong>, <strong>nội dung</strong>, <strong>ảnh bìa</strong> và chèn <strong>ảnh vào giữa bài viết</strong>. Bài viết published có thể hiển thị ở popup trang chủ và mục tin tức.
             </div>

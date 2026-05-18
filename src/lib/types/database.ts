@@ -225,6 +225,7 @@ export interface DbPost {
   excerpt: string | null
   content: string | null
   cover_image: string | null
+  canva_embed_url: string | null
   status: PostStatus
   published_at: string | null
   created_by: string | null
