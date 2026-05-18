@@ -86,16 +86,16 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
     notFound();
   }
 
-  // ── Canva Landing Page Mode ──────────────────────────────────────────────
+  // ── Canva Landing Page Mode (Portrait / Vertical-friendly) ───────────────
   if (post.canva_embed_url) {
     return (
-      <div className="flex h-screen w-full flex-col overflow-hidden bg-slate-900">
+      <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_40%),linear-gradient(180deg,#020617_0%,#0b1120_100%)]">
         {/* Floating back button */}
-        <header className="absolute left-0 top-0 z-50 flex w-full items-center p-4 sm:p-5">
+        <header className="sticky top-0 z-50 flex w-full items-center border-b border-white/10 bg-black/40 px-4 py-3 backdrop-blur-md sm:px-6">
           <FadeIn>
             <Link
               href="/tin-tuc"
-              className="flex items-center gap-2 rounded-full bg-black/50 px-4 py-2.5 text-sm font-semibold text-white shadow-lg backdrop-blur-sm transition-all hover:bg-black/70"
+              className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-white/20"
             >
               <ArrowLeft className="h-4 w-4" />
               Quay lại tin tức
@@ -103,16 +103,33 @@ export default async function NewsDetailPage({ params }: { params: Promise<{ slu
           </FadeIn>
         </header>
 
-        {/* Full-screen Canva embed */}
-        <main className="h-full w-full">
-          <iframe
-            src={post.canva_embed_url}
-            className="h-full w-full border-none"
-            allowFullScreen
-            allow="fullscreen"
-            loading="eager"
-            title={post.title}
-          />
+        <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
+          <FadeIn>
+            <div className="mb-5 text-center">
+              <h1 className="text-balance text-xl font-extrabold tracking-tight text-white sm:text-2xl">
+                {post.title}
+              </h1>
+              <p className="mt-2 text-sm text-slate-300">
+                Chế độ xem dọc - tối ưu trải nghiệm trên điện thoại
+              </p>
+            </div>
+          </FadeIn>
+
+          {/* Portrait container */}
+          <FadeIn>
+            <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/15 bg-black/30 p-2 shadow-[0_30px_80px_rgba(15,23,42,0.55)] backdrop-blur-xl">
+              <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[22px] bg-black">
+                <iframe
+                  src={post.canva_embed_url}
+                  className="absolute inset-0 h-full w-full border-none"
+                  allowFullScreen
+                  allow="fullscreen"
+                  loading="eager"
+                  title={post.title}
+                />
+              </div>
+            </div>
+          </FadeIn>
         </main>
       </div>
     );

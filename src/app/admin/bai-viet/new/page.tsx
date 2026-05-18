@@ -72,7 +72,8 @@ export default function NewPostPage() {
                 placeholder="https://www.canva.com/design/.../view?embed"
               />
               <p className="text-xs text-muted-foreground">
-                ⚡ Nếu có link này, bài viết sẽ hiển thị dạng <strong>Landing Page toàn màn hình</strong> từ Canva thay vì dạng bài viết thông thường.
+                ⚡ Nếu có link này, bài viết sẽ hiển thị dạng <strong>Landing Page toàn màn hình</strong> từ Canva. <br/>
+                <strong className="text-destructive">Quan trọng:</strong> Bạn phải lấy link Embed (Chia sẻ -&gt; Xem thêm -&gt; Nhúng) và đảm bảo thiết kế được để ở chế độ <strong>Công khai (Bất kỳ ai có liên kết)</strong>, nếu không Canva sẽ từ chối kết nối. Hệ thống sẽ tự động chuyển link `/view` thành `/view?embed`.
               </p>
             </div>
             <div className="rounded-2xl border border-border/60 bg-secondary/20 p-4 text-sm text-muted-foreground">

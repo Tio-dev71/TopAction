@@ -20,8 +20,20 @@ export async function createPost(prevState: any, formData: FormData) {
     return { error: parsed.error.issues.map(e => e.message).join(', ') }
   }
 
+  // Auto-format Canva URL
+  let canvaUrl = parsed.data.canva_embed_url
+  if (canvaUrl && canvaUrl.includes('canva.com') && canvaUrl.includes('/view') && !canvaUrl.includes('?embed')) {
+    try {
+      const urlObj = new URL(canvaUrl)
+      canvaUrl = `${urlObj.origin}${urlObj.pathname}?embed`
+    } catch (e) {
+      // Ignore invalid URL formatting
+    }
+  }
+
   const insertData: any = {
     ...parsed.data,
+    canva_embed_url: canvaUrl,
     created_by: user.id,
   }
 
@@ -65,7 +77,21 @@ export async function updatePost(id: string, prevState: any, formData: FormData)
     return { error: parsed.error.issues.map(e => e.message).join(', ') }
   }
 
-  const updateData: any = { ...parsed.data }
+  // Auto-format Canva URL
+  let canvaUrl = parsed.data.canva_embed_url
+  if (canvaUrl && canvaUrl.includes('canva.com') && canvaUrl.includes('/view') && !canvaUrl.includes('?embed')) {
+    try {
+      const urlObj = new URL(canvaUrl)
+      canvaUrl = `${urlObj.origin}${urlObj.pathname}?embed`
+    } catch (e) {
+      // Ignore invalid URL formatting
+    }
+  }
+
+  const updateData: any = { 
+    ...parsed.data,
+    canva_embed_url: canvaUrl
+  }
   if (parsed.data.status === 'published' && !raw.published_at) {
     updateData.published_at = new Date().toISOString()
   }
