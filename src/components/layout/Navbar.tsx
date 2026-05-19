@@ -57,7 +57,7 @@ export function Navbar() {
             <Trophy className="h-5 w-5" />
           </div>
           <span className="text-[1.35rem] font-bold tracking-tight sm:text-[1.45rem]">
-            <span className="text-primary">TOP</span>PLAY
+            <img src="/favicon.ico" alt="Topplay" className="h-32 w-auto object-contain" />
           </span>
         </Link>
 
