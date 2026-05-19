@@ -549,6 +549,7 @@ export default async function TournamentDetailPage({
               </FadeIn>
             </div>
           </div>
+        </div>
       </main>
 
       {/* ─── Organizers Section (Full Width) ─── */}
