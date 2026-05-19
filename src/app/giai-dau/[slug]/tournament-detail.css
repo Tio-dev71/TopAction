@@ -1058,18 +1058,14 @@
 
 /* ─── Organizers (Full Width) ─── */
 .td-organizers {
-  margin-top: 3rem;
-  padding-bottom: 3rem;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 3rem;
+  padding-top: 2rem;
 }
 
 .td-organizers__section {
-  background: var(--card);
-  border: 1px solid var(--border);
-  border-radius: 1.25rem;
-  padding: 2rem;
+  padding: 0;
 }
 
 .td-organizers__title {

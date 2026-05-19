@@ -21,6 +21,7 @@ import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { LiveStatsBanner } from "@/components/home/LiveStatsBanner";
 import { LeaderboardPodium } from "./LeaderboardPodium";
+import Marquee from "react-fast-marquee";
 
 /* ────────────── helpers ────────────── */
 
@@ -526,7 +527,7 @@ export default async function TournamentDetailPage({
                 const pages = tournament.facebook_pages && tournament.facebook_pages.length > 0
                   ? tournament.facebook_pages
                   : (tournament.facebook_page_url ? [{ name: tournament.facebook_page_name || 'TOPPLAY', url: tournament.facebook_page_url }] : []);
-                
+
                 return pages.map((page: any, index: number) => (
                   <FadeIn delay={0.4 + (index * 0.1)} key={index}>
                     <FacebookEmbed
@@ -548,9 +549,12 @@ export default async function TournamentDetailPage({
               </FadeIn>
             </div>
           </div>
+      </main>
 
-          {/* ─── Organizers Section (Full Width) ─── */}
-          {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0 || press.length > 0) && (
+      {/* ─── Organizers Section (Full Width) ─── */}
+      {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0 || press.length > 0) && (
+        <section className="w-full bg-card border-t border-border/60 pb-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="td-organizers">
               {organizers.length > 0 && (
                 <FadeIn className="td-organizers__section">
@@ -617,24 +621,26 @@ export default async function TournamentDetailPage({
                     <Handshake className="td-organizers__title-icon" />
                     Đơn vị đồng hành
                   </h3>
-                  <div className="td-organizers__logos">
-                    {partners.map((pt: any) => {
-                      const logoContent = pt.logo_url ? (
-                        <img src={pt.logo_url} alt={pt.name} className="td-organizers__logo-img" />
-                      ) : (
-                        <div className="td-organizers__logo-placeholder">
-                          <Handshake className="h-8 w-8" />
-                          <span>{pt.name}</span>
-                        </div>
-                      );
-                      return (
-                        <div key={pt.id} className="td-organizers__logo-card">
-                          {pt.website_url ? (
-                            <a href={pt.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
-                          ) : logoContent}
-                        </div>
-                      );
-                    })}
+                  <div className="td-organizers__logos-wrap">
+                    <Marquee gradient={true} gradientColor="var(--card)" speed={30} autoFill={true}>
+                      {partners.map((pt: any) => {
+                        const logoContent = pt.logo_url ? (
+                          <img src={pt.logo_url} alt={pt.name} className="td-organizers__logo-img" />
+                        ) : (
+                          <div className="td-organizers__logo-placeholder">
+                            <Handshake className="h-8 w-8" />
+                            <span>{pt.name}</span>
+                          </div>
+                        );
+                        return (
+                          <div key={pt.id} className="td-organizers__logo-card">
+                            {pt.website_url ? (
+                              <a href={pt.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                            ) : logoContent}
+                          </div>
+                        );
+                      })}
+                    </Marquee>
                   </div>
                 </FadeIn>
               )}
@@ -645,31 +651,33 @@ export default async function TournamentDetailPage({
                     <Newspaper className="td-organizers__title-icon" />
                     Báo chí
                   </h3>
-                  <div className="td-organizers__logos">
-                    {press.map((pr: any) => {
-                      const logoContent = pr.logo_url ? (
-                        <img src={pr.logo_url} alt={pr.name} className="td-organizers__logo-img" />
-                      ) : (
-                        <div className="td-organizers__logo-placeholder">
-                          <Newspaper className="h-8 w-8" />
-                          <span>{pr.name}</span>
-                        </div>
-                      );
-                      return (
-                        <div key={pr.id} className="td-organizers__logo-card">
-                          {pr.website_url ? (
-                            <a href={pr.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
-                          ) : logoContent}
-                        </div>
-                      );
-                    })}
+                  <div className="td-organizers__logos-wrap">
+                    <Marquee gradient={true} gradientColor="var(--card)" speed={30} autoFill={true}>
+                      {press.map((pr: any) => {
+                        const logoContent = pr.logo_url ? (
+                          <img src={pr.logo_url} alt={pr.name} className="td-organizers__logo-img" />
+                        ) : (
+                          <div className="td-organizers__logo-placeholder">
+                            <Newspaper className="h-8 w-8" />
+                            <span>{pr.name}</span>
+                          </div>
+                        );
+                        return (
+                          <div key={pr.id} className="td-organizers__logo-card">
+                            {pr.website_url ? (
+                              <a href={pr.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                            ) : logoContent}
+                          </div>
+                        );
+                      })}
+                    </Marquee>
                   </div>
                 </FadeIn>
               )}
             </div>
-          )}
-        </div>
-      </main>
+          </div>
+        </section>
+      )}
 
       <Footer />
     </div>
