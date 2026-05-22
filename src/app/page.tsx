@@ -21,6 +21,8 @@ import {
 import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
 import { NewsSection } from "@/components/home/NewsSection";
 import { NewsPopup } from "@/components/home/NewsPopup";
+import { PressSection } from "@/components/home/PressSection";
+import { CarouselScroll } from "@/components/ui/carousel-scroll";
 
 export const metadata: Metadata = {
   title: "TOPPLAY - Giải đấu thể thao & tin tức nổi bật",
@@ -256,15 +258,23 @@ function TournamentsSection({ tournaments }: { tournaments: TournamentCardData[]
               của bạn ngay hôm nay.
             </p>
           </div>
+          <Link href="/giai-dau">
+            <Button variant="outline" className="gap-2">
+              Xem tất cả
+              <ArrowRight className="h-4 w-4" />
+            </Button>
+          </Link>
         </div>
 
         {tournaments.length > 0 ? (
-          <FadeInStagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {tournaments.map((t) => (
-              <FadeIn key={t.slug}>
-                <TournamentCard tournament={t} />
-              </FadeIn>
-            ))}
+          <FadeInStagger>
+            <CarouselScroll>
+              {tournaments.map((t) => (
+                <FadeIn key={t.slug} className="min-w-[280px] sm:min-w-[320px] max-w-[350px] flex-shrink-0 snap-start h-full">
+                  <TournamentCard tournament={t} />
+                </FadeIn>
+              ))}
+            </CarouselScroll>
           </FadeInStagger>
         ) : (
           <div className="rounded-2xl border border-dashed border-border/60 py-16 text-center">
@@ -368,7 +378,14 @@ export default async function Home() {
     .select('slug, title, excerpt, content, cover_image, published_at')
     .eq('status', 'published')
     .order('published_at', { ascending: false })
-    .limit(3);
+    .limit(10);
+
+  const { data: allPress } = await supabase
+    .from('organizers')
+    .select('id, name, logo_url, website_url')
+    .eq('type', 'press');
+
+  const uniquePress = Array.from(new Map(allPress?.map((p: any) => [p.logo_url || p.name, p])).values());
 
   return (
     <div className="overflow-x-hidden">
@@ -379,6 +396,7 @@ export default async function Home() {
         <HowItWorksSection />
         <TournamentsSection tournaments={tournaments || []} />
         <NewsSection posts={posts || []} />
+        <PressSection press={uniquePress as any} />
       </main>
       <Footer />
     </div>
