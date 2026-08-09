@@ -120,9 +120,9 @@ export default async function TournamentDetailPage({
   }
 
   // Get donations
-  const { data: donations } = await supabase
+  const { data: donations, count: donationCount } = await supabase
     .from("donations")
-    .select("id, donor_name, amount, message, is_anonymous, created_at")
+    .select("id, donor_name, amount, message, is_anonymous, created_at", { count: 'exact' })
     .eq("tournament_id", tournament.id)
     .eq("status", "paid")
     .order("created_at", { ascending: false })
@@ -545,6 +545,7 @@ export default async function TournamentDetailPage({
                   slug={slug}
                   initialDonations={donationList}
                   initialTotal={tournament.donation_total || 0}
+                  initialCount={donationCount || 0}
                 />
               </FadeIn>
             </div>

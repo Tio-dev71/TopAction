@@ -41,11 +41,13 @@ export function DonationWidget({
   slug,
   initialDonations = [],
   initialTotal = 0,
+  initialCount = 0,
 }: {
   tournamentId: string;
   slug: string;
   initialDonations?: any[];
   initialTotal?: number;
+  initialCount?: number;
 }) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -54,6 +56,7 @@ export function DonationWidget({
 
   const [donations, setDonations] = useState<any[]>(initialDonations);
   const [total, setTotal] = useState(initialTotal);
+  const [count, setCount] = useState(initialCount || initialDonations.length);
   const [loading, setLoading] = useState(initialDonations.length === 0);
   const [newDonationId, setNewDonationId] = useState<string | null>(null);
   const [pulseTotal, setPulseTotal] = useState(false);
@@ -113,6 +116,7 @@ export function DonationWidget({
           return [donationEntry, ...prev];
         });
 
+        setCount((prev) => prev + 1);
         setTotal((prev) => prev + (newRow.amount || 0));
 
         setNewDonationId(newRow.id);
@@ -155,6 +159,7 @@ export function DonationWidget({
           return [donationEntry, ...prev];
         });
 
+        setCount((prev) => prev + 1);
         setTotal((prev) => prev + (newRow.amount || 0));
         setNewDonationId(newRow.id);
         setPulseTotal(true);
@@ -228,7 +233,7 @@ export function DonationWidget({
 
         <div className="mt-4 pt-4 border-t border-border/40 text-left">
           <p className="text-sm text-foreground/80 mb-2">
-            Đã có <strong className="text-primary">{donations.length || 0} lượt ủng hộ</strong> cho quỹ
+            Đã có <strong className="text-primary">{count || 0} lượt ủng hộ</strong> cho quỹ
           </p>
 
           <div className="flex gap-2">
