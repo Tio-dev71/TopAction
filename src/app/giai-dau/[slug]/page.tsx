@@ -180,6 +180,19 @@ export default async function TournamentDetailPage({
     })));
   }
 
+  // Get latest participants for avatars
+  const { data: latestRegistrations } = await supabase
+    .from('registrations')
+    .select('profiles:user_id(avatar_url)')
+    .eq('tournament_id', tournament.id)
+    .in('status', ['paid', 'approved', 'pending'])
+    .order('created_at', { ascending: false })
+    .limit(5);
+
+  const participantAvatars = latestRegistrations
+    ?.map((r: any) => r.profiles?.avatar_url)
+    .filter(Boolean) || [];
+
   // Check registration window
   const now = new Date().toISOString();
   const regOpen = !tournament.registration_close_at || now < tournament.registration_close_at;
@@ -305,7 +318,7 @@ export default async function TournamentDetailPage({
                   donationGoal={tournament.donation_goal || 500000000}
                   donationDescription={
                     tournament.donation_description ||
-                    "Mỗi lượt đăng ký là 100.000 VND gửi đến Quỹ, tiếp sức điều trị cho trẻ em mắc bệnh hiểm."
+                    "Mỗi lượt đăng ký là một hành động thiết thực nhằm lan tỏa tinh thần nhân ái, chung tay thắp sáng tương lai cho nạn nhân chất độc da cam, góp phần chăm sóc sức khỏe, hỗ trợ sinh kế và ổn định cuộc sống."
                   }
                   charityIframeUrl={tournament.charity_iframe_url}
                 />
@@ -506,8 +519,13 @@ export default async function TournamentDetailPage({
 
                 <div className="td-sidebar__participants">
                   <div className="td-sidebar__participant-avatars">
-                    {[1, 2, 3, 4, 5].map((i) => (
-                      <div key={i} className="td-sidebar__participant-avatar">
+                    {participantAvatars.map((url, i) => (
+                      <div key={i} className="td-sidebar__participant-avatar overflow-hidden p-0 border-0">
+                        <img src={url} alt="Participant" className="w-full h-full object-cover rounded-full" />
+                      </div>
+                    ))}
+                    {Array.from({ length: Math.max(0, Math.min(5, tournament.participant_count) - participantAvatars.length) }).map((_, i) => (
+                      <div key={`dummy-${i}`} className="td-sidebar__participant-avatar">
                         <UserPlus className="h-3 w-3" />
                       </div>
                     ))}
