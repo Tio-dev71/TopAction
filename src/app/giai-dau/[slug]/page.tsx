@@ -317,7 +317,6 @@ export default async function TournamentDetailPage({
                   donationTotal={tournament.donation_total || 0}
                   donationGoal={tournament.donation_goal || 500000000}
                   donationDescription={
-                    tournament.donation_description ||
                     "Mỗi lượt đăng ký là một hành động thiết thực nhằm lan tỏa tinh thần nhân ái, chung tay thắp sáng tương lai cho nạn nhân chất độc da cam, góp phần chăm sóc sức khỏe, hỗ trợ sinh kế và ổn định cuộc sống."
                   }
                   charityIframeUrl={tournament.charity_iframe_url}
