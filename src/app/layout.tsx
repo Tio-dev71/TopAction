@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import { Be_Vietnam_Pro } from "next/font/google";
 import "./globals.css";
+import { MobileBottomNav } from "@/components/layout/MobileBottomNav";
 
 const beVietnamPro = Be_Vietnam_Pro({
   subsets: ["vietnamese", "latin"],
@@ -47,6 +48,7 @@ export default function RootLayout({
     <html lang="vi" className={`h-full antialiased ${beVietnamPro.variable}`} suppressHydrationWarning>
       <body className="min-h-full flex flex-col font-sans overflow-x-hidden">
         {children}
+        <MobileBottomNav />
         <Toaster position="top-center" richColors />
       </body>
     </html>

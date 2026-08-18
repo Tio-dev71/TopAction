@@ -8,9 +8,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { updateProfile } from "@/app/actions/profile";
 import { toast } from "sonner";
-import { Loader2, LogOut, Medal } from "lucide-react";
+import { Loader2, LogOut, Medal, ShieldCheck, TrendingUp, Banknote } from "lucide-react";
 import { logout } from "@/app/actions/auth";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export function ProfileForm({ profile, stravaConnected = false, garminConnected = false }: { profile: any, stravaConnected?: boolean, garminConnected?: boolean }) {
   const [state, formAction, pending] = useActionState(updateProfile, null);
@@ -113,6 +114,62 @@ export function ProfileForm({ profile, stravaConnected = false, garminConnected 
               </Button>
             </div>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card className="mt-8 border-border/60 shadow-lg shadow-primary/5">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold flex items-center gap-2">
+            <ShieldCheck className="w-6 h-6 text-primary" />
+            TopPlay Verified & Uy tín
+          </CardTitle>
+          <p className="text-sm text-muted-foreground mt-1">Quản lý cấp độ xác minh, điểm uy tín và tài khoản ký quỹ của bạn.</p>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {/* Cấp độ xác minh */}
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 rounded-xl border border-border/50 bg-secondary/20 gap-4">
+            <div>
+              <p className="font-semibold text-[15px] mb-1">Cấp độ hiện tại</p>
+              <div className="flex items-center gap-2">
+                <span className="text-muted-foreground text-sm">Chưa xác minh (Khách)</span>
+              </div>
+            </div>
+            <Button variant="default" className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white shadow-sm" onClick={() => router.push('/verified')}>
+              Nâng cấp Tích Xanh
+            </Button>
+          </div>
+
+          {/* Điểm Uy Tín & Ký Quỹ */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="p-4 rounded-xl border border-border/50 bg-secondary/20 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-semibold text-[15px]">Trust Score</p>
+                  <TrendingUp className="w-5 h-5 text-amber-500" />
+                </div>
+                <p className="text-3xl font-extrabold text-foreground">0<span className="text-sm text-muted-foreground font-medium">/100</span></p>
+                <p className="text-[12px] text-muted-foreground mt-2">Điểm uy tín sẽ tăng khi bạn tổ chức hoặc tham gia sự kiện tích cực.</p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-border/50">
+                <Link href="#" className="text-[13px] text-primary font-medium hover:underline">Xem lịch sử điểm</Link>
+              </div>
+            </div>
+
+            <div className="p-4 rounded-xl border border-border/50 bg-secondary/20 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="font-semibold text-[15px]">Tài khoản Ký quỹ</p>
+                  <Banknote className="w-5 h-5 text-teal-600" />
+                </div>
+                <p className="text-3xl font-extrabold text-foreground">0đ</p>
+                <p className="text-[12px] text-muted-foreground mt-2">Dùng để đặt cọc khi tạo giải đấu/CLB. (Có thể hoàn trả)</p>
+              </div>
+              <div className="mt-4 pt-4 border-t border-border/50 flex gap-2">
+                <Button variant="outline" size="sm" className="flex-1 text-xs">Nạp thêm</Button>
+                <Button variant="outline" size="sm" className="flex-1 text-xs" disabled>Rút tiền</Button>
+              </div>
+            </div>
+          </div>
         </CardContent>
       </Card>
 

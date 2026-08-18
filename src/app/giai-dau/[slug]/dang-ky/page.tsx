@@ -65,14 +65,16 @@ export default async function RegistrationPage({
     .not('status', 'in', '("cancelled","rejected")')
 
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8">
-      <RegistrationForm
-        tournament={tournament}
-        profile={profile}
-        registrationClosed={registrationClosed}
-        closedReason={closedReason}
-        existingRegistrations={existingRegs || []}
-      />
+    <div className="min-h-screen bg-[#f8fafc] flex flex-col pt-20">
+      <div className="mx-auto w-full max-w-3xl px-4 py-8 flex-1">
+        <RegistrationForm
+          tournament={tournament}
+          profile={profile}
+          registrationClosed={registrationClosed}
+          closedReason={closedReason}
+          existingRegistrations={existingRegs || []}
+        />
+      </div>
     </div>
   )
 }

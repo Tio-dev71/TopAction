@@ -1,304 +1,144 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { notFound } from "next/navigation";
-import { ArrowLeft, CalendarDays, Newspaper, ArrowRight } from "lucide-react";
+import { Metadata } from "next";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
-import { Badge } from "@/components/ui/badge";
-import { createClient } from "@/lib/supabase/server";
-import { FadeIn, FadeInStagger } from "@/components/animations/MotionWrapper";
+import { MainContainer } from "@/components/layout/MainContainer";
+import { NewsSidebar } from "@/components/news/NewsSidebar";
+import { Clock, MessageSquare, Share2, Eye, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
-function stripHtml(input: string | null) {
-  return (input || "").replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
-}
+export const metadata: Metadata = {
+  title: "Chi tiết bài viết | TOPPLAY",
+  description: "Chi tiết bài viết tin tức thể thao",
+};
 
-function formatDate(iso: string | null) {
-  if (!iso) return "Mới cập nhật";
-  return new Date(iso).toLocaleDateString("vi-VN", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-  });
-}
-
-function formatPostContent(content: string | null, fallback: string | null) {
-  const source = (content || fallback || "Nội dung đang được cập nhật.").trim();
-
-  if (/<\/?[a-z][\s\S]*>/i.test(source)) {
-    return source;
-  }
-
-  return source
-    .split(/\n\s*\n/)
-    .map((paragraph) => paragraph.trim())
-    .filter(Boolean)
-    .map((paragraph) => `<p>${paragraph.replace(/\n/g, "<br />")}</p>`)
-    .join("");
-}
-
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
-  const { slug } = await params;
-  const supabase = await createClient();
-
-  const { data: post } = await supabase
-    .from("posts")
-    .select("title, excerpt, content, cover_image, slug, status")
-    .eq("slug", slug)
-    .single();
-
-  const title = post?.title ? `${post.title} | TOPPLAY` : "Tin tức | TOPPLAY";
-  const description = stripHtml(post?.excerpt || post?.content || "Tin tức mới nhất từ TOPPLAY").slice(0, 160);
-  const image = post?.cover_image || "https://topplay.vn/images/default-share.jpg";
-  const url = `https://topplay.vn/tin-tuc/${post?.slug || slug}`;
-
-  return {
-    title,
-    description,
-    openGraph: {
-      title,
-      description,
-      url,
-      siteName: "TOPPLAY",
-      locale: "vi_VN",
-      type: "article",
-      images: [{ url: image, width: 1200, height: 630, alt: title }],
-    },
-    twitter: {
-      card: "summary_large_image",
-      title,
-      description,
-      images: [image],
-    },
-  };
-}
-
-export default async function NewsDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
-  const supabase = await createClient();
-
-  const { data: post } = await supabase
-    .from("posts")
-    .select("id, slug, title, excerpt, content, cover_image, canva_embed_url, story_image_urls, published_at, status")
-    .eq("slug", slug)
-    .single();
-
-  if (!post || post.status !== "published") {
-    notFound();
-  }
-
-  const storyImages = Array.isArray(post.story_image_urls) ? post.story_image_urls.filter(Boolean) : [];
-
-  // ── Vertical Story Image Mode ─────────────────────────────────────────────
-  if (storyImages.length > 0) {
-    return (
-      <div className="min-h-screen bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.12),transparent_40%),linear-gradient(180deg,#020617_0%,#0b1120_100%)]">
-        <header className="sticky top-0 z-50 flex w-full items-center border-b border-white/10 bg-black/45 px-4 py-3 backdrop-blur-md sm:px-6">
-          <Link
-            href="/tin-tuc"
-            className="inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white transition-all hover:bg-white/20"
-          >
-            <ArrowLeft className="h-4 w-4" /> Quay lại tin tức
-          </Link>
-        </header>
-
-        <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6">
-          <h1 className="mb-5 text-center text-xl font-extrabold text-white sm:text-2xl">{post.title}</h1>
-          <div className="space-y-4">
-            {storyImages.map((src, idx) => (
-              <div key={`${src}-${idx}`} className="overflow-hidden rounded-2xl border border-white/15 bg-white/5 shadow-[0_12px_40px_rgba(2,6,23,0.45)]">
-                <img
-                  src={src}
-                  alt={`${post.title} - trang ${idx + 1}`}
-                  className="w-full h-auto object-contain"
-                  loading={idx === 0 ? "eager" : "lazy"}
-                />
-              </div>
-            ))}
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  // ── Canva Landing Page Mode (Portrait / Vertical-friendly) ───────────────
-  if (post.canva_embed_url) {
-    return (
-      <div className="min-h-screen w-full bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.14),transparent_40%),linear-gradient(180deg,#020617_0%,#0b1120_100%)]">
-        <header className="sticky top-0 z-50 flex w-full items-center border-b border-white/10 bg-black/40 px-4 py-3 backdrop-blur-md sm:px-6">
-          <FadeIn>
-            <Link
-              href="/tin-tuc"
-              className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2.5 text-sm font-semibold text-white shadow-lg transition-all hover:bg-white/20"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              Quay lại tin tức
-            </Link>
-          </FadeIn>
-        </header>
-
-        <main className="mx-auto w-full max-w-5xl px-4 py-6 sm:px-6 sm:py-8">
-          <FadeIn>
-            <div className="mb-5 text-center">
-              <h1 className="text-balance text-xl font-extrabold tracking-tight text-white sm:text-2xl">
-                {post.title}
-              </h1>
-              <p className="mt-2 text-sm text-slate-300">
-                Chế độ xem dọc - tối ưu trải nghiệm trên điện thoại
-              </p>
-            </div>
-          </FadeIn>
-
-          {/* Portrait container */}
-          <FadeIn>
-            <div className="mx-auto w-full max-w-[420px] overflow-hidden rounded-[28px] border border-white/15 bg-black/30 p-2 shadow-[0_30px_80px_rgba(15,23,42,0.55)] backdrop-blur-xl">
-              <div className="relative aspect-[9/16] w-full overflow-hidden rounded-[22px] bg-black">
-                <iframe
-                  src={post.canva_embed_url}
-                  className="absolute inset-0 h-full w-full border-none"
-                  allowFullScreen
-                  allow="fullscreen"
-                  loading="eager"
-                  title={post.title}
-                />
-              </div>
-            </div>
-          </FadeIn>
-        </main>
-      </div>
-    );
-  }
-
-  // ── Standard Article Mode ────────────────────────────────────────────────
-  const { data: relatedPosts } = await supabase
-    .from("posts")
-    .select("slug, title, excerpt, cover_image, published_at")
-    .eq("status", "published")
-    .neq("slug", slug)
-    .order("published_at", { ascending: false })
-    .limit(3);
-
+export default function ArticleDetailPage({ params }: { params: { slug: string } }) {
   return (
-    <div className="overflow-x-hidden">
+    <div className="bg-white min-h-screen flex flex-col">
       <Navbar />
-      <main>
-        <section className="relative overflow-hidden border-b border-border/60">
-          <div className="absolute inset-0 -z-10 overflow-hidden">
-            <div className="absolute left-1/2 top-0 h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-primary/10 blur-3xl" />
-            <div className="absolute bottom-0 right-0 h-[280px] w-[280px] rounded-full bg-accent/10 blur-3xl" />
+      
+      <main className="flex-1 w-full pb-16 pt-8">
+        <MainContainer>
+          {/* Breadcrumbs */}
+          <div className="flex items-center gap-2 text-[13px] font-medium text-muted-foreground mb-8 overflow-x-auto no-scrollbar whitespace-nowrap">
+             <Link href="/" className="hover:text-foreground transition-colors">Trang chủ</Link>
+             <ChevronRight className="w-3.5 h-3.5" />
+             <Link href="/tin-tuc" className="hover:text-foreground transition-colors">Tin tức</Link>
+             <ChevronRight className="w-3.5 h-3.5" />
+             <Link href="/tin-tuc?cat=pickleball" className="hover:text-foreground transition-colors">Pickleball</Link>
+             <ChevronRight className="w-3.5 h-3.5" />
+             <span className="text-foreground font-semibold truncate max-w-[200px] sm:max-w-[400px]">
+               Giải Vô địch Quốc gia Pickleball 2026 chính thức khởi tranh
+             </span>
           </div>
 
-          <div className="mx-auto max-w-5xl px-4 py-14 sm:px-6 sm:py-18 lg:px-8">
-            <FadeIn>
-              <Link href="/tin-tuc" className="inline-flex items-center gap-2 text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
-                <ArrowLeft className="h-4 w-4" />
-                Quay lại tin tức
-              </Link>
-            </FadeIn>
+          <div className="flex flex-col lg:flex-row gap-12">
+            
+            {/* Left 70%: Article Content */}
+            <div className="flex-1 lg:w-2/3 lg:max-w-[800px]">
+               <div className="mb-6">
+                 <span className="bg-[#1d4ed8] text-white text-[11px] font-bold px-3 py-1 rounded-md mb-4 inline-block">
+                   PICKLEBALL
+                 </span>
+                 <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-foreground mb-6 leading-[1.15] tracking-tight">
+                   Giải Vô địch Quốc gia Pickleball 2026 chính thức khởi tranh với 2.000 VĐV
+                 </h1>
+                 
+                 <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-border/60 mb-8">
+                   <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full bg-secondary overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?auto=format&fit=crop&w=100&q=80" alt="Author" className="w-full h-full object-cover" />
+                      </div>
+                      <div>
+                        <div className="text-[14px] font-bold text-foreground">Nguyễn Tuấn Khang</div>
+                        <div className="flex items-center gap-2 text-[12px] text-muted-foreground font-medium">
+                           <span className="flex items-center gap-1"><Clock className="w-3 h-3" /> 24/08/2026</span>
+                           <span>•</span>
+                           <span>5 phút đọc</span>
+                        </div>
+                      </div>
+                   </div>
+                   
+                   <div className="flex items-center gap-3 text-muted-foreground">
+                      <button className="flex items-center gap-1.5 text-[13px] font-medium hover:text-[#1d4ed8] transition-colors bg-secondary/50 px-3 py-1.5 rounded-full">
+                        <Eye className="w-4 h-4" /> 12.5k
+                      </button>
+                      <button className="flex items-center gap-1.5 text-[13px] font-medium hover:text-[#1d4ed8] transition-colors bg-secondary/50 px-3 py-1.5 rounded-full">
+                        <MessageSquare className="w-4 h-4" /> 148
+                      </button>
+                      <button className="flex items-center gap-1.5 text-[13px] font-medium hover:text-[#1d4ed8] transition-colors bg-secondary/50 px-3 py-1.5 rounded-full">
+                        <Share2 className="w-4 h-4" /> Chia sẻ
+                      </button>
+                   </div>
+                 </div>
+               </div>
 
-            <FadeIn className="mt-6">
-              <Badge className="border-0 bg-primary/10 text-primary shadow-none">
-                <Newspaper className="h-3.5 w-3.5" />
-                Tin tức TOPPLAY
-              </Badge>
-              <h1 className="mt-4 text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl lg:text-5xl">
-                {post.title}
-              </h1>
-              <div className="mt-4 inline-flex items-center gap-2 rounded-full border border-border/60 bg-secondary/40 px-3 py-1.5 text-sm text-muted-foreground">
-                <CalendarDays className="h-4 w-4 text-primary" />
-                {formatDate(post.published_at)}
-              </div>
-              {post.excerpt && (
-                <p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground sm:text-lg">
-                  {post.excerpt}
-                </p>
-              )}
-            </FadeIn>
+               {/* Highlights/Summary */}
+               <div className="bg-[#f8fafc] border-l-4 border-[#1d4ed8] p-6 rounded-r-xl mb-8">
+                 <h3 className="font-bold text-foreground mb-2">Tóm tắt nội dung:</h3>
+                 <ul className="list-disc list-inside text-[15px] text-muted-foreground leading-relaxed space-y-1">
+                   <li>Giải Vô địch Quốc gia Pickleball 2026 diễn ra từ 25/08 đến 30/08 tại Hà Nội.</li>
+                   <li>Quy tụ hơn 2.000 vận động viên từ 45 tỉnh thành phố trên cả nước.</li>
+                   <li>Tổng giải thưởng lên đến 1,5 tỷ đồng - lớn nhất từ trước đến nay.</li>
+                 </ul>
+               </div>
+
+               {/* Hero Image */}
+               <figure className="mb-10">
+                 <div className="w-full aspect-[16/9] rounded-2xl overflow-hidden bg-secondary">
+                   <img src="https://images.unsplash.com/photo-1622227432807-91eb59a23d9b?auto=format&fit=crop&w=1200&q=80" alt="Pickleball event" className="w-full h-full object-cover" />
+                 </div>
+                 <figcaption className="text-[13px] text-muted-foreground text-center mt-3 italic">
+                   Lễ khai mạc Giải Vô địch Quốc gia Pickleball 2026 tại Cung điền kinh trong nhà (Ảnh: TopPlay)
+                 </figcaption>
+               </figure>
+
+               {/* Content Body */}
+               <div className="prose prose-lg max-w-none prose-headings:font-bold prose-headings:text-foreground prose-p:text-foreground/80 prose-a:text-[#1d4ed8] prose-img:rounded-2xl">
+                 <p>
+                   Sáng ngày 25/08, <strong>Giải Vô địch Quốc gia Pickleball 2026</strong> đã chính thức khai mạc tại Cung điền kinh trong nhà Hà Nội. Đây là giải đấu quy mô nhất từ trước đến nay do Liên đoàn Pickleball Việt Nam phối hợp cùng nền tảng TopPlay tổ chức.
+                 </p>
+                 
+                 <h2>Sự kiện bước ngoặt của phong trào Pickleball Việt Nam</h2>
+                 <p>
+                   Phát biểu tại lễ khai mạc, đại diện Ban tổ chức cho biết: "Với hơn 2.000 vận động viên đăng ký tham gia thi đấu ở 12 nội dung từ phong trào đến chuyên nghiệp, giải đấu năm nay đánh dấu một bước phát triển vượt bậc của phong trào Pickleball tại Việt Nam. Không chỉ vượt kỷ lục về số lượng VĐV, chất lượng chuyên môn cũng được nâng tầm rõ rệt".
+                 </p>
+                 
+                 <p>
+                   Giải đấu quy tụ hàng loạt tay vợt hàng đầu quốc gia và các vận động viên quốc tế thi đấu dưới màu áo các Câu lạc bộ trong nước. Hệ thống 30 sân thi đấu đạt chuẩn quốc tế đã được lắp đặt hoàn thiện để phục vụ hàng trăm trận đấu diễn ra liên tục trong 5 ngày.
+                 </p>
+
+                 <h2>TopPlay đồng hành ứng dụng công nghệ vào quản lý giải đấu</h2>
+                 <p>
+                   Một điểm nhấn của giải năm nay là việc áp dụng toàn diện hệ thống công nghệ quản lý giải đấu của TopPlay. Toàn bộ lịch thi đấu, kết quả cập nhật theo thời gian thực (Live Scoring), nhánh đấu và thống kê chi tiết đều được công khai trực tiếp trên nền tảng TopPlay.vn.
+                 </p>
+                 
+                 <p>
+                   Người hâm mộ có thể dễ dàng theo dõi trực tiếp kết quả của các tay vợt yêu thích, xem xếp hạng và nhận thông báo ngay khi trận đấu bắt đầu thông qua ứng dụng di động.
+                 </p>
+               </div>
+
+               {/* Tags */}
+               <div className="flex flex-wrap items-center gap-2 mt-12 pt-6 border-t border-border/60">
+                 <span className="text-[14px] font-bold text-foreground mr-2">Tags:</span>
+                 {["Pickleball", "Giải Vô địch Quốc gia", "TopPlay", "Hà Nội", "Sự kiện"].map(tag => (
+                   <Link href={`/tin-tuc/tag/${tag}`} key={tag} className="bg-secondary/50 hover:bg-secondary text-foreground text-[13px] font-medium px-3 py-1.5 rounded-lg transition-colors">
+                     #{tag}
+                   </Link>
+                 ))}
+               </div>
+            </div>
+
+            {/* Right 30%: Sidebar */}
+            <div className="w-full lg:w-[320px] xl:w-[360px] shrink-0">
+               <div className="sticky top-[100px]">
+                 <NewsSidebar />
+               </div>
+            </div>
+            
           </div>
-        </section>
-
-        <section className="py-12 sm:py-16">
-          <div className="mx-auto grid max-w-7xl gap-10 px-4 sm:px-6 lg:grid-cols-[minmax(0,1fr)_320px] lg:px-8">
-            <FadeIn className="min-w-0">
-              <article className="overflow-hidden rounded-[2rem] border border-border/60 bg-card shadow-[0_20px_70px_rgba(15,23,42,0.08)]">
-                {post.cover_image && (
-                  <div className="border-b border-border/60 bg-[linear-gradient(180deg,rgba(248,250,252,0.98),rgba(241,245,249,0.94))] p-5 sm:p-6">
-                    <div className="overflow-hidden rounded-[1.5rem] bg-white/90 p-4 shadow-inner ring-1 ring-black/5">
-                      <img
-                        src={post.cover_image}
-                        alt={post.title}
-                        className="mx-auto max-h-[460px] w-full object-contain"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                <div className="p-6 sm:p-8 lg:p-10">
-                  <div
-                    className="prose prose-slate max-w-none prose-headings:font-extrabold prose-headings:tracking-tight prose-p:leading-8 prose-p:text-slate-700 prose-strong:text-slate-900 prose-img:rounded-2xl prose-a:text-primary prose-li:leading-8"
-                    dangerouslySetInnerHTML={{ __html: formatPostContent(post.content, post.excerpt) }}
-                  />
-                </div>
-              </article>
-            </FadeIn>
-
-            <aside className="space-y-6">
-              <FadeIn>
-                <div className="rounded-[1.75rem] border border-border/60 bg-card p-5 shadow-sm">
-                  <h2 className="text-lg font-extrabold tracking-tight">Khám phá thêm</h2>
-                  <div className="mt-4 space-y-3">
-                    <Link href="/giai-dau" className="flex items-center justify-between rounded-2xl border border-border/60 bg-secondary/20 px-4 py-3 text-sm font-semibold transition-colors hover:border-primary/30 hover:text-primary">
-                      Giải đấu đang mở
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                    <Link href="/tin-tuc" className="flex items-center justify-between rounded-2xl border border-border/60 bg-secondary/20 px-4 py-3 text-sm font-semibold transition-colors hover:border-primary/30 hover:text-primary">
-                      Tất cả tin tức
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-              </FadeIn>
-
-              {!!relatedPosts?.length && (
-                <FadeIn>
-                  <div className="rounded-[1.75rem] border border-border/60 bg-card p-5 shadow-sm">
-                    <h2 className="text-lg font-extrabold tracking-tight">Bài viết liên quan</h2>
-                    <FadeInStagger className="mt-4 space-y-4">
-                      {relatedPosts.map((item) => (
-                        <FadeIn key={item.slug}>
-                          <Link href={`/tin-tuc/${item.slug}`} className="group block rounded-2xl border border-border/60 p-3 transition-all hover:-translate-y-0.5 hover:border-primary/30 hover:shadow-md">
-                            <div className="flex gap-3">
-                              <div className="flex h-[76px] w-[76px] shrink-0 items-center justify-center overflow-hidden rounded-xl bg-[linear-gradient(180deg,rgba(248,250,252,0.96),rgba(241,245,249,0.92))] p-2 ring-1 ring-black/5">
-                                {item.cover_image ? (
-                                  <img src={item.cover_image} alt={item.title} className="max-h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.03]" />
-                                ) : (
-                                  <div className="flex h-full w-full items-center justify-center rounded-lg bg-primary/8">
-                                    <Newspaper className="h-5 w-5 text-primary/70" />
-                                  </div>
-                                )}
-                              </div>
-                              <div className="min-w-0 flex-1">
-                                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-primary/75">
-                                  {formatDate(item.published_at)}
-                                </p>
-                                <h3 className="mt-1 line-clamp-2 text-sm font-bold leading-6 transition-colors group-hover:text-primary">
-                                  {item.title}
-                                </h3>
-                                <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
-                                  {stripHtml(item.excerpt || "").slice(0, 80)}
-                                </p>
-                              </div>
-                            </div>
-                          </Link>
-                        </FadeIn>
-                      ))}
-                    </FadeInStagger>
-                  </div>
-                </FadeIn>
-              )}
-            </aside>
-          </div>
-        </section>
+        </MainContainer>
       </main>
+
       <Footer />
     </div>
   );

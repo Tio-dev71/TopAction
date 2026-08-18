@@ -23,6 +23,10 @@ import { NewsSection } from "@/components/home/NewsSection";
 import { NewsPopup } from "@/components/home/NewsPopup";
 import { PressSection } from "@/components/home/PressSection";
 import { CarouselScroll } from "@/components/ui/carousel-scroll";
+import { GlobalSearch } from "@/components/search/GlobalSearch";
+import { QuickAccess } from "@/components/home/QuickAccess";
+import { MembershipSection } from "@/components/home/MembershipSection";
+import { EventCard } from "@/components/cards/EventCard";
 
 export const metadata: Metadata = {
   title: "TOPPLAY - Giải đấu thể thao & tin tức nổi bật",
@@ -40,65 +44,74 @@ function fmtDate(iso: string | null) {
 
 /* ─────────────────── hero ─────────────────── */
 
-function Hero() {
+function Hero({ tournament }: { tournament?: TournamentCardData }) {
+  const bgImage = tournament?.home_cover_image || tournament?.cover_image || "https://images.unsplash.com/photo-1552674605-15c21746360c?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80";
+  const title = tournament?.display_title || tournament?.title || "Sải Bước Nghĩa Tình 2026";
+
   return (
-    <section className="relative overflow-hidden">
-      <div className="absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute -top-24 left-1/2 h-[500px] w-full max-w-[800px] -translate-x-1/2 rounded-full bg-primary/8 blur-3xl" />
-        <div className="absolute top-20 right-0 h-[300px] w-[60vw] max-w-[400px] rounded-full bg-accent/10 blur-3xl" />
-        <div className="absolute bottom-0 left-0 h-[200px] w-[50vw] max-w-[300px] rounded-full bg-chart-3/8 blur-3xl" />
-      </div>
-
-      <div className="mx-auto max-w-7xl px-4 py-20 sm:px-6 sm:py-28 lg:px-8 lg:py-36">
-        <FadeIn className="mx-auto max-w-3xl text-center">
-          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 py-1.5 text-xs font-semibold tracking-wide text-primary">
-            <Flame className="h-3.5 w-3.5" />
-            NỀN TẢNG GIẢI ĐẤU TRỰC TUYẾN #1 VIỆT NAM
+    <section className="relative w-full pb-12">
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6">
+        <div className="relative overflow-hidden rounded-3xl bg-[#004e92] h-[400px] sm:h-[480px] w-full">
+          {/* Background image */}
+          <div className="absolute inset-0 z-0">
+            <img
+              src={bgImage}
+              alt="Hero background"
+              className="w-full h-full object-cover object-center opacity-80"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-[#0a2558]/90 via-[#103a8e]/80 to-transparent" />
           </div>
 
-          <h1 className="text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl lg:text-6xl">
-            Chinh phục{" "}
-            <span className="bg-gradient-to-r from-primary via-primary to-accent bg-clip-text text-transparent">
-              giới hạn
-            </span>
-            <br />
-            cùng cộng đồng thể thao
-          </h1>
-
-          <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Tham gia các giải chạy bộ, đạp xe và thể thao trực tuyến hàng đầu.
-            Theo dõi thành tích, bảng xếp hạng và kết nối với hàng nghìn
-            vận động viên trên toàn quốc.
-          </p>
-
-          <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
-            <Link href="#tournaments">
-              <Button size="lg" className="gap-2 px-8 shadow-lg shadow-primary/25 text-base">
-                Khám phá giải đấu
-                <ChevronRight className="h-4 w-4" />
-              </Button>
-            </Link>
-            <Link href="#how-it-works">
-              <Button variant="outline" size="lg" className="gap-2 px-8 text-base">
-                <Timer className="h-4 w-4" />
-                Cách thức tham gia
-              </Button>
-            </Link>
-          </div>
-
-          <div className="mt-14 flex justify-center gap-8 sm:gap-14">
-            {[
-              { value: "50+", label: "Giải đấu" },
-              { value: "12K+", label: "Vận động viên" },
-              { value: "300K km", label: "Đã chinh phục" },
-            ].map((stat) => (
-              <div key={stat.label} className="text-center">
-                <div className="text-2xl font-extrabold text-primary sm:text-3xl">{stat.value}</div>
-                <div className="mt-1 text-xs font-medium text-muted-foreground sm:text-sm">{stat.label}</div>
+          <div className="relative z-10 flex h-full flex-col justify-center px-8 sm:px-16 lg:px-24">
+            <FadeIn className="max-w-2xl">
+              {/* Event Logo Mock */}
+              <div className="mb-6 flex items-center gap-3 text-white">
+                <svg className="h-10 w-10 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5">
+                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+                </svg>
+                <div className="flex flex-col">
+                  <span className="font-extrabold text-2xl uppercase tracking-tighter leading-none whitespace-pre-line">
+                    {tournament?.category || "Sải Bước\nNghĩa Tình"}
+                  </span>
+                  <span className="text-[9px] uppercase tracking-widest mt-1">Hành trình của yêu thương</span>
+                </div>
               </div>
-            ))}
+
+              <h1 className="text-4xl sm:text-5xl font-bold text-white mb-3">
+                {title}
+              </h1>
+
+              <p className="text-lg text-white/90 mb-8 font-medium">
+                {tournament?.rewards_title || "Bước chân hôm nay – Hy vọng cho ngày mai"}
+              </p>
+
+              <div className="flex items-center gap-6 text-sm text-white/90 font-medium mb-8">
+                <div className="flex items-center gap-2">
+                  <CalendarDays className="h-5 w-5" />
+                  <span>{fmtDate(tournament?.start_date || null)}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <MapPin className="h-5 w-5" />
+                  <span>{tournament?.location || "Hồ Hoàn Kiếm, Hà Nội"}</span>
+                </div>
+              </div>
+
+              <Link href={tournament ? `/giai-dau/${tournament.slug}/dang-ky` : "#"}>
+                <Button size="lg" className="h-12 px-8 rounded-xl font-bold text-[15px] bg-[#22b39b] hover:bg-[#1d9e88] text-white border-0 shadow-lg shadow-teal-500/30 w-max">
+                  ĐĂNG KÝ NGAY
+                </Button>
+              </Link>
+            </FadeIn>
           </div>
-        </FadeIn>
+
+          {/* Carousel Dots */}
+          <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-2">
+            <button className="h-2 w-6 rounded-full bg-white"></button>
+            <button className="h-2 w-2 rounded-full bg-white/40 hover:bg-white/60 transition-colors"></button>
+            <button className="h-2 w-2 rounded-full bg-white/40 hover:bg-white/60 transition-colors"></button>
+            <button className="h-2 w-2 rounded-full bg-white/40 hover:bg-white/60 transition-colors"></button>
+          </div>
+        </div>
       </div>
     </section>
   );
@@ -122,165 +135,55 @@ interface TournamentCardData {
   categories?: { name: string; distance: string | null }[];
 }
 
-function TournamentCard({ tournament }: { tournament: TournamentCardData }) {
-  const distances = (tournament.categories || [])
-    .map((c) => c.distance || c.name)
-    .filter(Boolean);
+/* ─────────────────── featured section ─────────────────── */
 
+function FeaturedSection({ tournaments }: { tournaments: TournamentCardData[] }) {
   return (
-    <Link
-      href={`/giai-dau/${tournament.slug}`}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-primary/5"
-    >
-      <div className="relative aspect-[16/9] overflow-hidden bg-secondary/30">
-        {tournament.home_cover_image || tournament.cover_image ? (
-          <img
-            src={tournament.home_cover_image || tournament.cover_image!}
-            alt={tournament.title}
-            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-          />
-        ) : (
-          <div className="flex h-full items-center justify-center">
-            <Trophy className="h-12 w-12 text-muted-foreground/30" />
-          </div>
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-        {tournament.category && (
-          <div className="absolute top-3 left-3">
-            <Badge variant="secondary" className="bg-white/90 text-xs font-semibold text-foreground backdrop-blur-sm">
-              {tournament.category}
-            </Badge>
-          </div>
-        )}
-
-        {tournament.is_featured && (
-          <div className="absolute top-3 right-3 flex flex-col items-end gap-2">
-            <Badge className="gap-1 bg-chart-3/90 text-white backdrop-blur-sm border-0">
-              <Flame className="h-3 w-3" />
-              Nổi bật
-            </Badge>
-            {tournament.rewards_title && (
-              <Badge className="gap-1 bg-primary/90 text-white backdrop-blur-sm border-0 animate-pulse">
-                <Medal className="h-3 w-3" />
-                {tournament.rewards_title}
-              </Badge>
-            )}
-          </div>
-        )}
-
-        {!tournament.is_featured && tournament.rewards_title && (
-          <div className="absolute top-3 right-3">
-            <Badge className="gap-1 bg-primary/90 text-white backdrop-blur-sm border-0">
-              <Medal className="h-3 w-3" />
-              {tournament.rewards_title}
-            </Badge>
-          </div>
-        )}
-
-        {distances.length > 0 && (
-          <div className="absolute bottom-3 left-3 flex flex-wrap gap-1.5">
-            {distances.slice(0, 3).map((d) => (
-              <span key={d} className="rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
-                {d}
-              </span>
-            ))}
-            {distances.length > 3 && (
-              <span className="rounded-full bg-white/20 px-2.5 py-0.5 text-[11px] font-medium text-white backdrop-blur-sm">
-                +{distances.length - 3}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
-
-      <div className="flex flex-1 flex-col p-4 sm:p-5">
-        <h3 className="text-base font-bold leading-snug tracking-tight text-card-foreground group-hover:text-primary transition-colors sm:text-lg line-clamp-2 min-h-[3rem]">
-          {tournament.display_title || tournament.title}
-        </h3>
-
-        <div className="mt-3 flex flex-col gap-2 text-sm text-muted-foreground">
-          <div className="flex items-center gap-2">
-            <CalendarDays className="h-4 w-4 shrink-0 text-primary/60" />
-            <span>{fmtDate(tournament.start_date)} – {fmtDate(tournament.end_date)}</span>
-          </div>
-          {tournament.location && (
-            <div className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 shrink-0 text-primary/60" />
-              <span>{tournament.location}</span>
-            </div>
-          )}
-          <div className="flex items-center gap-2">
-            <Users className="h-4 w-4 shrink-0 text-primary/60" />
-            <span>
-              <strong className="font-semibold text-foreground">
-                {tournament.participant_count.toLocaleString("vi-VN")}
-              </strong>{" "}
-              người tham gia
-            </span>
-          </div>
-        </div>
-
-        <div className="mt-auto pt-4">
-          <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary transition-colors group-hover:text-primary/80">
-            Xem chi tiết
-            <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-          </span>
-        </div>
-      </div>
-    </Link>
-  );
-}
-
-/* ─────────────────── tournaments section ─────────────────── */
-
-function TournamentsSection({ tournaments }: { tournaments: TournamentCardData[] }) {
-  return (
-    <section id="tournaments" className="relative py-16 sm:py-24">
-      <div className="absolute inset-0 -z-10">
-        <div className="absolute top-0 left-1/4 h-[400px] w-[400px] rounded-full bg-primary/4 blur-3xl" />
-        <div className="absolute bottom-0 right-1/4 h-[300px] w-[300px] rounded-full bg-accent/6 blur-3xl" />
-      </div>
-
+    <section id="featured" className="relative mt-8 sm:mt-12">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="mb-10 flex flex-col gap-4 sm:mb-12 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <div className="mb-2 inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-primary">
-              <Trophy className="h-4 w-4" />
-              Giải đấu
-            </div>
-            <h2 className="text-2xl font-extrabold tracking-tight sm:text-3xl lg:text-4xl">
-              Các giải đấu{" "}
-              <span className="text-primary">đang mở</span>
-            </h2>
-            <p className="mt-2 max-w-lg text-muted-foreground">
-              Lựa chọn giải đấu phù hợp và bắt đầu hành trình chinh phục mục tiêu
-              của bạn ngay hôm nay.
-            </p>
-          </div>
-          <Link href="/giai-dau">
-            <Button variant="outline" className="gap-2">
-              Xem tất cả
-              <ArrowRight className="h-4 w-4" />
-            </Button>
+        <div className="mb-6 flex items-end justify-between">
+          <h2 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-3xl">
+            Nổi bật hôm nay
+          </h2>
+          <Link href="/su-kien" className="text-sm font-semibold text-[#1d4ed8] hover:underline">
+            Xem tất cả
           </Link>
         </div>
 
         {tournaments.length > 0 ? (
-          <FadeInStagger>
+          <FadeInStagger className="relative">
             <CarouselScroll>
-              {tournaments.map((t) => (
-                <FadeIn key={t.slug} className="min-w-[280px] sm:min-w-[320px] max-w-[350px] flex-shrink-0 snap-start h-full">
-                  <TournamentCard tournament={t} />
-                </FadeIn>
-              ))}
+              {tournaments.map((t) => {
+                const dateRange = t.start_date ? `${fmtDate(t.start_date)}` : undefined;
+                return (
+                  <FadeIn key={t.slug} className="min-w-[280px] sm:min-w-[300px] max-w-[320px] flex-shrink-0 snap-start h-full pb-4">
+                    <EventCard item={{
+                      id: t.slug,
+                      slug: t.slug,
+                      title: t.display_title || t.title,
+                      category: t.category || "Giải đấu",
+                      image: t.home_cover_image || t.cover_image || "",
+                      date: dateRange,
+                      location: t.location || undefined,
+                      price: "Từ 200.000đ", // Mock for now
+                      status: "Đang mở đăng ký", // Mock for now
+                      participants: t.participant_count,
+                      isFeatured: t.is_featured,
+                    }} />
+                  </FadeIn>
+                );
+              })}
             </CarouselScroll>
+            {/* Mock scroll button to match screenshot */}
+            <button className="hidden lg:flex absolute -right-5 top-1/2 -translate-y-1/2 h-10 w-10 items-center justify-center rounded-full bg-white shadow-[0_4px_20px_rgb(0,0,0,0.15)] text-muted-foreground hover:text-foreground z-10 border border-border/50">
+              <ChevronRight className="h-5 w-5" />
+            </button>
           </FadeInStagger>
         ) : (
           <div className="rounded-2xl border border-dashed border-border/60 py-16 text-center">
             <Trophy className="mx-auto h-12 w-12 text-muted-foreground/30" />
             <p className="mt-4 text-muted-foreground">
-              Chưa có giải đấu nào. Hãy quay lại sau!
+              Chưa có sự kiện nổi bật nào.
             </p>
           </div>
         )}
@@ -388,15 +291,22 @@ export default async function Home() {
   const uniquePress = Array.from(new Map(allPress?.map((p: any) => [p.logo_url || p.name, p])).values());
 
   return (
-    <div className="overflow-x-hidden">
+    <div className="overflow-x-hidden bg-white">
       <Navbar />
-      <main className="flex-1">
-        <Hero />
-        <NewsPopup post={posts?.[0] || null} />
-        <HowItWorksSection />
-        <TournamentsSection tournaments={tournaments || []} />
+      <main className="flex-1 pb-16">
+        <Hero tournament={tournaments?.[0]} />
+        <GlobalSearch />
+
+        {/* Nổi bật hôm nay */}
+        <FeaturedSection tournaments={tournaments || []} />
+
+        <QuickAccess />
+
+        <div className="bg-secondary/10 border-y border-border/40 py-8">
+          <MembershipSection />
+        </div>
+
         <NewsSection posts={posts || []} />
-        <PressSection press={uniquePress as any} />
       </main>
       <Footer />
     </div>
