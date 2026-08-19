@@ -28,7 +28,7 @@ export async function getPosts(): Promise<PostWithAuthor[]> {
 
   // Lấy danh sách posts kèm thông tin author
   const { data: posts, error } = await supabase
-    .from("posts")
+    .from("community_posts")
     .select(`
       id,
       content,
@@ -51,7 +51,7 @@ export async function getPosts(): Promise<PostWithAuthor[]> {
   if (userId && posts && posts.length > 0) {
     const postIds = posts.map(p => p.id);
     const { data: likes } = await supabase
-      .from("post_likes")
+      .from("community_post_likes")
       .select("post_id")
       .eq("user_id", userId)
       .in("post_id", postIds);
@@ -82,7 +82,7 @@ export async function createPost(content: string, imageUrls: string[] = []) {
     return { error: "Bài viết không được để trống." };
   }
 
-  const { error } = await supabase.from("posts").insert({
+  const { error } = await supabase.from("community_posts").insert({
     author_id: userId,
     content: content.trim(),
     images: imageUrls,
@@ -108,10 +108,10 @@ export async function toggleLikePost(postId: string, currentLikedState: boolean)
 
   if (currentLikedState) {
     // Bỏ like
-    await supabase.from("post_likes").delete().match({ post_id: postId, user_id: userId });
+    await supabase.from("community_post_likes").delete().match({ post_id: postId, user_id: userId });
   } else {
     // Thích
-    await supabase.from("post_likes").insert({ post_id: postId, user_id: userId });
+    await supabase.from("community_post_likes").insert({ post_id: postId, user_id: userId });
   }
 
   revalidatePath("/cong-dong");
