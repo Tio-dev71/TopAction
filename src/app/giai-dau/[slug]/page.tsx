@@ -186,7 +186,7 @@ export default async function TournamentDetailPage({
     .from('registrations')
     .select('profiles:user_id(full_name, avatar_url)')
     .eq('tournament_id', tournament.id)
-    .in('status', ['paid', 'approved', 'pending'])
+    .in('status', ['paid', 'approved', 'pending', 'registered', 'confirmed'])
     .order('created_at', { ascending: false });
 
   const participantAvatars = latestRegistrations
@@ -385,16 +385,16 @@ export default async function TournamentDetailPage({
         </div>
 
         {/* ─── Organizers Section (Bottom) ─── */}
-        {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0) && (
+        {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0 || press.length > 0) && (
           <div className="mt-12 bg-white rounded-3xl shadow-sm border border-border/40 p-6 sm:p-10 mb-8">
             <h3 className="text-xl font-bold text-center mb-8">Các đơn vị đồng hành</h3>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {sponsors.map((sp: any) => (
+              {[...organizers, ...sponsors, ...partners, ...press].map((sp: any) => (
                 <div key={sp.id} className="flex items-center justify-center p-4 border border-border/60 rounded-2xl h-24 bg-secondary/10">
                   {sp.logo_url ? (
                     <img src={sp.logo_url} alt={sp.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
                   ) : (
-                    <span className="font-bold text-muted-foreground">{sp.name}</span>
+                    <span className="font-bold text-muted-foreground text-center text-sm">{sp.name}</span>
                   )}
                 </div>
               ))}
