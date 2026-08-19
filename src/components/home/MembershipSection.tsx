@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { Check, ShieldCheck, Clock, Lock, Headphones, ChevronDown, ChevronRight, Trophy, Medal } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { createClient } from "@/lib/supabase/client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 const PLANS = [
   {
@@ -81,6 +84,28 @@ const PLANS = [
 
 export function MembershipSection() {
   const [showCompare, setShowCompare] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user);
+    });
+  }, []);
+
+  const handleRegister = (planId: string) => {
+    if (!user) {
+      router.push("/dang-nhap?redirect=/");
+      return;
+    }
+    
+    if (planId === "basic") {
+      router.push("/verified/onboarding");
+    } else {
+      router.push(`/thanh-toan/membership?plan=${planId}`);
+    }
+  };
 
   return (
     <section className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -144,6 +169,7 @@ export function MembershipSection() {
 
             <div className="mt-8">
               <Button 
+                onClick={() => handleRegister(plan.id)}
                 className={`w-full h-11 rounded-xl font-bold text-[15px] ${
                   plan.buttonVariant === 'warning' 
                     ? 'bg-amber-500 hover:bg-amber-600 text-white shadow-lg shadow-amber-500/25' 

@@ -22,6 +22,7 @@ import { CollapsibleSection } from "./CollapsibleSection";
 import { LiveStatsBanner } from "@/components/home/LiveStatsBanner";
 import { LeaderboardPodium } from "./LeaderboardPodium";
 import Marquee from "react-fast-marquee";
+import { TournamentTabsClient } from "./TournamentTabsClient";
 
 /* ────────────── helpers ────────────── */
 
@@ -180,10 +181,10 @@ export default async function TournamentDetailPage({
     })));
   }
 
-  // Get latest participants for avatars
+  // Get latest participants for avatars and members tab
   const { data: latestRegistrations } = await supabase
     .from('registrations')
-    .select('profiles:user_id(avatar_url)')
+    .select('profiles:user_id(full_name, avatar_url)')
     .eq('tournament_id', tournament.id)
     .in('status', ['paid', 'approved', 'pending'])
     .order('created_at', { ascending: false })
@@ -191,6 +192,10 @@ export default async function TournamentDetailPage({
 
   const participantAvatars = latestRegistrations
     ?.map((r: any) => r.profiles?.avatar_url)
+    .filter(Boolean) || [];
+
+  const participantsList = latestRegistrations
+    ?.map((r: any) => r.profiles)
     .filter(Boolean) || [];
 
   // Check registration window
@@ -282,108 +287,14 @@ export default async function TournamentDetailPage({
               </div>
             </div>
 
-            {/* Tabs Menu */}
-            <div className="bg-white rounded-2xl shadow-sm border border-border/40 px-2 flex items-center overflow-x-auto no-scrollbar">
-              <button className="px-6 py-4 border-b-[3px] border-primary text-primary font-bold text-[15px] whitespace-nowrap">Thông tin</button>
-              <button className="px-6 py-4 border-b-[3px] border-transparent text-muted-foreground font-semibold hover:text-foreground transition-colors text-[15px] whitespace-nowrap">Thể lệ</button>
-              <button className="px-6 py-4 border-b-[3px] border-transparent text-muted-foreground font-semibold hover:text-foreground transition-colors text-[15px] whitespace-nowrap">Giải thưởng</button>
-              <button className="px-6 py-4 border-b-[3px] border-transparent text-muted-foreground font-semibold hover:text-foreground transition-colors text-[15px] whitespace-nowrap">Thành viên</button>
-            </div>
-
-            {/* Content Body */}
-            <div className="space-y-6">
-              {/* Charity Progress */}
-              {tournament.donation_goal > 0 && (
-                <div className="bg-white rounded-3xl shadow-sm border border-border/40 p-6 sm:p-8">
-                  <CharityProgress
-                    tournamentId={tournament.id}
-                    donationTotal={tournament.donation_total || 0}
-                    donationGoal={tournament.donation_goal || 500000000}
-                    donationDescription="Mỗi lượt đăng ký là một hành động thiết thực nhằm lan tỏa tinh thần nhân ái..."
-                    charityIframeUrl={tournament.charity_iframe_url}
-                  />
-                </div>
-              )}
-
-              {/* Description */}
-              <div className="bg-white rounded-3xl shadow-sm border border-border/40 p-6 sm:p-8">
-                <CollapsibleSection
-                  title="Giới thiệu giải đấu"
-                  content={tournament.description}
-                  icon="activity"
-                  defaultExpanded={true}
-                />
-              </div>
-
-              {/* Live Stats */}
-              <LiveStatsBanner
-                todayParticipants={todayParticipantsCount}
-                totalDistance={totalDistanceBanner}
-                totalParticipants={tournament.participant_count || 0}
-                recentActivities={recentActivities.length > 0 ? recentActivities : []}
-              />
-
-              {/* Categories */}
-              {tournament.categories && tournament.categories.length > 0 && (
-                <div className="bg-white rounded-3xl shadow-sm border border-border/40 p-6 sm:p-8">
-                  <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                    <Trophy className="h-6 w-6 text-primary" />
-                    Hạng mục thi đấu
-                  </h3>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {tournament.categories.map((cat: any) => (
-                      <div key={cat.id} className="p-4 rounded-2xl border border-border bg-secondary/20 flex flex-col">
-                        <div className="flex justify-between items-start mb-2">
-                          <h4 className="font-bold text-[16px] text-foreground">{cat.name}</h4>
-                          <span className="font-bold text-primary">{cat.price > 0 ? `${cat.price.toLocaleString('vi-VN')} ₫` : 'Miễn phí'}</span>
-                        </div>
-                        {cat.distance && <p className="text-[13px] text-muted-foreground mb-3">Cự ly: {cat.distance}</p>}
-                        <div className="mt-auto flex items-center justify-between text-[12px] font-medium">
-                          <span className="flex items-center gap-1.5 text-muted-foreground">
-                            <Users className="h-3.5 w-3.5" />
-                            {cat.registered_count}/{cat.capacity || '∞'} đã đăng ký
-                          </span>
-                          {cat.capacity && cat.registered_count >= cat.capacity && (
-                            <span className="text-[#ef4444] font-bold">Hết chỗ</span>
-                          )}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Rules & Rewards */}
-              {(tournament.rules?.length > 0 || tournament.rewards_description) && (
-                <div className="bg-white rounded-3xl shadow-sm border border-border/40 p-6 sm:p-8 space-y-8">
-                  {tournament.rewards_description && (
-                    <CollapsibleSection
-                      title={tournament.rewards_title || "Giải thưởng"}
-                      content={tournament.rewards_description}
-                      icon="medal"
-                    />
-                  )}
-                  {tournament.short_description && (
-                    <CollapsibleSection
-                      title="Quy định chung"
-                      content={tournament.short_description}
-                      icon="info"
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* Leaderboard */}
-              {results && results.length > 0 && (
-                <div className="bg-white rounded-3xl shadow-sm border border-border/40 p-6 sm:p-8">
-                  <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
-                    <Medal className="h-6 w-6 text-[#f59e0b]" />
-                    Bảng xếp hạng (Top 10)
-                  </h3>
-                  <LeaderboardPodium results={results} />
-                </div>
-              )}
-            </div>
+            <TournamentTabsClient 
+              tournament={tournament}
+              todayParticipantsCount={todayParticipantsCount}
+              totalDistanceBanner={totalDistanceBanner}
+              recentActivities={recentActivities}
+              results={results || []}
+              participants={participantsList}
+            />
           </div>
 
           {/* ─── Right Column (1/3) Sticky Sidebar ─── */}

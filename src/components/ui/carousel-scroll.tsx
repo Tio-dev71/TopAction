@@ -38,7 +38,7 @@ export function CarouselScroll({ children, className, ...props }: CarouselScroll
   };
 
   return (
-    <div className={cn("relative group", className)} {...props}>
+    <div className={cn("relative", className)} {...props}>
       <div
         ref={scrollRef}
         onScroll={checkScroll}
