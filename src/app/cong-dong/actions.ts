@@ -36,7 +36,7 @@ export async function getPosts(): Promise<PostWithAuthor[]> {
       likes_count,
       comments_count,
       created_at,
-      author:author_id (id, full_name, avatar_url)
+      author:profiles (id, full_name, avatar_url)
     `)
     .order("created_at", { ascending: false })
     .limit(50);

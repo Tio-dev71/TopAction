@@ -7,7 +7,7 @@ import { createPost } from "./actions";
 import { toast } from "sonner";
 import { createClient } from "@/lib/supabase/client";
 
-export default function CreatePostBox() {
+export default function CreatePostBox({ avatarUrl }: { avatarUrl?: string }) {
   const [content, setContent] = useState("");
   const [images, setImages] = useState<File[]>([]);
   const [previews, setPreviews] = useState<string[]>([]);
@@ -84,7 +84,16 @@ export default function CreatePostBox() {
   return (
     <div className="bg-white rounded-[16px] shadow-sm border border-border/40 p-4">
       <div className="flex gap-3 mb-3">
-        <div className="w-10 h-10 rounded-full bg-gray-200 border border-border/50 shrink-0" />
+        {avatarUrl ? (
+          <img src={avatarUrl} alt="Avatar" className="w-10 h-10 rounded-full border border-border/50 shrink-0 object-cover" />
+        ) : (
+          <div className="w-10 h-10 rounded-full bg-gray-200 border border-border/50 shrink-0 flex items-center justify-center overflow-hidden">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-gray-400">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </div>
+        )}
         <textarea
           value={content}
           onChange={(e) => setContent(e.target.value)}

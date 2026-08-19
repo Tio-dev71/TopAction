@@ -6,6 +6,7 @@ import { Footer } from "@/components/layout/Footer";
 import CreatePostBox from "./CreatePostBox";
 import PostItem from "./PostItem";
 import { getPosts } from "./actions";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
   title: "Cộng Đồng | TOPPLAY",
@@ -16,6 +17,21 @@ export const revalidate = 0; // Luôn fetch dữ liệu mới nhất (hoặc s�
 
 export default async function CongDongPage() {
   const posts = await getPosts();
+  
+  // Get current user avatar
+  const supabase = await createClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  let avatarUrl = "";
+  if (session?.user?.id) {
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("avatar_url")
+      .eq("id", session.user.id)
+      .single();
+    if (profile?.avatar_url) {
+      avatarUrl = profile.avatar_url;
+    }
+  }
 
   return (
     <>
@@ -72,8 +88,8 @@ export default async function CongDongPage() {
             </div>
 
             {/* Center Content - Feed */}
-            <div className="col-span-1 lg:col-span-2 space-y-6">
-              <CreatePostBox />
+            <div className="col-span-1 lg:col-span-3 space-y-6">
+              <CreatePostBox avatarUrl={avatarUrl} />
 
               {/* Danh sách bài viết */}
               {posts.length === 0 ? (
@@ -85,37 +101,6 @@ export default async function CongDongPage() {
                   <PostItem key={post.id} post={post} />
                 ))
               )}
-            </div>
-
-            {/* Right Sidebar - Trending */}
-            <div className="hidden lg:block lg:col-span-1 space-y-6 sticky top-24">
-               <div className="bg-white rounded-[16px] shadow-sm border border-border/40 p-4">
-                 <h3 className="font-bold text-[15px] text-foreground mb-4">Chủ đề nổi bật</h3>
-                 <div className="space-y-4">
-                   {/* Mock Data for Trending */}
-                   <div className="flex flex-col gap-1 cursor-pointer group">
-                     <span className="text-[13px] text-muted-foreground font-medium">#PickleballVietnam</span>
-                     <span className="text-[14px] font-bold text-foreground group-hover:text-primary transition-colors">
-                       Cùng nhau tập luyện
-                     </span>
-                     <span className="text-[12px] text-muted-foreground">1,234 bài viết</span>
-                   </div>
-                   <div className="flex flex-col gap-1 cursor-pointer group">
-                     <span className="text-[13px] text-muted-foreground font-medium">#DanangMarathon</span>
-                     <span className="text-[14px] font-bold text-foreground group-hover:text-primary transition-colors">
-                       Cung đường tuyệt đẹp
-                     </span>
-                     <span className="text-[12px] text-muted-foreground">856 bài viết</span>
-                   </div>
-                   <div className="flex flex-col gap-1 cursor-pointer group">
-                     <span className="text-[13px] text-muted-foreground font-medium">#TopAction</span>
-                     <span className="text-[14px] font-bold text-foreground group-hover:text-primary transition-colors">
-                       Sự kiện gây quỹ
-                     </span>
-                     <span className="text-[12px] text-muted-foreground">412 bài viết</span>
-                   </div>
-                 </div>
-               </div>
             </div>
 
           </div>
