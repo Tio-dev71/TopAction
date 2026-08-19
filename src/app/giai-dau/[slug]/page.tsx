@@ -386,25 +386,135 @@ export default async function TournamentDetailPage({
             )}
           </div>
         </div>
+      </main>
 
-        {/* ─── Organizers Section (Bottom) ─── */}
-        {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0 || press.length > 0) && (
-          <div className="mt-12 bg-white rounded-3xl shadow-sm border border-border/40 p-6 sm:p-10 mb-8">
-            <h3 className="text-xl font-bold text-center mb-8">Các đơn vị đồng hành</h3>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[...organizers, ...sponsors, ...partners, ...press].map((sp: any) => (
-                <div key={sp.id} className="flex items-center justify-center p-4 border border-border/60 rounded-2xl h-24 bg-secondary/10">
-                  {sp.logo_url ? (
-                    <img src={sp.logo_url} alt={sp.name} className="max-h-full max-w-full object-contain mix-blend-multiply" />
-                  ) : (
-                    <span className="font-bold text-muted-foreground text-center text-sm">{sp.name}</span>
-                  )}
-                </div>
-              ))}
+        {/* ─── Organizers Section (Full Width) ─── */}
+      {(organizers.length > 0 || sponsors.length > 0 || partners.length > 0 || press.length > 0) && (
+        <section className="w-full bg-card border-t border-border/60 pb-16">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="td-organizers">
+              {organizers.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Building2 className="td-organizers__title-icon" />
+                    Đơn vị tổ chức
+                  </h3>
+                  <div className="td-organizers__logos">
+                    {organizers.map((org: any) => {
+                      const logoContent = org.logo_url ? (
+                        <img src={org.logo_url} alt={org.name} className="td-organizers__logo-img" />
+                      ) : (
+                        <div className="td-organizers__logo-placeholder">
+                          <Building2 className="h-8 w-8" />
+                          <span>{org.name}</span>
+                        </div>
+                      );
+                      return (
+                        <div key={org.id} className="td-organizers__logo-card">
+                          {org.website_url ? (
+                            <a href={org.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                          ) : logoContent}
+                          {org.description && (
+                            <p className="td-organizers__logo-desc">{org.description}</p>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </FadeIn>
+              )}
+
+              {sponsors.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Star className="td-organizers__title-icon" />
+                    Đơn vị tài trợ
+                  </h3>
+                  <div className="td-organizers__logos">
+                    {sponsors.map((sp: any) => {
+                      const logoContent = sp.logo_url ? (
+                        <img src={sp.logo_url} alt={sp.name} className="td-organizers__logo-img" />
+                      ) : (
+                        <div className="td-organizers__logo-placeholder">
+                          <Star className="h-8 w-8" />
+                          <span>{sp.name}</span>
+                        </div>
+                      );
+                      return (
+                        <div key={sp.id} className="td-organizers__logo-card">
+                          {sp.website_url ? (
+                            <a href={sp.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                          ) : logoContent}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </FadeIn>
+              )}
+
+              {partners.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Handshake className="td-organizers__title-icon" />
+                    Đơn vị đồng hành
+                  </h3>
+                  <div className="td-organizers__logos-wrap">
+                    <Marquee gradient={true} gradientColor="var(--card)" speed={30} autoFill={true}>
+                      {partners.map((pt: any) => {
+                        const logoContent = pt.logo_url ? (
+                          <img src={pt.logo_url} alt={pt.name} className="td-organizers__logo-img" />
+                        ) : (
+                          <div className="td-organizers__logo-placeholder">
+                            <Handshake className="h-8 w-8" />
+                            <span>{pt.name}</span>
+                          </div>
+                        );
+                        return (
+                          <div key={pt.id} className="td-organizers__logo-card">
+                            {pt.website_url ? (
+                              <a href={pt.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                            ) : logoContent}
+                          </div>
+                        );
+                      })}
+                    </Marquee>
+                  </div>
+                </FadeIn>
+              )}
+
+              {press.length > 0 && (
+                <FadeIn className="td-organizers__section">
+                  <h3 className="td-organizers__title">
+                    <Newspaper className="td-organizers__title-icon" />
+                    Báo chí
+                  </h3>
+                  <div className="td-organizers__logos-wrap">
+                    <Marquee gradient={true} gradientColor="var(--card)" speed={30} autoFill={true}>
+                      {press.map((pr: any) => {
+                        const logoContent = pr.logo_url ? (
+                          <img src={pr.logo_url} alt={pr.name} className="td-organizers__logo-img" />
+                        ) : (
+                          <div className="td-organizers__logo-placeholder">
+                            <Newspaper className="h-8 w-8" />
+                            <span>{pr.name}</span>
+                          </div>
+                        );
+                        return (
+                          <div key={pr.id} className="td-organizers__logo-card">
+                            {pr.website_url ? (
+                              <a href={pr.website_url} target="_blank" rel="noopener noreferrer" className="block transition-transform hover:scale-105">{logoContent}</a>
+                            ) : logoContent}
+                          </div>
+                        );
+                      })}
+                    </Marquee>
+                  </div>
+                </FadeIn>
+              )}
             </div>
           </div>
-        )}
-      </main>
+        </section>
+      )}
 
       <Footer />
     </div>
