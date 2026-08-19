@@ -114,6 +114,10 @@ export async function POST(request: NextRequest) {
 
     // 3. Fallback: Tự động ghi nhận chuyển khoản tự do không có mã thành lượt ủng hộ trực tiếp
     if (processedCount === 0) {
+      if (!content.toUpperCase().includes('SAIBUOCNGHIATINH')) {
+        return NextResponse.json({ success: true, message: 'Ignored external transaction not containing SAIBUOCNGHIATINH' })
+      }
+      
       const txId = body.id?.toString() || body.referenceCode || null
       if (txId) {
         const { data: existing } = await supabase

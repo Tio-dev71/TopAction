@@ -181,16 +181,16 @@ export default async function TournamentDetailPage({
     })));
   }
 
-  // Get latest participants for avatars and members tab
+  // Get all participants for avatars and members tab
   const { data: latestRegistrations } = await supabase
     .from('registrations')
     .select('profiles:user_id(full_name, avatar_url)')
     .eq('tournament_id', tournament.id)
     .in('status', ['paid', 'approved', 'pending'])
-    .order('created_at', { ascending: false })
-    .limit(5);
+    .order('created_at', { ascending: false });
 
   const participantAvatars = latestRegistrations
+    ?.slice(0, 5)
     ?.map((r: any) => r.profiles?.avatar_url)
     .filter(Boolean) || [];
 
@@ -358,8 +358,8 @@ export default async function TournamentDetailPage({
                     {tournament.participant_count.toLocaleString("vi-VN")} người tham gia
                   </span>
                 </div>
-                <Button variant="outline" className="w-full h-11 rounded-xl text-[14px] font-bold">
-                  Xem danh sách
+                <Button variant="outline" className="w-full h-11 rounded-xl text-[14px] font-bold" asChild>
+                  <a href="#thanh-vien">Xem danh sách</a>
                 </Button>
               </div>
             </div>

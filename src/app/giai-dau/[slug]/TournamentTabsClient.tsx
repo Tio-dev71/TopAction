@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CollapsibleSection } from "./CollapsibleSection";
 import { LiveStatsBanner } from "@/components/home/LiveStatsBanner";
 import { LeaderboardPodium } from "./LeaderboardPodium";
@@ -26,12 +26,30 @@ export function TournamentTabsClient({
 }: TabClientProps) {
   const [activeTab, setActiveTab] = useState("thong-tin");
 
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (['thong-tin', 'the-le', 'giai-thuong', 'thanh-vien'].includes(hash)) {
+        setActiveTab(hash);
+      }
+    };
+    
+    handleHashChange();
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, []);
+
+  const handleTabClick = (tab: string) => {
+    setActiveTab(tab);
+    window.location.hash = tab;
+  };
+
   return (
-    <>
+    <div id="tabs">
       {/* Tabs Menu */}
       <div className="bg-white rounded-2xl shadow-sm border border-border/40 px-2 flex items-center overflow-x-auto no-scrollbar">
         <button
-          onClick={() => setActiveTab("thong-tin")}
+          onClick={() => handleTabClick("thong-tin")}
           className={`px-6 py-4 border-b-[3px] font-bold text-[15px] whitespace-nowrap transition-colors ${
             activeTab === "thong-tin"
               ? "border-primary text-primary"
@@ -41,7 +59,7 @@ export function TournamentTabsClient({
           Thông tin
         </button>
         <button
-          onClick={() => setActiveTab("the-le")}
+          onClick={() => handleTabClick("the-le")}
           className={`px-6 py-4 border-b-[3px] font-bold text-[15px] whitespace-nowrap transition-colors ${
             activeTab === "the-le"
               ? "border-primary text-primary"
@@ -51,7 +69,7 @@ export function TournamentTabsClient({
           Thể lệ
         </button>
         <button
-          onClick={() => setActiveTab("giai-thuong")}
+          onClick={() => handleTabClick("giai-thuong")}
           className={`px-6 py-4 border-b-[3px] font-bold text-[15px] whitespace-nowrap transition-colors ${
             activeTab === "giai-thuong"
               ? "border-primary text-primary"
@@ -61,7 +79,7 @@ export function TournamentTabsClient({
           Giải thưởng
         </button>
         <button
-          onClick={() => setActiveTab("thanh-vien")}
+          onClick={() => handleTabClick("thanh-vien")}
           className={`px-6 py-4 border-b-[3px] font-bold text-[15px] whitespace-nowrap transition-colors ${
             activeTab === "thanh-vien"
               ? "border-primary text-primary"
@@ -223,6 +241,6 @@ export function TournamentTabsClient({
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
