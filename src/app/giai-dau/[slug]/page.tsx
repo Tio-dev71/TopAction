@@ -8,6 +8,7 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { DonationWidget } from "@/components/DonationWidget";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import {
   Trophy, CalendarDays, Users, ArrowLeft, MapPin,
   Dumbbell, Gauge, Map, Smartphone, CheckCircle,
@@ -182,7 +183,9 @@ export default async function TournamentDetailPage({
   }
 
   // Get all participants for avatars and members tab
-  const { data: latestRegistrations } = await supabase
+  // Use admin client to bypass RLS on registrations table
+  const supabaseAdmin = await createAdminClient();
+  const { data: latestRegistrations } = await supabaseAdmin
     .from('registrations')
     .select('profiles:user_id(full_name, avatar_url)')
     .eq('tournament_id', tournament.id)
