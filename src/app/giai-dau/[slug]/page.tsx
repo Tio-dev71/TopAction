@@ -361,11 +361,11 @@ export default async function TournamentDetailPage({
                     {tournament.participant_count.toLocaleString("vi-VN")} người tham gia
                   </span>
                 </div>
-                <Link href="#thanh-vien" className="block w-full">
+                <a href="#thanh-vien" className="block w-full">
                   <Button variant="outline" className="w-full h-11 rounded-xl text-[14px] font-bold">
                     Xem danh sách
                   </Button>
-                </Link>
+                </a>
               </div>
             </div>
 

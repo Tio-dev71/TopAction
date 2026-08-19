@@ -45,7 +45,8 @@ export function TournamentTabsClient({
   };
 
   return (
-    <div id="tabs">
+    <div id="tabs" className="relative">
+      <div id="thanh-vien" className="absolute -top-24"></div>
       {/* Tabs Menu */}
       <div className="bg-white rounded-2xl shadow-sm border border-border/40 px-2 flex items-center overflow-x-auto no-scrollbar">
         <button
