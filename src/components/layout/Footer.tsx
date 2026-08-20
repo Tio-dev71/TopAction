@@ -111,7 +111,7 @@ export function Footer() {
             <Link href="/" className="inline-block relative">
               {/* Logo text updated to contrast with blue */}
               <div className="text-4xl font-extrabold uppercase text-white flex flex-col items-center lg:items-start tracking-tighter">
-                <img src="/favicon.ico" alt="TOPPLAY" />
+                <img src="/topplay_footer.png" alt="TOPPLAY" />
               </div>
             </Link>
           </div>
